@@ -5,5 +5,6 @@ export default interface Methode {
     name: string,
     dataType: string,
     attributeList?: IAttribute[],
-    visibility: string
+    visibility: string,
+    getAttributeListAsString() : string,
 }

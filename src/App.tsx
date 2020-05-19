@@ -1,8 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+
 import './App.css';
 import axios from 'axios';
 import IDiagram from './interfaces/diagram'
 import DiagramCreator from './helper/diagramCreator';
+import MxGraphCreator from './helper/mxGraphCreator';
 
 import {
   mxGraph,
@@ -24,6 +27,10 @@ const App = () => {
   const [diagram, setDiagram] = useState<IDiagram>();
   const divGraph = React.useRef<HTMLDivElement>(null);
 
+  const el = document.createElement("div");
+  console.log(el);
+  
+
   const diagramCreator = new DiagramCreator();
 
   const onChange = (e: any) => {
@@ -42,8 +49,12 @@ const App = () => {
           'Content-Type': 'multipart/form-data'
         },
       });
-
+      
+      console.log(res.data);
+      
       var diag = diagramCreator.createDiagram(res.data);
+      console.log(diag);
+      
       setDiagram(diag);
       
     }
@@ -75,15 +86,28 @@ const App = () => {
       
 
       const graph = new mxGraph(divGraph.current);
+      graph.setConnectable(true);
+      graph.setHtmlLabels(true);
+      
 
       const parent = graph.getDefaultParent();
 
+
+
       mxEvent.disableContextMenu(divGraph.current);
+    if(typeof diagram !== 'undefined' ){
+      var mxGraphCreator = new MxGraphCreator(graph,diagram);
 
       graph.getModel().beginUpdate();
 
+      mxGraphCreator.start();
+
+      graph.getModel().endUpdate();
+    }
+
+/*
       try {
-        //-----Text Umgebung-----
+        //-----Test Umgebung-----
         console.log(diagram);
         var count = diagram?.class_declarations.length ? diagram?.class_declarations.length : 0;
 
@@ -126,6 +150,8 @@ const App = () => {
       } finally {
         graph.getModel().endUpdate();
       }
+      */
+     graph.getModel().endUpdate();
     }
   });
 
@@ -154,7 +180,6 @@ const App = () => {
           className="graph-container"
           ref={divGraph}
           id="divGraph">
-
           </div>
     </Fragment>
   );

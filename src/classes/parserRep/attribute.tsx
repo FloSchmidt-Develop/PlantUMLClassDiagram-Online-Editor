@@ -1,4 +1,4 @@
-import IAttribute from '../interfaces/attribute'
+import IAttribute from '../../interfaces/attribute'
 
 
 export default class Attribute implements IAttribute {

@@ -1,6 +1,6 @@
-import IClass from '../interfaces/class'
-import IAttribute from '../interfaces/attribute'
-import IMethode from '../interfaces/methode'
+import IClass from '../../interfaces/class'
+import IAttribute from '../../interfaces/attribute'
+import IMethode from '../../interfaces/methode'
 
 
 export default class Class implements IClass{

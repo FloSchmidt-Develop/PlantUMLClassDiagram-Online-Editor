@@ -1,9 +1,12 @@
-import Diagram from '../classes/diagram';
+import Diagram from '../classes/parserRep/diagram';
 import IDiagram from '../interfaces/diagram'
-import IClass from '../interfaces/class'
-import Class from '../classes/class'
-import Attribute from '../classes/attribute';
-import Method from '../classes/method';
+import IClass from '../interfaces/class';
+import IConnection from '../interfaces/connection';
+
+import Class from '../classes/parserRep/class'
+import Attribute from '../classes/parserRep/attribute';
+import Method from '../classes/parserRep/method';
+import Connection from '../classes/parserRep/connection';
 
 export default class DiagramCreator{
  
@@ -20,12 +23,33 @@ export default class DiagramCreator{
         serverResponse.Res.diagram !== null )
         {
             let jsonDiagram = serverResponse.Res.diagram;
+            //check if the server result contains classes
             if(jsonDiagram.class_declaration !== null){        
                this.addClasses(jsonDiagram.class_declaration, diagram);              
             }     
+            if(jsonDiagram.connection_declaration !== null){
+                console.log(jsonDiagram.connection_declaration);
+                
+                this.addConnections(jsonDiagram.connection_declaration, diagram);
+            }
+
         }
 
         return diagram;
+    }
+
+    private addConnections(jsonConnections: any, diagram: IDiagram){
+        for (let index = 0; index < jsonConnections.length; index++) {
+            const jsonConnection = jsonConnections[index];
+
+            let con = new Connection(jsonConnection.connector,
+                jsonConnection.multiplicity_left,
+                jsonConnection.multiplicity_right,
+                jsonConnection.left, jsonConnection.right);
+
+            diagram.addConnection(con);
+            
+        }
     }
 
     private addClasses( jsonClasses : any , diagram : IDiagram  ) : void{
@@ -34,7 +58,7 @@ export default class DiagramCreator{
             var jasonClass = jsonClasses[index];
             
             let cls = new Class(jasonClass.name, jasonClass.type);
-            cls.alias = jasonClass.alias ? jasonClass.alias : '';
+            cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
 
             if (jsonClasses[index].attributes !== null) {
