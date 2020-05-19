@@ -1,0 +1,375 @@
+// Generated from PlantUML.g4 by ANTLR 4.8
+// jshint ignore: start
+var antlr4 = require('antlr4/index');
+
+// This class defines a complete listener for a parse tree produced by PlantUMLParser.
+function PlantUMLListener() {
+	antlr4.tree.ParseTreeListener.call(this);
+	return this;
+}
+
+PlantUMLListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
+PlantUMLListener.prototype.constructor = PlantUMLListener;
+
+// Enter a parse tree produced by PlantUMLParser#diagram.
+PlantUMLListener.prototype.enterDiagram = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#diagram.
+PlantUMLListener.prototype.exitDiagram = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#class_diagram.
+PlantUMLListener.prototype.enterClass_diagram = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#class_diagram.
+PlantUMLListener.prototype.exitClass_diagram = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#package_section.
+PlantUMLListener.prototype.enterPackage_section = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#package_section.
+PlantUMLListener.prototype.exitPackage_section = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#package_name.
+PlantUMLListener.prototype.enterPackage_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#package_name.
+PlantUMLListener.prototype.exitPackage_name = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#class_declaration.
+PlantUMLListener.prototype.enterClass_declaration = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#class_declaration.
+PlantUMLListener.prototype.exitClass_declaration = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#class_type.
+PlantUMLListener.prototype.enterClass_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#class_type.
+PlantUMLListener.prototype.exitClass_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#class_description.
+PlantUMLListener.prototype.enterClass_description = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#class_description.
+PlantUMLListener.prototype.exitClass_description = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#class_name.
+PlantUMLListener.prototype.enterClass_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#class_name.
+PlantUMLListener.prototype.exitClass_name = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#class_dataType.
+PlantUMLListener.prototype.enterClass_dataType = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#class_dataType.
+PlantUMLListener.prototype.exitClass_dataType = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#hide_declaration.
+PlantUMLListener.prototype.enterHide_declaration = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#hide_declaration.
+PlantUMLListener.prototype.exitHide_declaration = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#attribute.
+PlantUMLListener.prototype.enterAttribute = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#attribute.
+PlantUMLListener.prototype.exitAttribute = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#attribute_name.
+PlantUMLListener.prototype.enterAttribute_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#attribute_name.
+PlantUMLListener.prototype.exitAttribute_name = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#attribute_type.
+PlantUMLListener.prototype.enterAttribute_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#attribute_type.
+PlantUMLListener.prototype.exitAttribute_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#function_argument_attribute_type.
+PlantUMLListener.prototype.enterFunction_argument_attribute_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#function_argument_attribute_type.
+PlantUMLListener.prototype.exitFunction_argument_attribute_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#method.
+PlantUMLListener.prototype.enterMethod = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#method.
+PlantUMLListener.prototype.exitMethod = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#mathode_name.
+PlantUMLListener.prototype.enterMathode_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#mathode_name.
+PlantUMLListener.prototype.exitMathode_name = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#connection_left.
+PlantUMLListener.prototype.enterConnection_left = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#connection_left.
+PlantUMLListener.prototype.exitConnection_left = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#connection_right.
+PlantUMLListener.prototype.enterConnection_right = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#connection_right.
+PlantUMLListener.prototype.exitConnection_right = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#connection.
+PlantUMLListener.prototype.enterConnection = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#connection.
+PlantUMLListener.prototype.exitConnection = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#connection_symbol.
+PlantUMLListener.prototype.enterConnection_symbol = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#connection_symbol.
+PlantUMLListener.prototype.exitConnection_symbol = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#multiplicity.
+PlantUMLListener.prototype.enterMultiplicity = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#multiplicity.
+PlantUMLListener.prototype.exitMultiplicity = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#visibility.
+PlantUMLListener.prototype.enterVisibility = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#visibility.
+PlantUMLListener.prototype.exitVisibility = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#function_argument.
+PlantUMLListener.prototype.enterFunction_argument = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#function_argument.
+PlantUMLListener.prototype.exitFunction_argument = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#nested_argument_type.
+PlantUMLListener.prototype.enterNested_argument_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#nested_argument_type.
+PlantUMLListener.prototype.exitNested_argument_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#function_argument_list.
+PlantUMLListener.prototype.enterFunction_argument_list = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#function_argument_list.
+PlantUMLListener.prototype.exitFunction_argument_list = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#template_argument.
+PlantUMLListener.prototype.enterTemplate_argument = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#template_argument.
+PlantUMLListener.prototype.exitTemplate_argument = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#template_argument_list.
+PlantUMLListener.prototype.enterTemplate_argument_list = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#template_argument_list.
+PlantUMLListener.prototype.exitTemplate_argument_list = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#ident.
+PlantUMLListener.prototype.enterIdent = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#ident.
+PlantUMLListener.prototype.exitIdent = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#methode_data_type.
+PlantUMLListener.prototype.enterMethode_data_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#methode_data_type.
+PlantUMLListener.prototype.exitMethode_data_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#attribute_data_type.
+PlantUMLListener.prototype.enterAttribute_data_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#attribute_data_type.
+PlantUMLListener.prototype.exitAttribute_data_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#data_type.
+PlantUMLListener.prototype.enterData_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#data_type.
+PlantUMLListener.prototype.exitData_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#variable_name.
+PlantUMLListener.prototype.enterVariable_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#variable_name.
+PlantUMLListener.prototype.exitVariable_name = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#connection_name.
+PlantUMLListener.prototype.enterConnection_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#connection_name.
+PlantUMLListener.prototype.exitConnection_name = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#modifiers.
+PlantUMLListener.prototype.enterModifiers = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#modifiers.
+PlantUMLListener.prototype.exitModifiers = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#stereotype.
+PlantUMLListener.prototype.enterStereotype = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#stereotype.
+PlantUMLListener.prototype.exitStereotype = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#template_type.
+PlantUMLListener.prototype.enterTemplate_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#template_type.
+PlantUMLListener.prototype.exitTemplate_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#list_type.
+PlantUMLListener.prototype.enterList_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#list_type.
+PlantUMLListener.prototype.exitList_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#simple_type.
+PlantUMLListener.prototype.enterSimple_type = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#simple_type.
+PlantUMLListener.prototype.exitSimple_type = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#item_list.
+PlantUMLListener.prototype.enterItem_list = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#item_list.
+PlantUMLListener.prototype.exitItem_list = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#enum_declaration.
+PlantUMLListener.prototype.enterEnum_declaration = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#enum_declaration.
+PlantUMLListener.prototype.exitEnum_declaration = function(ctx) {
+};
+
+
+
+exports.PlantUMLListener = PlantUMLListener;

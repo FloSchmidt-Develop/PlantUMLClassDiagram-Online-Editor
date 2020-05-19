@@ -1,0 +1,104 @@
+@startuml
+
+package "HardwarePart" {
+
+interface "MemoryInterface" as MemoryInterface {
+    +read(address: integer): data
+    +write(address: integer, data: data)
+}
+
+interface CacheInterface {
+    +readFromNextLevel(function: MemoryInterconnect.read, address: integer): data
+    +writeToNextLevel(function: MemoryInterconnect.write, address: integer, data: data)
+}
+
+MemoryInterface <|-left- CacheInterface
+
+
+    class "Memory" as Memory {
+        #size: integer
+        #dataWidth: integer
+        #readLatency: * 
+        #writeLatency: *
+    }
+
+    MemoryInterface <|.. Memory
+
+    class "MemoryMap" as MemoryMap {
+        +numMemoryBanks: integer
+        +memoryBanks: Memory[]
+        +startAddresses: integer[]
+    }
+
+    MemoryMap o- Memory
+
+    class "MemoryInterconnect" as MemoryInterconnect {
+        #latency: *
+    }
+
+    MemoryInterconnect "1"*-"1" MemoryMap
+    MemoryInterface <|.. MemoryInterconnect
+
+    class "PipelineStage" as PipelineStage {
+        #latency: *
+        +forward(function: PipelineStage.receive, inst: inst.)
+        +receive(inst: inst.)
+    }
+
+    PipelineStage "0..*"<-"0..*" PipelineStage : "forward():inst"
+
+
+    class "ExecuteStage: PipelineStage" as ExecuteStage {
+        #process(inst: inst.)
+    }
+
+    PipelineStage <|-down- ExecuteStage
+
+    class "FunctionalUnit" as FunctionalUnit {
+        toProcess: inst.[]
+        latencies: *[]
+    }
+
+    ExecuteStage "1..*"*-down-"0..*" FunctionalUnit
+
+    class "MemoryAccessUnit" as MemoryAccessUnit {
+        #latency: *
+        #read(function: MemoryInterface.read, address: integer)
+        #write(function: MemoryInterface.write, address: integer, data: data)
+    }
+
+    MemoryInterface "0..*"<--"0..1" MemoryAccessUnit : "write():data"
+    MemoryInterface "0..*"-->"0..1" MemoryAccessUnit : "read():data"
+
+    ExecuteStage "1"*--"0..*" MemoryAccessUnit
+
+    class "Buffer" as Buffer {
+        #size: integer
+    }
+
+    MemoryInterface <|.. Buffer
+    PipelineStage "0..*"*-"0..1" Buffer
+
+    class "RegisterFile" as RegisterFile {
+        #numRegisters: integer
+        #dataWidth: integer
+    }
+
+    MemoryInterface <|.. RegisterFile
+
+    RegisterFile "0..*"<--"0..1" FunctionalUnit : "write():data"
+    RegisterFile "0..*"-->"0..1" FunctionalUnit : "read():data"
+
+    class "Cache" as Cache {
+        #size: integer
+        #dataWidth: integer
+        #readLatency: integer
+        #writeLatency: integer
+        #replacementPolicy: *
+    }
+
+    CacheInterface <|.. Cache
+    MemoryMap o-- Cache
+
+}
+@enduml

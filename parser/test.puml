@@ -1,0 +1,27 @@
+@startuml
+
+package "mainMemory: HardwarePart" {
+
+class "leNet: SoftwareComponent" as MemoryInterface {
+#size: *
++receive(inst: inst.)
+#toProcess: inst.[]
+}
+
+interface CacheInterface {
++readFromNextLevel(function: MemoryInterconnect.read, address: integer): data
++writeToNextLevel(function: MemoryInterconnect.write, address: integer, data: data)
++startAddresses: integer[]
+}
+
+ExecuteStage "1"*--"0..*" MemoryAccessUnit
+MemoryInterface <|-left- MemoryInterconnect
+RegisterFile "0..*"<--"0..1" FunctionalUnit : "write():data"
+
+class "ArrayList" as ArrayList {
++read(address: integer): integer
+#size: *
+#replacementPolicy: *
+}
+
+@enduml
