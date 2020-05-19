@@ -167,13 +167,42 @@ export default class MxGraphCreator{
 
         for (let index = 0; index < edgeCount; index++) {
             let connection = this.diagram?.connection_declarations[index];
-            const e1 = this.graph.insertEdge(this.parentContainer, null, "", activeVertexes[connection.leftElement], activeVertexes[connection.rightElement]);
+            //console.log(connection);
+            
+            const e1 = this.graph.insertEdge(this.parentContainer,
+                null,
+                "",
+                activeVertexes[connection.leftElement],
+                activeVertexes[connection.rightElement],
+                this.getLineStyle(connection.connector)+
+                this.getStartArrowStyle(connection.connector)+
+                'endArrow=dash;sourcePerimeterSpacing=4');
             
         }
+    }
 
-        console.log(activeVertexes);
-        
+    private getLineStyle(connector: string) : string{
+        if (connector.includes('..') ) { 
+            console.log(connector);
+            
+            return 'dashed=1;';
+        }
+        return 'dashed=0;';
+    }
 
-
+    private getStartArrowStyle(connector: string) : string{
+        if (connector.indexOf('o') === 0 ) { 
+            return 'startArrow=diamond;startFill=0;';
+        }
+        else if(connector.indexOf('<|') === 0){
+            return 'startArrow=block;startFill=0;startSize=20;'
+        }
+        else if(connector.indexOf('*') === 0){
+            return 'startArrow=diamond;startFill=1;'
+        }
+        else if(connector.indexOf('<') === 0){
+            return 'startArrow=classic;startFill=1;'
+        }
+        return 'startArrow=dash';
     }
 }
