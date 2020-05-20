@@ -225,6 +225,7 @@ CONNECTOR:
 	| '<|-' DIRECTION? '-'
 	| '-' DIRECTION? '-|>'
 	| '<|-' DIRECTION? '-'
+    | 'o-' DIRECTION? '-'
     ;
 	
 DIRECTION:

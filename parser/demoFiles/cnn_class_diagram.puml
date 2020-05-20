@@ -1,0 +1,57 @@
+@startuml
+
+class SoftwareComponent {
+    +components: SoftwareComponent[]
+    +data: Data[]
+}
+
+SoftwareComponent o-- SoftwareComponent
+
+SoftwareComponent <|-- Convolution
+SoftwareComponent <|-- MaxPooling
+SoftwareComponent <|-- FullyConnected
+SoftwareComponent <|-- ReLU
+SoftwareComponent <|-- Softmax
+
+class Convolution {
+    +kernel_size: integer
+    +stride: integer
+    +padding: integer[]
+    +num_output_channel: integer
+    +weights: Tensor
+    +biases: Tensor
+}
+Convolution o-- Tensor
+
+class MaxPooling {
+    +kernel_size: integer
+    +stride: integer
+    +padding: integer[]
+}
+
+class FullyConnected {
+    +weights: Tensor
+    +biases: Tensor
+}
+FullyConnected o-- Tensor
+
+class ReLU {
+}
+
+class Softmax {
+}
+
+class Data {
+}
+
+SoftwareComponent o-left- Data
+
+Data <|-- Tensor
+
+class Tensor {
+    +width: integer
+    +height: integer
+    +channels: integer
+}
+
+@enduml

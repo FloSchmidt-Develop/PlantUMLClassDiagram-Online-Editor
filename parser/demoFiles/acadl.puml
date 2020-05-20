@@ -1,7 +1,5 @@
 @startuml
 
-package "HardwarePart" {
-
 interface "MemoryInterface" as MemoryInterface {
     +read(address: integer): data
     +write(address: integer, data: data)
@@ -14,11 +12,12 @@ interface CacheInterface {
 
 MemoryInterface <|-left- CacheInterface
 
+package "HardwarePart" {
 
     class "Memory" as Memory {
         #size: integer
         #dataWidth: integer
-        #readLatency: * 
+        #readLatency: *
         #writeLatency: *
     }
 
@@ -36,20 +35,20 @@ MemoryInterface <|-left- CacheInterface
         #latency: *
     }
 
-    MemoryInterconnect "1"*-"1" MemoryMap
-    MemoryInterface <|.. MemoryInterconnect
+    MemoryInterconnect -right-|> MemoryMap
+    MemoryInterface <|-left- MemoryInterconnect
 
     class "PipelineStage" as PipelineStage {
         #latency: *
-        +forward(function: PipelineStage.receive, inst: inst.)
+        +forward(function: PipelineStage.receive, inst.:inst.)
         +receive(inst: inst.)
     }
 
-    PipelineStage "0..*"<-"0..*" PipelineStage : "forward():inst"
+    PipelineStage "0..*"<-"0..*" PipelineStage : "forward():inst."
 
 
     class "ExecuteStage: PipelineStage" as ExecuteStage {
-        #process(inst: inst.)
+        #process(inst.: inst.)
     }
 
     PipelineStage <|-down- ExecuteStage
