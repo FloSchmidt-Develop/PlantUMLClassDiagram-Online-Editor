@@ -154,10 +154,9 @@ export default class MxGraphCreator{
                 x = 200;
             }
             let element = this.diagram?.class_declarations[index];
-            activeVertexes[element.alias] = this.graph.insertVertex(this.parentContainer, null, element,x,y);
+            activeVertexes[element.alias] = this.graph.insertVertex(this.parentContainer, null, element,x,y,20,20);
             x = x + 400;
-            console.log(activeVertexes[element.alias]);
-            this.graph.updateCellSize(activeVertexes[element.alias]);
+            this.graph.updateCellSize(activeVertexes[element.alias],true);
             
 
 

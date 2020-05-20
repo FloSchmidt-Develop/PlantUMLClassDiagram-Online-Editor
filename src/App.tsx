@@ -25,6 +25,7 @@ const App = () => {
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('');
   const [diagram, setDiagram] = useState<IDiagram>();
+  const [graph, setGraph] = useState();
   const divGraph = React.useRef<HTMLDivElement>(null);
 
   const el = document.createElement("div");
@@ -54,7 +55,10 @@ const App = () => {
       
       var diag = diagramCreator.createDiagram(res.data);
       console.log(diag);
-      
+      if (typeof graph === 'undefined') {
+        setGraph(new mxGraph(divGraph.current));
+      }
+
       setDiagram(diag);
       
     }
@@ -75,84 +79,32 @@ const App = () => {
   //this is called evertime one of the states is changed
   useEffect(() => {
 
-    if (!mxClient.isBrowserSupported()) {
-      mxUtils.error("Browser is not supported!", 200, false);
-    } 
+    if (typeof graph !== 'undefined') {
+      if (!mxClient.isBrowserSupported()) {
+        mxUtils.error("Browser is not supported!", 200, false);
+      } 
 
+      else {
 
-    else {
+        
+        graph.setConnectable(true);
+        graph.setHtmlLabels(true);
+        graph.autoSizeCellsOnAdd = true;
+        
+        mxEvent.disableContextMenu(divGraph.current);
 
-      console.log('neues Laden');
-      
+      if(typeof diagram !== 'undefined' ){
+        var mxGraphCreator = new MxGraphCreator(graph,diagram);
 
-      const graph = new mxGraph(divGraph.current);
-      graph.setConnectable(true);
-      graph.setHtmlLabels(true);
-      
+        graph.getModel().beginUpdate();
 
-      const parent = graph.getDefaultParent();
+        mxGraphCreator.start();
 
-
-
-      mxEvent.disableContextMenu(divGraph.current);
-    if(typeof diagram !== 'undefined' ){
-      var mxGraphCreator = new MxGraphCreator(graph,diagram);
-
-      graph.getModel().beginUpdate();
-
-      mxGraphCreator.start();
-
-      graph.getModel().endUpdate();
-    }
-
-/*
-      try {
-        //-----Test Umgebung-----
-        console.log(diagram);
-        var count = diagram?.class_declarations.length ? diagram?.class_declarations.length : 0;
-
-        //run over every Class
-        for (let index = 0; index < count; index++) {
-          let offest = 5;
-          let element = diagram?.class_declarations[index];
-          if(typeof element !== 'undefined' ){
-
-            let container = graph.insertVertex(parent, null, '', 20 + index * 500, 20, 300, 80);
-            graph.insertVertex(container, null, element.name, 0, offest, 300, 25);
-
-            offest += 30;
-
-            for (let index = 0; index < element.attributes.length; index++) {
-              let tempAttr = element.attributes[index];
-              graph.insertVertex(container, null, tempAttr.visibility + ' ' + tempAttr.name + ': ' + tempAttr.dataType, 0, offest, 300, 20);   
-              offest += 20;     
-            }
-
-            for (let index = 0; index < element.methodes.length; index++) {
-              let tempMeth = element.methodes[index];
-              graph.insertVertex(container, null, 
-                tempMeth.visibility + ' ' + tempMeth.name 
-                + '(' + tempMeth.attributeList?.map((e) => (e.name + ': ' + e.dataType) ) + ')' 
-                + ((tempMeth.dataType !== '') ? ( ': ' + tempMeth.dataType) : '')
-                , 0, offest, 300, 20);   
-              offest += 20;     
-            }
-
-
-          }
-          
-        }
-
-
-        //const v1 = graph.insertVertex(parent, null, "Hello,", 20, 20, 80, 30);
-        //const v2 = graph.insertVertex(parent, null, "World!", 200, 150, 80, 30);
-        //const e1 = graph.insertEdge(parent, null, "", v1, v2);
-      } finally {
         graph.getModel().endUpdate();
       }
-      */
-     graph.getModel().endUpdate();
-    }
+      graph.getModel().endUpdate();
+      }
+  }
   });
 
   return(
