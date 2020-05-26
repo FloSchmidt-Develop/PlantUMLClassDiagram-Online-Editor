@@ -179,7 +179,10 @@ PlantUMLListener.prototype.enterConnection_left = function(ctx) {
 
 // Enter a parse tree produced by PlantUMLParser#connection_right.
 PlantUMLListener.prototype.enterConnection_right = function(ctx) {
-    actual_connection.right = ctx.instance.getText();
+    if(ctx.instance !== null)
+        actual_connection.right = ctx.instance.getText();
+    else
+        actual_connection.right = 'missing'
     actual_connection.multiplicity_right = ctx.mult ? ctx.mult.getText() : 'none';
 };
 

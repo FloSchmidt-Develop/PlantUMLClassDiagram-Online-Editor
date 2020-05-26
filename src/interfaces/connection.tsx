@@ -4,4 +4,5 @@ export default interface Connection{
     multiplicity_right: string,
     leftElement: string,
     rightElement: string,
+    stereoType: string;
 }

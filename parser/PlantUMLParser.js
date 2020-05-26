@@ -245,12 +245,12 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0002\u0002\u0002\u0141\u0142\u0003\u0002\u0002\u0002\u0142\u0143\u0003",
     "\u0002\u0002\u0002\u0143\u0144\u0005H%\u0002\u0144+\u0003\u0002\u0002",
     "\u0002\u0145\u0146\u0005(\u0015\u0002\u0146\u0147\u0005.\u0018\u0002",
-    "\u0147\u0149\u0005*\u0016\u0002\u0148\u014a\u0007+\u0002\u0002\u0149",
+    "\u0147\u0150\u0005*\u0016\u0002\u0148\u014a\u0007+\u0002\u0002\u0149",
     "\u0148\u0003\u0002\u0002\u0002\u0149\u014a\u0003\u0002\u0002\u0002\u014a",
-    "\u0150\u0003\u0002\u0002\u0002\u014b\u014d\u0007*\u0002\u0002\u014c",
+    "\u014b\u0003\u0002\u0002\u0002\u014b\u014d\u0007*\u0002\u0002\u014c",
     "\u014e\u0007+\u0002\u0002\u014d\u014c\u0003\u0002\u0002\u0002\u014d",
     "\u014e\u0003\u0002\u0002\u0002\u014e\u014f\u0003\u0002\u0002\u0002\u014f",
-    "\u0151\u0005L\'\u0002\u0150\u014b\u0003\u0002\u0002\u0002\u0150\u0151",
+    "\u0151\u0005L\'\u0002\u0150\u0149\u0003\u0002\u0002\u0002\u0150\u0151",
     "\u0003\u0002\u0002\u0002\u0151\u0153\u0003\u0002\u0002\u0002\u0152\u0154",
     "\u0007$\u0002\u0002\u0153\u0152\u0003\u0002\u0002\u0002\u0153\u0154",
     "\u0003\u0002\u0002\u0002\u0154-\u0003\u0002\u0002\u0002\u0155\u0156",
@@ -3002,18 +3002,6 @@ ConnectionContext.prototype.connection_right = function() {
     return this.getTypedRuleContext(Connection_rightContext,0);
 };
 
-ConnectionContext.prototype.WHITESPACE = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(PlantUMLParser.WHITESPACE);
-    } else {
-        return this.getToken(PlantUMLParser.WHITESPACE, i);
-    }
-};
-
-
 ConnectionContext.prototype.DOTDOT = function() {
     return this.getToken(PlantUMLParser.DOTDOT, 0);
 };
@@ -3025,6 +3013,18 @@ ConnectionContext.prototype.stereotype = function() {
 ConnectionContext.prototype.NEWLINE = function() {
     return this.getToken(PlantUMLParser.NEWLINE, 0);
 };
+
+ConnectionContext.prototype.WHITESPACE = function(i) {
+	if(i===undefined) {
+		i = null;
+	}
+    if(i===null) {
+        return this.getTokens(PlantUMLParser.WHITESPACE);
+    } else {
+        return this.getToken(PlantUMLParser.WHITESPACE, i);
+    }
+};
+
 
 ConnectionContext.prototype.enterRule = function(listener) {
     if(listener instanceof PlantUMLListener ) {
@@ -3064,18 +3064,18 @@ PlantUMLParser.prototype.connection = function() {
         this.connection_symbol();
         this.state = 325;
         localctx.right = this.connection_right();
-        this.state = 327;
-        this._errHandler.sync(this);
-        _la = this._input.LA(1);
-        if(_la===PlantUMLParser.WHITESPACE) {
-            this.state = 326;
-            this.match(PlantUMLParser.WHITESPACE);
-        }
-
         this.state = 334;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        if(_la===PlantUMLParser.DOTDOT) {
+        if(_la===PlantUMLParser.DOTDOT || _la===PlantUMLParser.WHITESPACE) {
+            this.state = 327;
+            this._errHandler.sync(this);
+            _la = this._input.LA(1);
+            if(_la===PlantUMLParser.WHITESPACE) {
+                this.state = 326;
+                this.match(PlantUMLParser.WHITESPACE);
+            }
+
             this.state = 329;
             this.match(PlantUMLParser.DOTDOT);
             this.state = 331;

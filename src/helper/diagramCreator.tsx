@@ -48,7 +48,8 @@ export default class DiagramCreator{
             let con = new Connection(jsonConnection.connector,
                 jsonConnection.multiplicity_left,
                 jsonConnection.multiplicity_right,
-                jsonConnection.left, jsonConnection.right);
+                jsonConnection.left, jsonConnection.right, 
+                jsonConnection.stereotype);
 
             diagram.addConnection(con);
             

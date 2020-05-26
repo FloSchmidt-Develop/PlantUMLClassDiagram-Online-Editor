@@ -208,7 +208,7 @@ export default class MxGraphCreator {
       const e1 = this.graph.insertEdge(
         this.parentContainer,
         null,
-        "",
+        'Hallo',
         activeVertexes[connection.leftElement],
         activeVertexes[connection.rightElement],
         this.getLineStyle(connection.connector) +

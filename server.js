@@ -1,12 +1,11 @@
-var antlr4 = require('antlr4/index');
+const antlr4 = require('./node_modules/antlr4')
 var PlantUMLLexer = require('./parser/PlantUMLLexer').PlantUMLLexer;
 var PlantUMLParser = require('./parser/PlantUMLParser').PlantUMLParser;
 var DiagramListener = require('./parser/DiagramListener').DiagramListener;
 
-const express = require('express');
-const fileUpload = require('express-fileupload');
-//const fs = require('fs');
-const cors = require('cors');
+const express = require('./node_modules/express');
+const fileUpload = require('./node_modules/express-fileupload');
+const cors = require('./node_modules/cors');
 
 const app = express();
 

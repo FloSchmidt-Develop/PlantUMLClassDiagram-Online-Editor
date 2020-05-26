@@ -118,8 +118,7 @@ connection:
     left=connection_left
     connection_symbol
     right=connection_right
-    WHITESPACE?
-    (':' WHITESPACE? stereotype)?
+    ( WHITESPACE?':' WHITESPACE? stereotype)?
     NEWLINE?
     ;
 	
@@ -248,6 +247,8 @@ CONNECTOR:
 	| '-' DIRECTION? '-|>'
     | 'o-' DIRECTION? '-'
     | '-' DIRECTION? '-o'
+    | '<-' DIRECTION '-'
+    | '-' DIRECTION '->'
     ;
 	
 DIRECTION:
