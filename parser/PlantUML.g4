@@ -22,7 +22,7 @@ package_name:
 
 class_declaration:
     class_type WHITESPACE? class_description WHITESPACE? ('{'
-    (attribute | method |NEWLINE)*
+    (attribute | method | declaration |NEWLINE)*
     '}' )?
     ;
 	
@@ -83,6 +83,27 @@ method:
 
  mathode_name:
     WORD*
+    ;
+
+declaration:
+    visibility?
+    modifiers?
+    declaration_name
+	WHITESPACE?
+    '='
+	WHITESPACE?
+    declaration_argument
+    ;
+
+declaration_name:
+    WORD+
+    ;
+
+declaration_argument:
+    WORD+ 
+	| INTEGER+
+	| ('[' WORD (',' WORD)* ']')
+	| ('[' INTEGER+ (',' INTEGER)* ']')
     ;
 
 connection_left:
@@ -175,7 +196,7 @@ stereotype:
 type_declaration:
     ident '<' template_argument_list? '>'               # template_type
     | ident '[' ']'                                     # list_type
-    | ident                                            # simple_type
+    | ident                                             # simple_type
     ;
 
 item_list:
@@ -222,10 +243,11 @@ CONNECTOR:
     | 'o->'
     | '<-o'
 	| '*-' DIRECTION? '-'
+    | '-' DIRECTION? '-*'
 	| '<|-' DIRECTION? '-'
 	| '-' DIRECTION? '-|>'
-	| '<|-' DIRECTION? '-'
     | 'o-' DIRECTION? '-'
+    | '-' DIRECTION? '-o'
     ;
 	
 DIRECTION:
@@ -251,6 +273,7 @@ NEWLINE  :   '\n\n' | '\n' ;
 
 ARRAY : NONDIGIT ( DIGIT | NONDIGIT )* '.'? '[]';
 WORD  : NONDIGIT ( DIGIT | NONDIGIT )*;
+INTEGER: DIGIT (DIGIT)*;
 ANYARRAY : '*[]';
 ANY   : '*';
 DOTDOT  : ':';

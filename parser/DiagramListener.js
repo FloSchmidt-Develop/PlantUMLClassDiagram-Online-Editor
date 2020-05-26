@@ -5,6 +5,7 @@ var actual_connection = null;
 var actual_attribute = null;
 var actual_functionAttribute = null;
 var actual_package = null;
+var actual_declaration = null;
 
 
 var DiagramListener = function(res){
@@ -21,6 +22,7 @@ PlantUMLListener.prototype.enterClass_diagram = function(ctx) {
     this.Res.diagram = {};
     this.Res.diagram.class_declaration = new Array();
     this.Res.diagram.connection_declaration = new Array();
+    this.Res.diagram.object_declaration = new Array();
 };
 
 PlantUMLListener.prototype.enterPackage_section = function(ctx) {
@@ -45,6 +47,7 @@ PlantUMLListener.prototype.enterClass_declaration = function(ctx) {
     actual_class = {};
     actual_class.attributes = new Array();
     actual_class.methodes = new Array();
+    actual_class.declarations = new Array();
 };
 
 // Exit a parse tree produced by PlantUMLParser#class_declaration.
@@ -69,6 +72,28 @@ PlantUMLListener.prototype.enterClass_name = function(ctx) {
 PlantUMLListener.prototype.enterClass_dataType = function(ctx) {
     actual_class.alias = ctx.getText();
     
+};
+
+// Enter a parse tree produced by PlantUMLParser#declaration.
+PlantUMLListener.prototype.enterDeclaration = function(ctx) {
+    actual_declaration = {};
+};
+
+// Exit a parse tree produced by PlantUMLParser#declaration.
+PlantUMLListener.prototype.exitDeclaration = function(ctx) {
+    let clone = JSON.parse(JSON.stringify(actual_declaration));
+    actual_class.declarations.push(clone);
+    actual_declaration = null;
+};
+
+// Enter a parse tree produced by PlantUMLParser#declaration_name.
+PlantUMLListener.prototype.enterDeclaration_name = function(ctx) {
+    actual_declaration.name = ctx.getText();
+};
+
+// Enter a parse tree produced by PlantUMLParser#declaration_argument.
+PlantUMLListener.prototype.enterDeclaration_argument = function(ctx) {
+    actual_declaration.attribute = ctx.getText();
 };
 
 PlantUMLListener.prototype.enterAttribute = function(ctx) {

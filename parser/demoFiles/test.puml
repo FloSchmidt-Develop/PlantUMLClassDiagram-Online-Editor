@@ -1,0 +1,36 @@
+@startuml
+
+package "mainMemory: HardwarePart" {
+
+class "leNet: SoftwareComponent" as MemoryInterface {
+#size: *
++receive(inst: inst.)
+toProcess: inst.[]
+latencies: *[]
+}
+
+class "ArrayList" as ArrayList {
++read(address: integer): integer
+}
+
+object "loadUnit: MemoryAccessUnit" as loadUnit {
+latencies = [4]
+latencieszz = test
+hallo = [welt]
+nummer = 2
+array = [10,20,3]
+strArray = [h,w,h,f]
+}
+
+interface CacheInterface {
++readFromNextLevel(function: MemoryInterconnect.read, address: integer): data
++writeToNextLevel(function: MemoryInterconnect.write, address: integer, data: data)
+}
+
+ExecuteStage "1"*--"0..*" MemoryAccessUnit
+MemoryInterface <|-left- MemoryInterconnect
+RegisterFile "0..*"<--"0..1" FunctionalUnit : "write():data"
+
+}
+
+@enduml

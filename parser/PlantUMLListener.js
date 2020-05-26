@@ -155,6 +155,33 @@ PlantUMLListener.prototype.exitMathode_name = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#declaration.
+PlantUMLListener.prototype.enterDeclaration = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#declaration.
+PlantUMLListener.prototype.exitDeclaration = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#declaration_name.
+PlantUMLListener.prototype.enterDeclaration_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#declaration_name.
+PlantUMLListener.prototype.exitDeclaration_name = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#declaration_argument.
+PlantUMLListener.prototype.enterDeclaration_argument = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#declaration_argument.
+PlantUMLListener.prototype.exitDeclaration_argument = function(ctx) {
+};
+
+
 // Enter a parse tree produced by PlantUMLParser#connection_left.
 PlantUMLListener.prototype.enterConnection_left = function(ctx) {
 };

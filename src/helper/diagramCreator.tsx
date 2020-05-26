@@ -1,12 +1,14 @@
 import Diagram from '../classes/parserRep/diagram';
-import IDiagram from '../interfaces/diagram'
+import IDiagram from '../interfaces/diagram';
 import IClass from '../interfaces/class';
 import IConnection from '../interfaces/connection';
 
-import Class from '../classes/parserRep/class'
+import Class from '../classes/parserRep/class';
 import Attribute from '../classes/parserRep/attribute';
 import Method from '../classes/parserRep/method';
 import Connection from '../classes/parserRep/connection';
+import Declaration from '../classes/parserRep/declaration';
+import { EROFS } from 'constants';
 
 export default class DiagramCreator{
  
@@ -22,13 +24,14 @@ export default class DiagramCreator{
         serverResponse.Res !== null &&
         serverResponse.Res.diagram !== null )
         {
+            console.log(serverResponse.Res.diagram);
+            
             let jsonDiagram = serverResponse.Res.diagram;
             //check if the server result contains classes
             if(jsonDiagram.class_declaration !== null){        
                this.addClasses(jsonDiagram.class_declaration, diagram);              
             }     
             if(jsonDiagram.connection_declaration !== null){
-                console.log(jsonDiagram.connection_declaration);
                 
                 this.addConnections(jsonDiagram.connection_declaration, diagram);
             }
@@ -69,8 +72,9 @@ export default class DiagramCreator{
                 this.addMethods(jsonClasses[index].methodes, cls)
             }
 
-
-
+            if(jsonClasses[index].declarations !== null){
+                this.addDeclarations(jsonClasses[index].declarations, cls)
+            }
 
             diagram.addClass(cls);         
         }
@@ -89,6 +93,23 @@ export default class DiagramCreator{
             tempClass.attributes.push(attr);
             
         }
+    }
+
+    private addDeclarations(jsonDeclarations: any, tempClass : IClass): void{
+
+            for (let index = 0; index < jsonDeclarations.length; index++) {
+                if(tempClass.type === 'object'){
+                let jsonDeclaration = jsonDeclarations[index];
+    
+                let declaration = new Declaration(jsonDeclaration.name,jsonDeclaration.attribute);
+                tempClass.declarations.push(declaration);
+                }
+                else{
+                    throw Error("class must not have declarations")
+                }
+
+                
+            }
     }
 
     private addMethods(jsonMethods: any, tempClass : IClass) : void{

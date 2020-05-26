@@ -108,6 +108,24 @@ PlantUMLVisitor.prototype.visitMathode_name = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#declaration.
+PlantUMLVisitor.prototype.visitDeclaration = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#declaration_name.
+PlantUMLVisitor.prototype.visitDeclaration_name = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#declaration_argument.
+PlantUMLVisitor.prototype.visitDeclaration_argument = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by PlantUMLParser#connection_left.
 PlantUMLVisitor.prototype.visitConnection_left = function(ctx) {
   return this.visitChildren(ctx);

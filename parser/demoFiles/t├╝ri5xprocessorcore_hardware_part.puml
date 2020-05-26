@@ -1,0 +1,134 @@
+@startuml
+package "TURI5XProcessorCore: HardwarePart" {
+
+    
+    object "fetchStage: FetchStage" as fetchStage {
+        latency = 1
+        issueWidth = 1
+    }
+
+    object "instructionBuffer: FifoBuffer" as instructionBuffer {
+        size = 12
+    }
+
+    object "jumpFU: FunctionalUnit" as jumpFU {
+        toProcess = [jump]
+        latencies = [1]
+    }
+
+    object "decodeStage: PipelineStage" as decodeStage {
+        latency = 1
+    }
+
+    object "executeStage0: PipelineStage" as executeStage0 {
+        latency = 1
+    }
+
+    object "addSubLogicFU: FunctionalUnit" as addSubLogicFU {
+        toProcess = [add, sub, logic]
+        latencies = [1]
+    }
+
+    object "branchFU: BranchFunctionalUnit" as branchFU {
+        toProcess = [branch]
+        latencies = [1]
+    }
+
+    object "mulFU: FunctionalUnit" as mulFU {
+        toProcess = [mul]
+        latencies = [4]
+    }
+
+    object "divFU: FunctionalUnit" as divFU {
+        toProcess = [div, rem]
+        latencies = [34]
+    }
+
+    instructionBuffer -down-* fetchStage
+
+    executeStage0 *-down- addSubLogicFU
+    executeStage0 *-down- mulFU
+    executeStage0 *-down- divFU
+    executeStage0 *-down- branchFU
+
+    branchFU -up-> fetchStage
+    jumpFU -down-* fetchStage
+
+    object "executeStage1: PipelineStage" as executeStage1 {
+        latency = 1
+    }
+
+    object "loadUnit: MemoryAccessUnit" as loadUnit {
+        toProcess = [load]
+        latencies = [1]
+    }
+
+    object "storeUnit: MemoryAccessUnit" as storeUnit {
+        toProcess = [store]
+        latencies = [1]
+    }
+
+    executeStage1 *-down- loadUnit
+    executeStage1 *-down- storeUnit
+
+    fetchStage -right-> decodeStage
+    decodeStage -right-> executeStage0
+    executeStage0 -right-> executeStage1
+
+    object "registerFile: RegisterFile" as registerFile {
+        numRegisters = 32
+        dataWidth = 4
+    }
+
+    registerFile -up-> branchFU 
+
+    registerFile -up-> mulFU
+    registerFile <-down- mulFU
+
+    registerFile -up-> addSubLogicFU
+    registerFile <-down- addSubLogicFU
+
+    registerFile -up-> divFU : "read():data"
+    registerFile <-down- divFU : "write():data"
+
+    registerFile -up-> loadUnit : "read():address"
+    registerFile <-down- loadUnit : "write():data"
+
+    registerFile -up-> storeUnit : "read():address"
+
+    object "l1ICache: LRUCache" as l1ICache {
+        size = 64
+        dataWidth = 4
+        readLatency = 1
+        writeLatency = 2
+    }
+
+    object "l1DCache: LRUCache" as l1DCache {
+        size = 64
+        dataWidth = 4
+        readLatency = 1
+        writeLatency = 2
+    }
+
+    object "l2Cache: RRCache" as l2Cache {
+        size = 128
+        dataWidth = 4
+        readLatency = 2
+        writeLatency = 3
+    }
+
+    l2Cache --> l1DCache : "read():data"
+    l2Cache <-- l1DCache : "write():data"
+
+    l2Cache --> l1ICache : "read():data"
+
+    l1ICache -right-> fetchStage : "read():data"
+
+    l1DCache --> loadUnit : "read():data"
+    l1DCache <-- storeUnit : "write():data"
+
+    executeStage1 -right-> l1DCache
+    
+}
+
+@enduml
