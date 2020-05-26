@@ -1,6 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-
+This Project ist tested with:
+npm Version: 6.9.0
+Nodejs Version: 10.16.0
 
 ## Installing Node Modules before first run
 
