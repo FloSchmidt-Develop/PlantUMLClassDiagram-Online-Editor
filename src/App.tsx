@@ -9,17 +9,29 @@ import MxGraphCreator from './helper/mxGraphCreator';
 
 import {
   mxGraph,
-  mxRubberband,
-  mxKeyHandler,
+  mxImage,
+  mxConstraintHandler,
   mxClient,
   mxUtils,
-  mxEvent
+  mxEvent,
+  mxRubberband,
+  mxShape,
+  mxEdgeHandler,
+  mxConnectionConstraint,
+  mxPoint,
+  mxConstants,
+  mxRectangle
 } from "mxgraph-js";
 
 
 
 
-axios.defaults.baseURL = 'http://localhost:1234';
+axios.defaults.baseURL = 'http://localhost:4000';
+
+function useForceUpdate(){
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue(value => ++value); // update the state to force render
+}
 
 const App = () => {
   const [file, setFile] = useState('');
@@ -27,10 +39,9 @@ const App = () => {
   const [diagram, setDiagram] = useState<IDiagram>();
   const [graph, setGraph] = useState();
   const divGraph = React.useRef<HTMLDivElement>(null);
+  const editPanel = React.useRef<HTMLDivElement>(null);
 
-  const el = document.createElement("div");
-  console.log(el);
-  
+  const forceUpdate = useForceUpdate();
 
   const diagramCreator = new DiagramCreator();
 
@@ -38,6 +49,12 @@ const App = () => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
+
+  const onUpdate = (e: any) => {
+    console.log('update');
+    forceUpdate();
+    
+  }
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -86,17 +103,20 @@ const App = () => {
 
       else {
 
-        
         graph.setConnectable(true);
         graph.setHtmlLabels(true);
-        graph.autoSizeCellsOnAdd = true;
-        
+        //graph.autoSizeCellsOnAdd = true;
+
         mxEvent.disableContextMenu(divGraph.current);
 
       if(typeof diagram !== 'undefined' ){
-        var mxGraphCreator = new MxGraphCreator(graph,diagram);
+        var mxGraphCreator = new MxGraphCreator(graph,diagram,editPanel);
+        
+        
 
         graph.getModel().beginUpdate();
+
+        graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
 
         mxGraphCreator.start();
 
@@ -121,7 +141,6 @@ const App = () => {
             {filename}
           </label>
         </div>
-
         <input
           type='submit'
           value='Upload'
@@ -133,6 +152,18 @@ const App = () => {
           ref={divGraph}
           id="divGraph">
           </div>
+        <div 
+          className="edit-container"
+          ref={editPanel}
+          id='editPanel'>
+            Hallo
+        </div>
+        <input
+            type='button'
+            className='custom-button'
+            value='Update'
+            onClick={onUpdate}
+          />
     </Fragment>
   );
 };

@@ -1,14 +1,24 @@
 import IAttribute from './attribute';
-import IMethode from './methode';
+import IMethod from './methode';
 import IDeclaration from './declaration';
 
 
 export default interface Class {
     attributes: IAttribute[],
-    methodes: IMethode[],
+    methods: IMethod[],
     declarations: IDeclaration[];
     name: string,
     package: string,
     type: string,
     alias: string
+
+    setName(newName: string): void;
+
+    setType(newName: string): void;
+
+    AddMethods(method:IMethod ): void;
+
+    AddAttribute(attribute: IAttribute): void;
+
+    getWidth(): number;
 }

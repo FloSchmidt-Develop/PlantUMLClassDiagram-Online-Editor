@@ -9,7 +9,7 @@ export default class Method implements IMethod{
 
     constructor(name :string, visibility : string ){
         this.name = name;
-        this.visibility = visibility;
+        this.visibility = (visibility === 'undefined') ? '' : visibility;
     }
 
     getAttributeListAsString(): string {
@@ -21,5 +21,19 @@ export default class Method implements IMethod{
         }
         result += ")"
         return result;
+    }
+
+    private getWidthOfAttributeList(): number{
+        let width = 0;
+        for (let index = 0; index < this.attributeList.length; index++) {
+            const attribute = this.attributeList[index];
+            width += attribute.getWidth();
+            
+        }
+        return width;
+    }
+
+    public getWidth(): number{
+        return (this.name.length + this.dataType.length + this.visibility?.length +  2 + this.getAttributeListAsString().length) * 10 
     }
 }

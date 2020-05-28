@@ -7,4 +7,6 @@ export default interface Methode {
     attributeList?: IAttribute[],
     visibility: string,
     getAttributeListAsString() : string,
+
+    getWidth(): number;
 }

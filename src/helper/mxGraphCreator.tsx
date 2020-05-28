@@ -6,6 +6,10 @@ import Attribute from "../classes/parserRep/attribute";
 import Method from "../classes/parserRep/method";
 import Connection from "../classes/parserRep/connection";
 import Diagram from "../classes/parserRep/diagram";
+import TypeSelectCreator from './htmlCreators/typeSelectCreator';
+import NameSelectCreator from './htmlCreators/nameInputCreator';
+import AttributeInputCreator from './htmlCreators/attributeInputCreator';
+import MethodInputCreator from './htmlCreators/methodInputCreator';
 import { start } from "repl";
 
 import {
@@ -15,30 +19,117 @@ import {
   mxClient,
   mxUtils,
   mxEvent,
+  mxRectangle,
+  mxGraphHandler,
+  mxEdgeHandler,
+  mxConstants,
+  mxEdgeStyle
 } from "mxgraph-js";
+import typeSelectCreator from "./htmlCreators/typeSelectCreator";
 
 export default class MxGraphCreator {
   graph: any;
   parentContainer: any;
   diagram: IDiagram;
+  editPanel: React.RefObject<HTMLDivElement>;
 
-  constructor(graph: any, diagram: IDiagram) {
+  constructor(graph: any, diagram: IDiagram, editPanel: React.RefObject<HTMLDivElement>) {
     this.graph = graph;
+    this.editPanel = editPanel;
+    
 
-    graph.setHtmlLabels(true);
+    this.graph.setHtmlLabels(true);
+    this.graph.setCellsResizable(true);
+    //this.graph.setResizeContainer(false);
+
+    var style = graph.getStylesheet().getDefaultEdgeStyle();
+    style[mxConstants.STYLE_ROUNDED] = true;
+    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+    graph.alternateEdgeStyle = 'elbow=vertical';
+
+
+    mxGraphHandler.prototype.guidesEnabled = true;
+    mxEdgeHandler.prototype.snapToTerminals = true;
+
+
+    this.graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
+		{
+
+          if (sender.cells[0] !== null && typeof sender.cells[0] !== 'undefined' && typeof (sender.cells[0].value as Class) !== 'undefined') {
+            let table = document.createElement("table");
+
+          //type
+          let typeSelectCreator = new TypeSelectCreator(graph);
+          let type_tr = typeSelectCreator.createTypeSeclectDiv(sender.cells[0].value as IClass, sender);
+          table.appendChild(type_tr);
+
+          //name
+          let nameInputCreator = new NameSelectCreator(graph);
+          let name_tr = nameInputCreator.createNameInputDiv(sender.cells[0].value as IClass, sender);
+          table.appendChild(name_tr);
+
+          //attribute
+          let attributeInputCreator = new AttributeInputCreator(graph);
+          let attribute_div = attributeInputCreator.createNameInputDiv(sender.cells[0].value as IClass, sender);
+          let attributeHeader = document.createElement('h3');
+          attributeHeader.innerText = 'Attributes';
+
+          let newAttributeButton = document.createElement('button');
+          newAttributeButton.innerText = 'at new Attribute';
+          newAttributeButton.onclick = () =>{
+            (sender.cells[0].value as IClass)?.attributes.push(new Attribute('name','dataType',''));
+          }
+
+          //method
+          let methodInputCreator = new MethodInputCreator(graph);
+          let methode_div = methodInputCreator.createNameInputDiv(sender.cells[0].value as IClass, sender);
+          let methodHeader = document.createElement('h3');
+          methodHeader.innerText = 'Methods';
+
+          let view = document.createElement('div');
+          view.appendChild(table);
+          view.appendChild(attributeHeader);
+          view.appendChild(attribute_div);
+          view.appendChild(newAttributeButton);
+          view.appendChild(methodHeader);
+          view.appendChild(methode_div);
+
+          if (editPanel.current !== null) {
+            var oldChild = editPanel.current.firstChild;
+            if (oldChild !== null) {
+              editPanel.current?.removeChild(oldChild);
+            }
+            editPanel.current?.appendChild(view);
+          }
+          }
+          
+                 
+		});
+    
+    new mxKeyHandler(this.graph);
+
+    // Overrides method to disallow edge label editing
+    this.graph.isCellEditable = function(cell)
+    {
+      return !this.getModel().isEdge(cell);
+    };
+
 
     this.parentContainer = graph.getDefaultParent();
     this.diagram = diagram;
 
     this.graph.getLabel = function (cell) {
       var actual_class: IClass = cell.value;
-      if(actual_class !== null && (actual_class.type === 'interface' || actual_class.type === 'class' ||actual_class.type === 'object')){
+      if(actual_class !== null && typeof actual_class !== 'undefined' && (actual_class.type === 'interface' || actual_class.type === 'class' ||actual_class.type === 'object')){
       if (actual_class !== null) {
         var table = document.createElement("table");
-        table.style.height = "100%";
-        table.style.width = "100%";
-        table.style.backgroundColor = "#fcba03";
+        table.style.backgroundColor = "yellow";
+        table.style.fontFamily = 'Consolas'
         table.style.padding = "10px";
+        table.style.maxWidth = actual_class.getWidth().toString();
+        table.style.border = '0px';
+        table.style.margin = '0px';
+
 
         var body = document.createElement("tbody");
 
@@ -102,8 +193,8 @@ export default class MxGraphCreator {
             method_container_div.style.borderBottom = "1px solid black";
             method_container_div.style.minHeight = "5px";
 
-            for (let index = 0; index < actual_class.methodes.length; index++) {
-            const method = actual_class.methodes[index];
+            for (let index = 0; index < actual_class.methods.length; index++) {
+            const method = actual_class.methods[index];
 
             var method_div = document.createElement("div");
 
@@ -162,11 +253,27 @@ export default class MxGraphCreator {
 
         return table;
       }
-    };
+    }
+    //TODO: check if it is really a connection
+    else{
+      return cell.value;
+    }
+
+    
 }
   }
 
   public start(): void {
+
+    let style = new Object();
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
+    style[mxConstants.STYLE_STROKECOLOR] = '#0ff000';
+    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+    style[mxConstants.STYLE_SPACING_TOP] = '0';
+    style[mxConstants.STYLE_SPACING] = '0';
+    this.graph.getStylesheet().putCellStyle('bottom', style);
+
     this.graph.getModel().beginUpdate();
 
     var activeVertexes: { [id: string]: any } = {};
@@ -179,7 +286,7 @@ export default class MxGraphCreator {
     var y = 0;
 
     for (let index = 0; index < count; index++) {
-      if (index % 5 == 0) {
+      if (index % 4 == 0) {
         y = y + 150;
         x = 200;
       }
@@ -190,11 +297,12 @@ export default class MxGraphCreator {
         element,
         x,
         y,
-        20,
-        20
+        element.getWidth() * 0.60,
+        67 + (element.attributes.length * 11) + (element.methods.length * 11) + (element.declarations.length * 11) - (element.attributes.length !== 0 ? 3 : 0) - (element.methods.length !== 0 ? 3 : 0),
+        'bottom'
       );
       x = x + 400;
-      this.graph.updateCellSize(activeVertexes[element.alias], true);
+      //this.graph.updateCellSize(activeVertexes[element.alias], true);
     }
 
     var edgeCount = this.diagram?.connection_declarations.length
@@ -203,17 +311,16 @@ export default class MxGraphCreator {
 
     for (let index = 0; index < edgeCount; index++) {
       let connection = this.diagram?.connection_declarations[index];
-      //console.log(connection);
 
       const e1 = this.graph.insertEdge(
         this.parentContainer,
         null,
-        'Hallo',
+        connection.stereoType,
         activeVertexes[connection.leftElement],
         activeVertexes[connection.rightElement],
         this.getLineStyle(connection.connector) +
           this.getStartArrowStyle(connection.connector) +
-          "endArrow=dash;sourcePerimeterSpacing=4"
+          "endArrow=dash;sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;"
       );
     }
   }
@@ -238,5 +345,13 @@ export default class MxGraphCreator {
       return "startArrow=classic;startFill=1;";
     }
     return "startArrow=dash";
+  }
+
+  private selectionChanged(graph): void
+	{
+    var cell = graph.getSelectionCell();
+    console.log(cell);
+    return;
+    
   }
 }

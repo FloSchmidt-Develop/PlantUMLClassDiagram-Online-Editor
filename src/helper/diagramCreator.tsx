@@ -91,7 +91,7 @@ export default class DiagramCreator{
             let jsonAttribute = jsonAttributes[index];
 
             let attr = new Attribute(jsonAttribute.name, jsonAttribute.dataType, jsonAttribute.visibility);
-            tempClass.attributes.push(attr);
+            tempClass.AddAttribute(attr);
             
         }
     }
@@ -130,7 +130,7 @@ export default class DiagramCreator{
             }
 
 
-            tempClass.methodes.push(meth);
+            tempClass.AddMethods(meth)
             
         }
     }

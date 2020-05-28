@@ -11,4 +11,20 @@ export default class Attribute implements IAttribute {
         this.dataType = dataType;
         this.visibility = visibility;
     }
+
+    public setName(newName : string){
+        this.name = newName;
+    }
+
+    public setVisibility(newVisibility: string){
+        this.visibility = newVisibility;
+    }
+    
+    public setDataType(newDatatype: string){
+        this.dataType = newDatatype;
+    }
+
+    public getWidth(): number{
+        return (this.name.length + this.dataType.length + this.visibility?.length + 2) * 10;
+    }
 }
