@@ -156,7 +156,7 @@ const App = () => {
           className="edit-container"
           ref={editPanel}
           id='editPanel'>
-            Hallo
+            nothing Selected
         </div>
         <input
             type='button'

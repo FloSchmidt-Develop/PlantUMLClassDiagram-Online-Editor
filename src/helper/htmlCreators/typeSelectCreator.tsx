@@ -12,6 +12,7 @@ export default class {
     sender: any
   ): HTMLTableRowElement {
 
+
     //TODO Check IClass for undefined !! 
     let tr1 = document.createElement("tr");
     let td1 = document.createElement("td");

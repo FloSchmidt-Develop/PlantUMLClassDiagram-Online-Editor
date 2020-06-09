@@ -60,7 +60,7 @@ export default class Class implements IClass{
             
         }
 
-        console.log(max);
+        //console.log(max);
         
         return max;
     }
