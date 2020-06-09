@@ -28,3 +28,8 @@ In the project directory, you can run the server Application:
 
 Both have to run to test the Application:
 
+
+## Files to test the appliaction
+
+in the directory ./parser/demoFiles are PlantUML files that should work and cause no errors
+
