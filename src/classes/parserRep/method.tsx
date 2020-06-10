@@ -33,6 +33,18 @@ export default class Method implements IMethod{
         return width;
     }
 
+    public setName(newName : string){
+        this.name = newName;
+    }
+
+    public setVisibility(newVisibility: string){
+        this.visibility = newVisibility;
+    }
+    
+    public setDataType(newDatatype: string){
+        this.dataType = newDatatype;
+    }
+
     public getWidth(): number{
         return (this.name.length + this.dataType.length + this.visibility?.length +  2 + this.getAttributeListAsString().length) * 10 
     }

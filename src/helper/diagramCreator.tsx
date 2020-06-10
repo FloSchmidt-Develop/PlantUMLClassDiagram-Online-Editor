@@ -61,7 +61,7 @@ export default class DiagramCreator{
         for (let index = 0; index < jsonClasses.length; index++) {
             var jasonClass = jsonClasses[index];
             
-            let cls = new Class(jasonClass.name, jasonClass.type);
+            let cls = new Class(jasonClass.name, jasonClass.type,diagram);
             cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
 

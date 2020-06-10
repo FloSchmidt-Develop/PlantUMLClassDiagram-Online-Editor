@@ -130,40 +130,43 @@ const App = () => {
   return(
     <Fragment>
       <form onSubmit={onSubmit}>
-        <div className='custom-file mb-4'>
+        <div className='upload-section'>
           <input
+            className='my-button-style'
             type='file'
-            className='custom-file-input'
             id='customFile'
             onChange={onChange}
           />
           <label className='custom-file-label' htmlFor='customFile'>
             {filename}
           </label>
-        </div>
-        <input
+          <input
+          className='my-button-style'
           type='submit'
           value='Upload'
-          className='btn btn-primary btn-block mt-4'
         />
+        </div>   
         </form>
         <div          
           className="graph-container"
           ref={divGraph}
           id="divGraph">
           </div>
-        <div 
-          className="edit-container"
+          <div className="edit-container">
+          <div 
           ref={editPanel}
           id='editPanel'>
-            nothing Selected
+            <p>nothing Selected</p>
         </div>
         <input
             type='button'
             className='custom-button'
-            value='Update'
+            value='OK'
             onClick={onUpdate}
           />
+          </div>
+      
+
     </Fragment>
   );
 };

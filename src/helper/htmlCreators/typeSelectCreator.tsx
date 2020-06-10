@@ -61,7 +61,12 @@ export default class {
           (document.getElementById("type-select") as HTMLSelectElement).value
         );
       }
+
+      this.graph.getModel().beginUpdate();
+
       this.graph.model.setValue(sender.cells[0], classToChange);
+
+      this.graph.getModel().endUpdate();
     };
 
     td2.appendChild(select);

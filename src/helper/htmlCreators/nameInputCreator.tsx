@@ -28,7 +28,11 @@ export default class NameInputCreator {
       if (classToChange !== null) {
         classToChange.setName(input2.value);
       }
+      
+      //Update Cell
+      this.graph.getModel().beginUpdate();
       this.graph.model.setValue(sender.cells[0], classToChange);
+      this.graph.getModel().endUpdate();
     };
 
     td2.appendChild(input2);

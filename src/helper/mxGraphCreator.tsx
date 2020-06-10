@@ -10,6 +10,7 @@ import TypeSelectCreator from './htmlCreators/typeSelectCreator';
 import NameSelectCreator from './htmlCreators/nameInputCreator';
 import AttributeInputCreator from './htmlCreators/attributeInputCreator';
 import MethodInputCreator from './htmlCreators/methodInputCreator';
+import DeclarationInputCreator from './htmlCreators/declarationInputCreator';
 import { start } from "repl";
 
 import {
@@ -25,7 +26,7 @@ import {
   mxConstants,
   mxEdgeStyle
 } from "mxgraph-js";
-import typeSelectCreator from "./htmlCreators/typeSelectCreator";
+import Declaration from "../classes/parserRep/declaration";
 
 export default class MxGraphCreator {
   graph: any;
@@ -36,6 +37,7 @@ export default class MxGraphCreator {
   constructor(graph: any, diagram: IDiagram, editPanel: React.RefObject<HTMLDivElement>) {
     this.graph = graph;
     this.editPanel = editPanel;
+    this.parentContainer = graph.getDefaultParent();
     
 
     this.graph.setHtmlLabels(true);
@@ -51,15 +53,7 @@ export default class MxGraphCreator {
     mxGraphHandler.prototype.guidesEnabled = true;
     mxEdgeHandler.prototype.snapToTerminals = true;
 
-    this.graph.getSelectionModel().addListener(mxEvent.MOVE_END, function(sender, evt){
-      console.log(sender);
-      console.log(evt);
-      
-      
-
-    })
-
-
+    //Function to show the Element in the editing Panel
     this.graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
 		{
       let view = document.createElement('div');
@@ -68,10 +62,10 @@ export default class MxGraphCreator {
         
           if ( typeof senderClass !== 'undefined'){
             if( senderClass.value != null 
-            && (typeof senderClass.value) != 'undefined'
-            && (senderClass.value as Class).type === 'class'
+            && (typeof senderClass.value) !== 'undefined'
+            && ((senderClass.value as Class).type === 'class'
               || (senderClass.value as Class).type === 'interface'
-              || (senderClass.value as Class).type === 'object') {
+              || (senderClass.value as Class).type === 'object')) {
 
 
           let table = document.createElement("table");
@@ -85,6 +79,10 @@ export default class MxGraphCreator {
           let nameInputCreator = new NameSelectCreator(graph);
           let name_tr = nameInputCreator.createNameInputDiv(sender.cells[0].value as Class, sender);
           table.appendChild(name_tr);
+          view.appendChild(table);
+
+          if((senderClass.value as Class).type === 'class'
+          || (senderClass.value as Class).type === 'interface'){
 
           //attribute
           let attributeInputCreator = new AttributeInputCreator(graph);
@@ -95,8 +93,19 @@ export default class MxGraphCreator {
           let newAttributeButton = document.createElement('button');
           newAttributeButton.innerText = 'at new Attribute';
           newAttributeButton.onclick = () =>{
-            (sender.cells[0].value as Class)?.attributes.push(new Attribute('name','dataType',''));
+            let classToaddAttribute = (sender.cells[0].value as Class);
+            if (classToaddAttribute != null){
+              classToaddAttribute.attributes.push(new Attribute('name','dataType',''));
+              graph.getModel().beginUpdate();
+              graph.model.setValue(sender.cells[0], classToaddAttribute);
+              graph.getModel().endUpdate();
+            }
+            
           }
+
+          view.appendChild(attributeHeader);
+          view.appendChild(attribute_div);
+          view.appendChild(newAttributeButton);
 
           //method
           let methodInputCreator = new MethodInputCreator(graph);
@@ -104,17 +113,52 @@ export default class MxGraphCreator {
           let methodHeader = document.createElement('h3');
           methodHeader.innerText = 'Methods';
 
+          let newMethodButton = document.createElement('button');
+          newMethodButton.innerText = 'at new Method';
+          newMethodButton.onclick = () =>{
+            let classToaddMethod = (sender.cells[0].value as Class);
+            if (classToaddMethod != null){
+              classToaddMethod.methods.push(new Method('name',''));
+              graph.getModel().beginUpdate();
+              graph.model.setValue(sender.cells[0], classToaddMethod);
+              graph.getModel().endUpdate();
+            }
+          }
 
-          view.appendChild(table);
-          view.appendChild(attributeHeader);
-          view.appendChild(attribute_div);
-          view.appendChild(newAttributeButton);
           view.appendChild(methodHeader);
           view.appendChild(methode_div);
+          view.appendChild(newMethodButton);
+        }
+        else if(
+          (senderClass.value as Class).type === 'object'
+        ){
+                    //method
+          let declarationInputCreator = new DeclarationInputCreator(graph);
+          let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as Class, sender);
+          let declarationHeader = document.createElement('h3');
+          declarationHeader.innerText = 'Declarations';
+
+          let newDeclarationButton = document.createElement('button');
+          newDeclarationButton.innerText = 'at new Method';
+          newDeclarationButton.onclick = () =>{
+            let classToaddMethod = (sender.cells[0].value as Class);
+            if (classToaddMethod != null){
+              classToaddMethod.declarations.push(new Declaration('name',''));
+              graph.getModel().beginUpdate();
+              graph.model.setValue(sender.cells[0], classToaddMethod);
+              graph.getModel().endUpdate();
+            }
+          }
+
+          view.appendChild(declarationHeader);
+          view.appendChild(declaration_div);
+          view.appendChild(newDeclarationButton);
+        }
 
           
       }
 
+      //if the selected Element is a Connection
       else if (senderClass.value != null 
         && (sender.cells[0].value as Connection) != null) {
         let attributeHeader = document.createElement('h3');
@@ -147,7 +191,7 @@ export default class MxGraphCreator {
     };
 
 
-    this.parentContainer = graph.getDefaultParent();
+    
     this.diagram = diagram;
 
     this.graph.getLabel = function (cell) {
@@ -158,7 +202,6 @@ export default class MxGraphCreator {
           || actual_class.type === 'class' ||actual_class.type === 'object')){
       if (actual_class !== null) {
         var table = document.createElement("table");
-        table.style.backgroundColor = "yellow";
         table.style.fontFamily = 'Consolas'
         table.style.padding = "10px";
         table.style.maxWidth = actual_class.getWidth().toString();
@@ -291,7 +334,17 @@ export default class MxGraphCreator {
     }
     //TODO: check if it is really a connection
     else{  
-      return cell.value.stereoType;
+
+      if(cell.value != null ){
+        return cell.value.stereoType;
+      }
+      else{
+        console.log(cell);
+
+        
+        
+      }
+
     }
 
     
@@ -308,6 +361,28 @@ export default class MxGraphCreator {
     style[mxConstants.STYLE_SPACING_TOP] = '0';
     style[mxConstants.STYLE_SPACING] = '0';
     this.graph.getStylesheet().putCellStyle('bottom', style);
+
+    this.graph.connectionHandler.addListener(mxEvent.CONNECT, 
+      function(sender, evt) {
+        var edge = evt.getProperty('cell');
+        let sourceClass : Class;
+        let targetClass: Class;
+        if(edge != null){
+          if(edge.source != null && edge.target != null){
+            sourceClass = edge.source.value as Class;
+            targetClass = edge.target.value as Class;
+              if(targetClass != null && sourceClass != null){
+                let diagram = targetClass.diagram;
+                diagram.addConnection(
+                  new Connection('-->','','',sourceClass.alias,targetClass.alias,'')
+                  )
+          }     
+        }
+      }
+        
+        
+        
+    });
 
     this.graph.getModel().beginUpdate();
 

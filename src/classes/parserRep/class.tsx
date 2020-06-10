@@ -2,6 +2,7 @@ import IClass from '../../interfaces/class'
 import IAttribute from '../../interfaces/attribute'
 import IMethod from '../../interfaces/methode'
 import IDeclaration from '../../interfaces/declaration'
+import IDiagram from '../../interfaces/diagram';
 
 
 export default class Class implements IClass{
@@ -12,10 +13,12 @@ export default class Class implements IClass{
     public package: string = '';
     public type: string;
     public alias: string = '';
+    public diagram: IDiagram;
 
-    constructor(name: string, type: string){
+    constructor(name: string, type: string, diagram: IDiagram){
         this.name = name;
         this.type = type;
+        this.diagram = diagram;
     }
 
     public setName(newName: string){
@@ -59,8 +62,6 @@ export default class Class implements IClass{
             }
             
         }
-
-        //console.log(max);
         
         return max;
     }

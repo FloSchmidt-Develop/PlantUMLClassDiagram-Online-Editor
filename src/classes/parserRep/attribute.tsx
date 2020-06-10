@@ -8,8 +8,8 @@ export default class Attribute implements IAttribute {
 
     constructor(name: string, dataType: string, visibility: string){
         this.name = name;
-        this.dataType = dataType;
-        this.visibility = visibility;
+        this.dataType = dataType;        
+        this.visibility = (typeof visibility === 'undefined') ? '' : visibility;
     }
 
     public setName(newName : string){

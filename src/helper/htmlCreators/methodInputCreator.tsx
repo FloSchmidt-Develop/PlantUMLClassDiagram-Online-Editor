@@ -15,18 +15,11 @@ export default class MethodInputCreator {
 
     if(selectedClass !== null && selectedClass.methods !== null && typeof selectedClass.methods !== 'undefined'){
 
-
-
     for (let index = 0; index < selectedClass.methods.length; index++) {
       const method = selectedClass.methods[index];
       let row_div = document.createElement("div");
 
       //visibility
-      let visi_p = document.createElement("p");
-      visi_p.style.display = "inline";
-      visi_p.innerText = "visibility: ";
-      row_div.appendChild(visi_p);
-
       let input_visibility = document.createElement("input");
       input_visibility.type = "text";
       input_visibility.value = method.visibility;
@@ -35,9 +28,13 @@ export default class MethodInputCreator {
       input_visibility.onchange = () => {
         var classToChange = selectedClass;
         if (classToChange !== null) {
-          classToChange.attributes[index].setVisibility(input_visibility.value);
+          classToChange.methods[index].setVisibility(input_visibility.value);
         }
+
+        //update Cell
+        this.graph.getModel().beginUpdate();
         this.graph.model.setValue(sender.cells[0], classToChange);
+        this.graph.getModel().endUpdate();
       };
       row_div.appendChild(input_visibility);
 
@@ -53,12 +50,14 @@ export default class MethodInputCreator {
       input_name.onchange = () => {
         var classToChange = selectedClass;
         if (classToChange !== null) {
-          classToChange.attributes[index].setName(input_name.value);
+          classToChange.methods[index].setName(input_name.value);
         }
+        //Update Cell
+        this.graph.getModel().beginUpdate();
         this.graph.model.setValue(sender.cells[0], classToChange);
+        this.graph.getModel().endUpdate();
       };
       row_div.appendChild(input_name);
-
 
       //DataType
       let input_type = document.createElement("input");
@@ -68,14 +67,78 @@ export default class MethodInputCreator {
       input_type.onchange = () => {
         var classToChange = selectedClass;
         if (classToChange !== null) {
-          classToChange.attributes[index].setDataType(input_type.value);
+          classToChange.methods[index].setDataType(input_type.value);
         }
+
+        //Update Cell
+        this.graph.getModel().beginUpdate();
         this.graph.model.setValue(sender.cells[0], classToChange);
+        this.graph.getModel().endUpdate();
+
       };
       row_div.appendChild(input_type);
-
-
       container_div.appendChild(row_div);
+
+
+      //Function Arguments
+      let functionArgumentHeader = document.createElement("p");
+      functionArgumentHeader.innerText = 'Function Arguments';
+      container_div.appendChild(functionArgumentHeader);
+
+      for (let index = 0; index < (method.attributeList ? method.attributeList?.length : 0) ; index++) {
+        const argument = method.attributeList ?  method.attributeList[index] : null;
+        if(argument != null){
+          let functionArgumentDiv = document.createElement("div");
+          functionArgumentDiv.style.marginLeft = '20px';
+
+          //argument Name
+          let input_argument_name = document.createElement("input");
+          input_argument_name.type = "text";
+          input_argument_name.value = argument.name;
+
+          input_argument_name.onchange = () => {
+              argument.setName(input_argument_name.value);
+            
+
+            //Update Cell
+            this.graph.getModel().beginUpdate();
+            this.graph.model.setValue(sender.cells[0], selectedClass);
+            this.graph.getModel().endUpdate();
+          }
+          functionArgumentDiv.appendChild(input_argument_name);
+
+
+          //argument dataType
+          let input_argument_dataType = document.createElement("input");
+          input_argument_dataType.type = "text";
+          input_argument_dataType.value = argument.dataType;
+
+          input_argument_dataType.onchange = () => {
+              argument.setDataType(input_argument_dataType.value);
+            
+
+            //Update Cell
+            this.graph.getModel().beginUpdate();
+            this.graph.model.setValue(sender.cells[0], selectedClass);
+            this.graph.getModel().endUpdate();
+          }
+          functionArgumentDiv.appendChild(input_argument_dataType);
+
+          container_div.appendChild(functionArgumentDiv);
+
+          };     
+        }
+
+        container_div.appendChild(document.createElement("hr"));
+      
+      
+           
+
+
+
+        
+
+
     }
   }
 

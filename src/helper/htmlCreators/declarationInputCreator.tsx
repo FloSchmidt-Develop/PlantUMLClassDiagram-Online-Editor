@@ -1,6 +1,6 @@
 import IClass from "../../interfaces/class";
 
-export default class AttributeInputCreator {
+export default class DeclarationInputCreator {
   graph: any;
 
   constructor(graph: any) {
@@ -13,33 +13,13 @@ export default class AttributeInputCreator {
   ): HTMLDivElement {
     let container_div = document.createElement("div");
 
-    if(selectedClass !== null && selectedClass.attributes !== null && typeof selectedClass.attributes !== 'undefined'){
+    if(selectedClass !== null && selectedClass.declarations !== null && typeof selectedClass.declarations !== 'undefined'){
 
 
 
-    for (let index = 0; index < selectedClass.attributes.length; index++) {
-      const attribute = selectedClass.attributes[index];
+    for (let index = 0; index < selectedClass.declarations.length; index++) {
+      const declaration = selectedClass.declarations[index];
       let row_div = document.createElement("div");
-
-      //visibility
-      let input_visibility = document.createElement("input");
-      input_visibility.type = "text";
-      input_visibility.value = attribute.visibility;
-      input_visibility.style.width = "20px";
-
-      input_visibility.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.attributes[index].setVisibility(input_visibility.value);
-        }
-
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
-        this.graph.getModel().endUpdate();
-
-      };
-      row_div.appendChild(input_visibility);
 
       //name
       let name_p = document.createElement("p");
@@ -49,12 +29,12 @@ export default class AttributeInputCreator {
 
       let input_name = document.createElement("input");
       input_name.type = "text";
-      input_name.value = attribute.name;
+      input_name.value = declaration.name;
 
       input_name.onchange = () => {
         var classToChange = selectedClass;
         if (classToChange !== null) {
-          classToChange.attributes[index].setName(input_name.value);
+          classToChange.declarations[index].setName(input_name.value);
         }
 
         //Update Cell
@@ -73,12 +53,12 @@ export default class AttributeInputCreator {
 
       let input_type = document.createElement("input");
       input_type.type = "text";
-      input_type.value = attribute.dataType;
+      input_type.value = declaration.declaration_value
 
       input_type.onchange = () => {
         var classToChange = selectedClass;
         if (classToChange !== null) {
-          classToChange.attributes[index].setDataType(input_type.value);
+          classToChange.declarations[index].setDeclarationValue(input_type.value);
         }
 
         //Update Cell

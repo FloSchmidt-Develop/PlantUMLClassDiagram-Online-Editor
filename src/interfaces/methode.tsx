@@ -9,4 +9,8 @@ export default interface Methode {
     getAttributeListAsString() : string,
 
     getWidth(): number;
+
+    setName(newName : string);
+    setVisibility(newVisibility: string);
+    setDataType(newDatatype: string);
 }

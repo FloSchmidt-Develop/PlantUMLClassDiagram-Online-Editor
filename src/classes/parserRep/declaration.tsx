@@ -9,4 +9,12 @@ export default class Declaration implements IDeclaration{
         this.name = name;
         this.declaration_value = value;
     }
+
+    public setName(newName : string){
+        this.name = newName;
+    }
+    
+    public setDeclarationValue(newDeclarationValue: string){
+        this.declaration_value = newDeclarationValue;
+    }
 }
