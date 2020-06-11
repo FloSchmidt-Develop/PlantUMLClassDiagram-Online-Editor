@@ -44,6 +44,9 @@
   height: 90vh;
   top: 60px;
   right: 0px;
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: nowrap;
   margin-right: 1vh;
   border: 2px solid black;
 }
@@ -64,6 +67,13 @@
   bottom: 3vh;
   left: 3vw;
   background-color: lightgray;
+}
+
+.connector-option-normal-line{
+  background-image: url(https://images.pexels.com/photos/34153/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .App-link {

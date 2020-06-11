@@ -12,9 +12,10 @@ export default class AttributeInputCreator {
     sender: any
   ): HTMLDivElement {
     let container_div = document.createElement("div");
+    
 
     if(selectedClass !== null && selectedClass.attributes !== null && typeof selectedClass.attributes !== 'undefined'){
-
+    container_div.appendChild(document.createElement('hr'));
 
 
     for (let index = 0; index < selectedClass.attributes.length; index++) {
@@ -22,6 +23,11 @@ export default class AttributeInputCreator {
       let row_div = document.createElement("div");
 
       //visibility
+      let visibility_p = document.createElement("p");
+      visibility_p.style.display = "inline";
+      visibility_p.innerText = " Visibility: ";
+      row_div.appendChild(visibility_p);
+
       let input_visibility = document.createElement("input");
       input_visibility.type = "text";
       input_visibility.value = attribute.visibility;
@@ -40,11 +46,12 @@ export default class AttributeInputCreator {
 
       };
       row_div.appendChild(input_visibility);
+      row_div.appendChild(document.createElement('br'));
 
       //name
       let name_p = document.createElement("p");
       name_p.style.display = "inline";
-      name_p.innerText = " name: ";
+      name_p.innerText = " Name: ";
       row_div.appendChild(name_p);
 
       let input_name = document.createElement("input");
@@ -64,12 +71,14 @@ export default class AttributeInputCreator {
 
       };
       row_div.appendChild(input_name);
+      row_div.appendChild(document.createElement('br'));
+
 
       //DataType
       let type_p = document.createElement("p");
-      name_p.style.display = "inline";
-      name_p.innerText = " name: ";
-      row_div.appendChild(name_p);
+      type_p.style.display = "inline";
+      type_p.innerText = " Datatype: ";
+      row_div.appendChild(type_p);
 
       let input_type = document.createElement("input");
       input_type.type = "text";
@@ -91,6 +100,7 @@ export default class AttributeInputCreator {
 
 
       container_div.appendChild(row_div);
+      container_div.appendChild(document.createElement('hr'));
     }
   }
 

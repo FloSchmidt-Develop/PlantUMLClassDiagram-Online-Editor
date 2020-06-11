@@ -23,4 +23,9 @@ export default class Connection implements IConnection{
             this.stereoType = stereoType;
         
     }
+
+
+    public setConnector(connector: string){
+        this.connector = connector;
+    }
 }

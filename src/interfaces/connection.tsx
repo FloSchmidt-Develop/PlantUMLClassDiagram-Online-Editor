@@ -5,4 +5,6 @@ export default interface Connection{
     leftElement: string,
     rightElement: string,
     stereoType: string;
+
+    setConnector(connector: string)
 }

@@ -11,11 +11,12 @@ import NameSelectCreator from './htmlCreators/nameInputCreator';
 import AttributeInputCreator from './htmlCreators/attributeInputCreator';
 import MethodInputCreator from './htmlCreators/methodInputCreator';
 import DeclarationInputCreator from './htmlCreators/declarationInputCreator';
+import ConnectionInputCreator from './htmlCreators/connectionInputCreator';
 import { start } from "repl";
 
 import {
   mxGraph,
-  mxRubberband,
+  mxMarker,
   mxKeyHandler,
   mxClient,
   mxUtils,
@@ -91,7 +92,7 @@ export default class MxGraphCreator {
           attributeHeader.innerText = 'Attributes';
 
           let newAttributeButton = document.createElement('button');
-          newAttributeButton.innerText = 'at new Attribute';
+          newAttributeButton.innerText = '+ Attribute';
           newAttributeButton.onclick = () =>{
             let classToaddAttribute = (sender.cells[0].value as Class);
             if (classToaddAttribute != null){
@@ -114,7 +115,7 @@ export default class MxGraphCreator {
           methodHeader.innerText = 'Methods';
 
           let newMethodButton = document.createElement('button');
-          newMethodButton.innerText = 'at new Method';
+          newMethodButton.innerText = '+ Method';
           newMethodButton.onclick = () =>{
             let classToaddMethod = (sender.cells[0].value as Class);
             if (classToaddMethod != null){
@@ -163,7 +164,18 @@ export default class MxGraphCreator {
         && (sender.cells[0].value as Connection) != null) {
         let attributeHeader = document.createElement('h3');
         attributeHeader.innerText = 'Connection';
+
+        let table = document.createElement("table");
+
+        //type
+        let typeSelectCreator = new ConnectionInputCreator(graph);
+        let type_tr = typeSelectCreator.createTypeSeclectDiv(sender.cells[0].value, sender);
+        table.appendChild(type_tr[0]);
+        table.appendChild(type_tr[1]);
+
+
         view.appendChild(attributeHeader);
+        view.appendChild(table);
       }
     }
     else{
@@ -434,7 +446,7 @@ export default class MxGraphCreator {
         activeVertexes[connection.rightElement],
         this.getLineStyle(connection.connector) +
           this.getStartArrowStyle(connection.connector) +
-          "endArrow=dash;sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;"
+          "endArrow=" + this.CreateArrowWithNumber(connection.multiplicity_right,false) + "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;"
       );
     }
   }
@@ -458,7 +470,30 @@ export default class MxGraphCreator {
     } else if (connector.indexOf("<") === 0) {
       return "startArrow=classic;startFill=1;";
     }
-    return "startArrow=dash";
+    return "startArrow=dash;";
+  }
+
+
+  private CreateArrowWithNumber(num: string, isStart: boolean): string{
+
+    mxMarker.addMarker("myconnector" + num + (isStart ? 'start' : 'end'), function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
+    {
+
+      return function()
+      {
+        if (isStart) {
+          canvas.text(pe.x + 5,pe.y - 25,10,10,num);
+        }
+        else{
+          canvas.text(pe.x - 25,pe.y - 25,10,10,num);
+        }
+
+      };
+    });
+
+    return "myconnector" + num + (isStart ? 'start' : 'end') + ";";
+
+
   }
 
   private selectionChanged(graph): void
