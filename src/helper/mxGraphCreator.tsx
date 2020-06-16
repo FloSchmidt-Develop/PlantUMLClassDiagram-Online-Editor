@@ -1,5 +1,6 @@
 import IDiagram from "../interfaces/diagram";
 import IClass from "../interfaces/class";
+import IConnector, {Arrows, Lines} from '../interfaces/connector'
 
 import Class from "../classes/parserRep/class";
 import Attribute from "../classes/parserRep/attribute";
@@ -172,6 +173,7 @@ export default class MxGraphCreator {
         let type_tr = typeSelectCreator.createTypeSeclectDiv(sender.cells[0].value, sender);
         table.appendChild(type_tr[0]);
         table.appendChild(type_tr[1]);
+        table.appendChild(type_tr[2]);
 
 
         view.appendChild(attributeHeader);
@@ -199,7 +201,7 @@ export default class MxGraphCreator {
     // Overrides method to disallow edge label editing
     this.graph.isCellEditable = function(cell)
     {
-      return !this.getModel().isEdge(cell);
+      return this.getModel().isEdge(cell);
     };
 
 
@@ -351,10 +353,19 @@ export default class MxGraphCreator {
         return cell.value.stereoType;
       }
       else{
-        console.log(cell);
+        if(cell.edge){
+          var connection = new Connection('<--','','', cell.target.value.alias,cell.source.value.alias,'');
+          diagram.addConnection(connection);
+          
+          graph.getModel().beginUpdate();
+    
+          graph.model.setValue(cell, connection);
+          
+          graph.model.setStyle(cell, "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;");
+    
+          graph.getModel().endUpdate();
+        }
 
-        
-        
       }
 
     }
@@ -386,7 +397,7 @@ export default class MxGraphCreator {
               if(targetClass != null && sourceClass != null){
                 let diagram = targetClass.diagram;
                 diagram.addConnection(
-                  new Connection('-->','','',sourceClass.alias,targetClass.alias,'')
+                  new Connection('-->','','',targetClass.alias,sourceClass.alias,'')
                   )
           }     
         }
@@ -442,35 +453,52 @@ export default class MxGraphCreator {
         this.parentContainer,
         null,
         connection,
-        activeVertexes[connection.leftElement],
-        activeVertexes[connection.rightElement],
-        this.getLineStyle(connection.connector) +
-          this.getStartArrowStyle(connection.connector) +
-          "endArrow=" + this.CreateArrowWithNumber(connection.multiplicity_right,false) + "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;"
+        activeVertexes[connection.sourceElement],
+        activeVertexes[connection.destinationElement],
+        this.getEdgeStyle(connection.connector)
       );
     }
   }
 
-  private getLineStyle(connector: string): string {
-    if (connector.includes("..")) {
-      console.log(connector);
 
+  private getEdgeStyle(connector: IConnector): string{
+    return this.getLineStyle(connector) +
+    this.getStartArrowStyle(connector) +
+    this.getEndArrowStyle(connector) + 
+    "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;"
+  }
+
+  private getLineStyle(connector: IConnector): string {
+    if (connector.lineStyle === Lines.dotted) {
       return "dashed=1;";
     }
     return "dashed=0;";
   }
 
-  private getStartArrowStyle(connector: string): string {
-    if (connector.indexOf("o") === 0) {
+  private getStartArrowStyle(connector: IConnector): string {
+    if (connector.startArrowSymbol === Arrows.diamond) {
       return "startArrow=diamond;startFill=0;";
-    } else if (connector.indexOf("<|") === 0) {
+    } else if (connector.startArrowSymbol === Arrows.big) {
       return "startArrow=block;startFill=0;startSize=20;";
-    } else if (connector.indexOf("*") === 0) {
+    } else if (connector.startArrowSymbol === Arrows.diamondFilled) {
       return "startArrow=diamond;startFill=1;";
-    } else if (connector.indexOf("<") === 0) {
+    } else if (connector.startArrowSymbol === Arrows.normal) {
       return "startArrow=classic;startFill=1;";
     }
     return "startArrow=dash;";
+  }
+
+  private getEndArrowStyle(connector: IConnector): string {
+    if (connector.endArrowSymbol === Arrows.diamond) {
+      return "endArrow=diamond;endFill=0;";
+    } else if (connector.endArrowSymbol === Arrows.big) {
+      return "endArrow=block;endFill=0;endSize=20;";
+    } else if (connector.endArrowSymbol === Arrows.diamondFilled) {
+      return "endArrow=diamond;endFill=1;";
+    } else if (connector.endArrowSymbol === Arrows.normal) {
+      return "endArrow=classic;endFill=1;";
+    }
+    return "endArrow=dash;endFill=0;";
   }
 
 

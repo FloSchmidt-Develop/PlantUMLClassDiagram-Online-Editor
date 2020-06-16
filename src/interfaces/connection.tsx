@@ -1,9 +1,11 @@
+import IConnector from './connector'
+
 export default interface Connection{
-    connector: string,
+    connector: IConnector,
     multiplicity_left: string,
     multiplicity_right: string,
-    leftElement: string,
-    rightElement: string,
+    destinationElement: string;
+    sourceElement: string;
     stereoType: string;
 
     setConnector(connector: string)
