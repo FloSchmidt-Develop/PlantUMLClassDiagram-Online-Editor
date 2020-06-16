@@ -29,7 +29,8 @@ export default class DiagramCreator{
             let jsonDiagram = serverResponse.Res.diagram;
             //check if the server result contains classes
             if(jsonDiagram.class_declaration !== null){        
-               this.addClasses(jsonDiagram.class_declaration, diagram);              
+               this.addClasses(jsonDiagram.class_declaration, diagram);    
+
             }     
             if(jsonDiagram.connection_declaration !== null){
                 
@@ -37,7 +38,8 @@ export default class DiagramCreator{
             }
 
         }
-
+        console.log(diagram);
+        
         return diagram;
     }
 
@@ -64,6 +66,10 @@ export default class DiagramCreator{
             let cls = new Class(jasonClass.name, jasonClass.type,diagram);
             cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
+            
+            let resPackage = diagram.addPackage(cls.package);
+            if(resPackage != null)
+                resPackage.AddClassReference(cls);
 
             if (jsonClasses[index].attributes !== null) {
                 this.addAttributes(jsonClasses[index].attributes, cls)

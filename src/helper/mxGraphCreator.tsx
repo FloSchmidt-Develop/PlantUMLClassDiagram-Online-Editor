@@ -22,7 +22,7 @@ import {
   mxClient,
   mxUtils,
   mxEvent,
-  mxRectangle,
+  mxDragSource,
   mxGraphHandler,
   mxEdgeHandler,
   mxConstants,
@@ -160,9 +160,11 @@ export default class MxGraphCreator {
           
       }
 
-      //if the selected Element is a Connection
+      //TODO check if is a package
       else if (senderClass.value != null 
-        && (sender.cells[0].value as Connection) != null) {
+        && (sender.cells[0].value as Connection) != null && sender.cells[0].value !== 'HardwarePart') {
+          console.log(sender.cells[0]);
+          
         let attributeHeader = document.createElement('h3');
         attributeHeader.innerText = 'Connection';
 
@@ -209,6 +211,8 @@ export default class MxGraphCreator {
     this.diagram = diagram;
 
     this.graph.getLabel = function (cell) {
+
+      //Class------------------------------------------------------------------------------------------------
       var actual_class: IClass = cell.value;
       if(actual_class !== null 
         && typeof actual_class !== 'undefined' 
@@ -311,6 +315,7 @@ export default class MxGraphCreator {
         body.appendChild(tr3);
         }
 
+        //Object-----------------------------------------------------------------------------
         else if (actual_class.type === 'object') {
             var tr2 = document.createElement("tr");
             var declaration_divContainer = document.createElement("div");
@@ -350,7 +355,7 @@ export default class MxGraphCreator {
     else{  
 
       if(cell.value != null ){
-        return cell.value.stereoType;
+        return cell.value.stereoType != null ? cell.value.stereoType : cell.value;
       }
       else{
         if(cell.edge){
@@ -407,9 +412,45 @@ export default class MxGraphCreator {
         
     });
 
+    this.graph.dropEnabled = true;
+				
+    // Matches DnD inside the graph
+    mxDragSource.prototype.getDropTarget = function(graph, x, y)
+    {
+      var cell = graph.getCellAt(x, y);
+      
+      if (!graph.isValidDropTarget(cell))
+      {
+        cell = null;
+      }
+      
+      return cell;
+    };
+
     this.graph.getModel().beginUpdate();
 
     var activeVertexes: { [id: string]: any } = {};
+    var activePackages: { [id: string]: any } = {};
+
+    var packageCount = this.diagram?.package_declarations.length ?
+      this.diagram?.package_declarations.length :
+      0;
+
+
+    for (let index = 0; index < packageCount; index++) {
+      let activePackage = this.diagram?.package_declarations[index];
+        activePackages[activePackage.Name] = this.graph.insertVertex(
+          this.parentContainer,
+          null,
+          activePackage.Name,
+          50,
+          400,
+          200,
+          200,
+          'shape=swimlane;startSize=20;'
+        )
+      
+    }
 
     var count = this.diagram?.class_declarations.length
       ? this.diagram?.class_declarations.length
@@ -428,7 +469,7 @@ export default class MxGraphCreator {
 
       let element = this.diagram?.class_declarations[index];
       activeVertexes[element.alias] = this.graph.insertVertex(
-        this.parentContainer,
+        element.package !== '' ? activePackages[element.package] : this.parentContainer,
         null,
         element,
         x,
