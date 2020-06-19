@@ -1,7 +1,8 @@
-import IAttribute from '../interfaces/attribute'
+import IAttribute from './attribute'
+import IName from './named';
 
 
-export default interface Methode {
+export default interface Methode extends IName{
     name: string,
     dataType: string,
     attributeList?: IAttribute[],

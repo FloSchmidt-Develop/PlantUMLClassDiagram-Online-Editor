@@ -26,14 +26,14 @@
 
 .graph-container{
   position:absolute;
-  width: 78vw;
+  width: 76vw;
   height: 90vh;
-  background-color: whitesmoke;
+  background:url('./images/grid.gif');
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
   top:50px;
-  left:0px;
+  left:24px;
   margin: 1vh;
   border: 2px solid black;
 }
@@ -49,6 +49,16 @@
   white-space: nowrap;
   margin-right: 1vh;
   border: 2px solid black;
+}
+
+.toolbar{
+  position : absolute;
+  overflow : hidden;
+  padding : 2px;
+  left : 0px;
+  top : 50px;
+  width : 24px;
+  bottom : 0px;
 }
 
 .upload-section{

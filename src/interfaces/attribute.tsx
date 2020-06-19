@@ -1,9 +1,10 @@
-export default interface Attribute{
-    name: string,
+import IName from './named';
+
+
+export default interface Attribute extends IName{
     dataType: string,
     visibility: string,
 
-    setName(newName: string): void;
     setVisibility(newVisibility: string): void;
     setDataType(newDataType: string): void;
 

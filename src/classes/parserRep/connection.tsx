@@ -9,6 +9,7 @@ export default class Connection implements IConnection{
     public destinationElement: string;
     public sourceElement: string;
     public stereoType: string;
+    public readonly type = 'Connection';
 
     constructor(connector: string,
         multiplicity_left: string,

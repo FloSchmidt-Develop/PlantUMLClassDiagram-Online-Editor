@@ -1,9 +1,10 @@
-import IClass from './class' 
+import IClass from './class';
+import ITyped from './typed';
+import IName from './named';
 
 
-export default interface Package{
+export default interface Package extends ITyped, IName{
 
-    readonly Name: string;
     ClassReferences: IClass[];
     
     AddClassReference(classToAdd : IClass): void;

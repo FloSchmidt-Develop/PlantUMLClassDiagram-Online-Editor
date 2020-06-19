@@ -1,4 +1,4 @@
-import IClass from "../../interfaces/class";
+import IName from "../../interfaces/named";
 
 export default class NameInputCreator {
   graph: any;
@@ -8,9 +8,10 @@ export default class NameInputCreator {
   }
 
   public createNameInputDiv(
-    selectedClass: IClass,
+    selectedClass: IName,
     sender: any
   ): HTMLTableRowElement {
+    
     let tr1 = document.createElement("tr");
     let td1 = document.createElement("td");
     let td2 = document.createElement("td");

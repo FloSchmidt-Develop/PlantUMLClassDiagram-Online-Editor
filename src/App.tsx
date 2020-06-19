@@ -6,21 +6,15 @@ import axios from "axios";
 import IDiagram from "./interfaces/diagram";
 import DiagramCreator from "./helper/diagramCreator";
 import MxGraphCreator from "./helper/mxGraphCreator";
+import Toolbar from './classes/view/toolbar/toolbar';
 
 import {
   mxGraph,
-  mxImage,
-  mxConstraintHandler,
   mxClient,
   mxUtils,
   mxEvent,
-  mxRubberband,
-  mxShape,
-  mxEdgeHandler,
-  mxConnectionConstraint,
-  mxPoint,
-  mxConstants,
-  mxRectangle,
+  mxKeyHandler,
+  mxCircleLayout,
 } from "mxgraph-js";
 
 axios.defaults.baseURL = "http://localhost:4000";
@@ -47,10 +41,6 @@ const App = () => {
     setFilename(e.target.files[0].name);
   };
 
-  const onUpdate = (e: any) => {
-    console.log("update");
-    forceUpdate();
-  };
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -90,10 +80,15 @@ const App = () => {
     if (typeof graph !== "undefined") {
       if (!mxClient.isBrowserSupported()) {
         mxUtils.error("Browser is not supported!", 200, false);
-      } else {
+      } 
+      else {
+
+        if(diagram != null)
+          Toolbar.getCreateToolbarContainer(graph, diagram );
+
+
         graph.setConnectable(true);
         graph.setHtmlLabels(true);
-        //graph.autoSizeCellsOnAdd = true;
 
         mxEvent.disableContextMenu(divGraph.current);
 
@@ -109,6 +104,17 @@ const App = () => {
           graph.getModel().endUpdate();
         }
         graph.getModel().endUpdate();
+
+        var keyHandler = new mxKeyHandler(graph);
+        keyHandler.bindKey(46, function(evt)
+        {
+          if (graph.isEnabled())
+          {
+            graph.removeCells();
+          }
+        });
+
+        
       }
     }
   });

@@ -20,7 +20,7 @@ export default class Diagram implements IDiagram{
     public addPackage(packageName: string): IPackage | null{
         if(packageName === '')
             return null;
-        let newPackage = this.package_declarations.find(e => e.Name === packageName)
+        let newPackage = this.package_declarations.find(e => e.name === packageName)
         if(newPackage != null){
             return newPackage
         }

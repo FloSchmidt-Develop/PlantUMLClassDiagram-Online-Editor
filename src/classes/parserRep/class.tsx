@@ -38,7 +38,7 @@ export default class Class implements IClass{
     }
 
     public getWidth(): number{
-        let max = 0;
+        let max = 75; // min width
 
         let lengthName = (this.name.length) * 12;
         if(lengthName > max)
