@@ -32,15 +32,12 @@ const App = () => {
   const divGraph = React.useRef<HTMLDivElement>(null);
   const editPanel = React.useRef<HTMLDivElement>(null);
 
-  const forceUpdate = useForceUpdate();
-
   const diagramCreator = new DiagramCreator();
 
   const onChange = (e: any) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
-
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -57,7 +54,7 @@ const App = () => {
       console.log(res.data);
 
       var diag = diagramCreator.createDiagram(res.data);
-      console.log(diag);
+
       if (typeof graph === "undefined") {
         setGraph(new mxGraph(divGraph.current));
       }
@@ -82,9 +79,6 @@ const App = () => {
         mxUtils.error("Browser is not supported!", 200, false);
       } 
       else {
-
-        if(diagram != null)
-          Toolbar.getCreateToolbarContainer(graph, diagram );
 
 
         graph.setConnectable(true);
@@ -116,6 +110,15 @@ const App = () => {
 
         
       }
+    }
+    else{
+      let graph = new mxGraph(divGraph.current)
+      let diag = diagramCreator.createDiagram(null);
+      Toolbar.getCreateToolbarContainer(graph, diag );
+
+      setGraph(graph);
+      setDiagram(diag);
+
     }
   });
 
