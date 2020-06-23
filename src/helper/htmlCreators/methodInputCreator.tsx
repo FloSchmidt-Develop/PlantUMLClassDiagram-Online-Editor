@@ -1,4 +1,6 @@
 import IClass from "../../interfaces/class";
+import ClassUpdateController from '../../classes/controller/classUpdateController';
+
 
 export default class MethodInputCreator {
   graph: any;
@@ -8,16 +10,16 @@ export default class MethodInputCreator {
   }
 
   public createNameInputDiv(
-    selectedClass: IClass,
+    elementToChange: IClass,
     sender: any
   ): HTMLDivElement {
     let container_div = document.createElement("div");
 
-    if(selectedClass !== null && selectedClass.methods !== null && typeof selectedClass.methods !== 'undefined'){
+    if(elementToChange !== null && elementToChange.methods !== null && typeof elementToChange.methods !== 'undefined'){
       container_div.appendChild(document.createElement('hr'));
 
-    for (let index = 0; index < selectedClass.methods.length; index++) {
-      const method = selectedClass.methods[index];
+    for (let index = 0; index < elementToChange.methods.length; index++) {
+      const method = elementToChange.methods[index];
       let row_div = document.createElement("div");
 
       //visibility
@@ -32,15 +34,16 @@ export default class MethodInputCreator {
       input_visibility.style.width = "20px";
 
       input_visibility.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.methods[index].setVisibility(input_visibility.value);
+
+        if (elementToChange !== null) {
+          elementToChange.methods[index].setVisibility(input_visibility.value);
         }
 
-        //update Cell
+        //Update Cell
         this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
+        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
         this.graph.getModel().endUpdate();
+
       };
       row_div.appendChild(input_visibility);
       row_div.appendChild(document.createElement('br'));
@@ -56,14 +59,15 @@ export default class MethodInputCreator {
       input_name.value = method.name;
 
       input_name.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.methods[index].setName(input_name.value);
+        if (elementToChange !== null) {
+          elementToChange.methods[index].setName(input_name.value);
         }
+
         //Update Cell
         this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
+        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
         this.graph.getModel().endUpdate();
+
       };
       row_div.appendChild(input_name);
       row_div.appendChild(document.createElement('br'));
@@ -79,14 +83,13 @@ export default class MethodInputCreator {
       input_type.value = method.dataType;
 
       input_type.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.methods[index].setDataType(input_type.value);
+        if (elementToChange !== null) {
+          elementToChange.methods[index].setDataType(input_type.value);
         }
 
         //Update Cell
         this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
+        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
         this.graph.getModel().endUpdate();
 
       };
@@ -127,11 +130,11 @@ export default class MethodInputCreator {
           input_argument_name.onchange = () => {
               argument.setName(input_argument_name.value);
             
+          //Update Cell
+          this.graph.getModel().beginUpdate();
+          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+          this.graph.getModel().endUpdate();
 
-            //Update Cell
-            this.graph.getModel().beginUpdate();
-            this.graph.model.setValue(sender.cells[0], selectedClass);
-            this.graph.getModel().endUpdate();
           }
           functionArgumentDiv.appendChild(input_argument_name);
           functionArgumentDiv.appendChild(document.createElement('br'));
@@ -151,10 +154,11 @@ export default class MethodInputCreator {
               argument.setDataType(input_argument_dataType.value);
             
 
-            //Update Cell
-            this.graph.getModel().beginUpdate();
-            this.graph.model.setValue(sender.cells[0], selectedClass);
-            this.graph.getModel().endUpdate();
+          //Update Cell
+          this.graph.getModel().beginUpdate();
+          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+          this.graph.getModel().endUpdate();
+
           }
           functionArgumentDiv.appendChild(input_argument_dataType);
 

@@ -5,7 +5,6 @@ import {
     mxUtils
   } from "mxgraph-js";
 import Class from "../../parserRep/class";
-import Diagram from "../../parserRep/diagram";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
@@ -15,7 +14,7 @@ import Package from "../../parserRep/package";
 
 export default class Toolbar{
 
-    public static getCreateToolbarContainer(graph: any, diagram: Diagram){
+    public static getCreateToolbarContainer(graph: any){
 
         var tbContainer = document.getElementById('toolbar');
         if(tbContainer === null){
@@ -27,7 +26,7 @@ export default class Toolbar{
             var toolbar = new mxToolbar(tbContainer);
             toolbar.enabled = false;
 
-            var cls = new Class('new Class','class',diagram);
+            var cls = new Class('new Class','class');
             var pkg = new Package('new Package');
     
             Toolbar.addVertex(graph,toolbar,pkg,'../../../images/swimlane.gif', 120, 160, 'shape=swimlane;startSize=20;');
@@ -52,7 +51,6 @@ export default class Toolbar{
         var funct = function(graph, evt, cell)
         {
             graph.stopEditing(false);
-            console.log(prototype);
             
             var pt = graph.getPointForEvent(evt);
             var vertex = graph.getModel().cloneCell(prototype);

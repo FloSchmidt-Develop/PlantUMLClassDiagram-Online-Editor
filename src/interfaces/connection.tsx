@@ -10,4 +10,6 @@ export default interface Connection extends ITyped{
     stereoType: string;
 
     setConnector(connector: string)
+    setStereoType(stereoType: string)
+    setStartMultiplicity(multiplicity: string)
 }

@@ -9,7 +9,7 @@
 
     object "0_Conv: Convolution" as 0_Conv {
         kernel_size = 5
-        stride = 1
+        stride = 2
         padding = [0,0,0,0]
         num_output_channel = 20
     }

@@ -17,4 +17,8 @@ export default class Declaration implements IDeclaration{
     public setDeclarationValue(newDeclarationValue: string){
         this.declaration_value = newDeclarationValue;
     }
+
+    public getWidth(): number{
+        return (this.name.length + this.declaration_value.length) * 10;
+    }
 }

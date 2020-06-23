@@ -1,4 +1,8 @@
 import IName from "../../interfaces/named";
+import ClassUpdateController from '../../classes/controller/classUpdateController';
+import ElementUpdateController from '../../classes/controller/elementUpdateController';
+import Class from '../../classes/parserRep/class';
+
 
 export default class NameInputCreator {
   graph: any;
@@ -8,7 +12,7 @@ export default class NameInputCreator {
   }
 
   public createNameInputDiv(
-    selectedClass: IName,
+    selectedElement: IName,
     sender: any
   ): HTMLTableRowElement {
     
@@ -22,23 +26,36 @@ export default class NameInputCreator {
 
     let input2 = document.createElement("input");
     input2.type = "text";
-    input2.value = selectedClass.name;
+    input2.value = selectedElement.name;
 
     input2.onchange = () => {
-      var classToChange = selectedClass;
-      if (classToChange !== null) {
-        classToChange.setName(input2.value);
+      var elementToChange = selectedElement;
+      if (elementToChange !== null) {
+        elementToChange.setName(input2.value);
       }
       
+
       //Update Cell
       this.graph.getModel().beginUpdate();
-      this.graph.model.setValue(sender.cells[0], classToChange);
+
+      //Update Cell size if selected element is Class
+      if(elementToChange instanceof Class){
+        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange as Class);
+      }
+      //otherwise Only update Element
+      else{
+        ElementUpdateController.updateElement(this.graph,sender.cells[0],elementToChange);
+      }
       this.graph.getModel().endUpdate();
+
+
     };
 
     td2.appendChild(input2);
     tr1.appendChild(td1);
     tr1.appendChild(td2);
     return tr1;
+
+    
   }
 }

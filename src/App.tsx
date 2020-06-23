@@ -15,6 +15,7 @@ import {
   mxEvent,
   mxKeyHandler,
   mxCircleLayout,
+  mxCodec
 } from "mxgraph-js";
 
 axios.defaults.baseURL = "http://localhost:4000";
@@ -29,6 +30,7 @@ const App = () => {
   const [filename, setFilename] = useState("");
   const [diagram, setDiagram] = useState<IDiagram>();
   const [graph, setGraph] = useState();
+  const [change, setChange] = useState(false);
   const divGraph = React.useRef<HTMLDivElement>(null);
   const editPanel = React.useRef<HTMLDivElement>(null);
 
@@ -37,6 +39,12 @@ const App = () => {
   const onChange = (e: any) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
+  };
+
+  const exportDiagram = () => {
+    var enc = new mxCodec(mxUtils.createXmlDocument());
+    var node = enc.encode(graph.getModel());
+    console.log(node);
   };
 
   const onSubmit = async (e: any) => {
@@ -51,17 +59,19 @@ const App = () => {
         },
       });
 
-      console.log(res.data);
 
-      var diag = diagramCreator.createDiagram(res.data);
+
+      diagramCreator.createDiagram(res.data);
 
       if (typeof graph === "undefined") {
         setGraph(new mxGraph(divGraph.current));
       }
 
-      setDiagram(diag);
+      setDiagram(DiagramCreator.diagram);
+      setChange(true);
+      console.log('----diagram setted---');
+      
     } catch (err) {
-      console.log(err);
       /*
       if (err.response ? err.response.status === 500) {
         setMessage('There was a problem with the server');
@@ -87,6 +97,10 @@ const App = () => {
         mxEvent.disableContextMenu(divGraph.current);
 
         if (typeof diagram !== "undefined") {
+          console.log('start');
+          console.log(diagram);
+          
+          
           var mxGraphCreator = new MxGraphCreator(graph, diagram, editPanel);
 
           graph.getModel().beginUpdate();
@@ -98,6 +112,9 @@ const App = () => {
           graph.getModel().endUpdate();
         }
         graph.getModel().endUpdate();
+
+        console.log(graph.getModel());
+        
 
         var keyHandler = new mxKeyHandler(graph);
         keyHandler.bindKey(46, function(evt)
@@ -114,7 +131,7 @@ const App = () => {
     else{
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null);
-      Toolbar.getCreateToolbarContainer(graph, diag );
+      Toolbar.getCreateToolbarContainer(graph);
 
       setGraph(graph);
       setDiagram(diag);
@@ -144,6 +161,10 @@ const App = () => {
           <p>nothing Selected</p>
         </div>
       </div>
+      <form>
+        <input className="exportButton" type="button" onClick={exportDiagram} value='Export' />
+      </form>
+
     </Fragment>
   );
 };

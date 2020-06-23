@@ -13,9 +13,34 @@ export default class ConnectionInputCreator{
     sender: any
   ): HTMLTableRowElement[] {
 
+    //Line Label----------------------------------------------------------------------
+    let lineLabelRow = document.createElement("tr");
+    let labelLabel = document.createElement("td");
+    let labelTextBoxContainer = document.createElement("td");
+    let p_LabelLabel = document.createElement("p");
 
-    //TODO Check IClass for undefined !! 
-    let tr1 = document.createElement("tr");
+    p_LabelLabel.innerText = "Line Label: ";
+    labelLabel.appendChild(p_LabelLabel);
+
+    let labelInput = document.createElement("input");
+    labelInput.type = "text";
+    labelInput.value = selectedConnection.stereoType != null ? selectedConnection.stereoType : "<Label>";
+
+    labelInput.onchange = () => {
+      if (selectedConnection !== null) {
+        selectedConnection.setStereoType(labelInput.value);
+      }
+      
+
+      this.UpdateLine(sender,selectedConnection);
+    };
+
+    labelTextBoxContainer.appendChild(labelInput);
+    lineLabelRow.appendChild(labelLabel);
+    lineLabelRow.appendChild(labelTextBoxContainer);
+
+    //----Line Type--------------------------------------------------------
+    let lineTypeRow = document.createElement("tr");
     let td1 = document.createElement("td");
     let td2 = document.createElement("td");
     let p_line_type = document.createElement("p");
@@ -48,36 +73,23 @@ export default class ConnectionInputCreator{
         : 0;
 
         select_line.onchange = () => {
-      var classToChange = selectedConnection;
-
-      console.log(classToChange);
             
-
-      if (classToChange !== null) {
+      if (selectedConnection !== null) {
         if (select_line.selectedIndex === 1 )
-          classToChange.connector.setLineStyle_direct(Lines.normal);
+        selectedConnection.connector.setLineStyle_direct(Lines.normal);
         else if(select_line.selectedIndex === 0)
-          classToChange.connector.setLineStyle_direct(Lines.dotted);
+        selectedConnection.connector.setLineStyle_direct(Lines.dotted);
       }
 
-
-
-      this.graph.getModel().beginUpdate();
-
-      this.graph.model.setValue(sender.cells[0], classToChange);
-      console.log(this.getUpdatedCellStyle(classToChange));
-      
-      this.graph.model.setStyle(sender.cells[0], this.getUpdatedCellStyle(classToChange));
-
-      this.graph.getModel().endUpdate();
+      this.UpdateLine(sender, selectedConnection);
     };
 
     td2.appendChild(select_line);
-    tr1.appendChild(td1);
-    tr1.appendChild(td2);
+    lineTypeRow.appendChild(td1);
+    lineTypeRow.appendChild(td2);
 
-    //Start Arrow
-        let tr2 = document.createElement("tr");
+    //Start Arrow-----------------------------------------------------------
+        let startArrowRow = document.createElement("tr");
         let td2_1 = document.createElement("td");
         let td2_2 = document.createElement("td");
         let p_startArrow_type = document.createElement("p");
@@ -133,51 +145,41 @@ export default class ConnectionInputCreator{
             ? 4 : 0;
     
             select_startArrow.onchange = () => {
-          var classToChange = selectedConnection;
-
-          console.log('--change Start arrow---');
           
     
-          if (classToChange !== null) {
+          if (selectedConnection !== null) {
             switch(select_startArrow.selectedIndex){
               case 0:
-                classToChange.connector.setStartConnector_direct(Arrows.normal);
+                selectedConnection.connector.setStartConnector_direct(Arrows.normal);
                 break;
               case 1:
-                classToChange.connector.setStartConnector_direct(Arrows.diamond);
+                selectedConnection.connector.setStartConnector_direct(Arrows.diamond);
                 break;
               case 2:
-                classToChange.connector.setStartConnector_direct(Arrows.diamondFilled);
+                selectedConnection.connector.setStartConnector_direct(Arrows.diamondFilled);
                 break;
               case 3:
-                classToChange.connector.setStartConnector_direct(Arrows.big);
+                selectedConnection.connector.setStartConnector_direct(Arrows.big);
                 break;
               case 4:
-                classToChange.connector.setStartConnector_direct(Arrows.none);
+                selectedConnection.connector.setStartConnector_direct(Arrows.none);
                 break;
               default:
-                classToChange.connector.setStartConnector_direct(Arrows.none);
+                selectedConnection.connector.setStartConnector_direct(Arrows.none);
                 break;
             }
           }
 
-          this.graph.getModel().beginUpdate();
-    
-          this.graph.model.setValue(sender.cells[0], classToChange);
-          console.log(this.getUpdatedCellStyle(classToChange));
-          
-          this.graph.model.setStyle(sender.cells[0], this.getUpdatedCellStyle(classToChange));
-    
-          this.graph.getModel().endUpdate();
+          this.UpdateLine(sender,selectedConnection)
         };
     
         td2_2.appendChild(select_startArrow);
-        tr2.appendChild(td2_1);
-        tr2.appendChild(td2_2);
+        startArrowRow.appendChild(td2_1);
+        startArrowRow.appendChild(td2_2);
 
 
-      //end Arrow
-        let tr3 = document.createElement("tr");
+      //End Arrow---------------------------------------------------------------------------
+        let endArrowRow = document.createElement("tr");
         let td3_1 = document.createElement("td");
         let td3_2 = document.createElement("td");
         let p_endArrow_type = document.createElement("p");
@@ -233,46 +235,66 @@ export default class ConnectionInputCreator{
             ? 4 : 0;
     
             select_EndArrow.onchange = () => {
-          var classToChange = selectedConnection;
     
-          if (classToChange !== null) {
+          if (selectedConnection !== null) {
             switch(select_EndArrow.selectedIndex){
               case 0:
-                classToChange.connector.setEndConnector_direct(Arrows.normal);
+                selectedConnection.connector.setEndConnector_direct(Arrows.normal);
                 break;
               case 1:
-                classToChange.connector.setEndConnector_direct(Arrows.diamond);
+                selectedConnection.connector.setEndConnector_direct(Arrows.diamond);
                 break;
               case 2:
-                classToChange.connector.setEndConnector_direct(Arrows.diamondFilled);
+                selectedConnection.connector.setEndConnector_direct(Arrows.diamondFilled);
                 break;
               case 3:
-                classToChange.connector.setEndConnector_direct(Arrows.big);
+                selectedConnection.connector.setEndConnector_direct(Arrows.big);
                 break;
               case 4:
-                classToChange.connector.setEndConnector_direct(Arrows.none);
+                selectedConnection.connector.setEndConnector_direct(Arrows.none);
                 break;
               default:
-                classToChange.connector.setEndConnector_direct(Arrows.none);
+                selectedConnection.connector.setEndConnector_direct(Arrows.none);
                 break;
             }
           }
 
-          this.graph.getModel().beginUpdate();
+          this.UpdateLine(sender,selectedConnection)
+        };
+        
+
+        td3_2.appendChild(select_EndArrow);
+        endArrowRow.appendChild(td3_1);
+        endArrowRow.appendChild(td3_2);
+
+        //Multiplicity Start--------------------------------------------------
+        let startMultiplicityRow = document.createElement("tr");
+        let startMultiplicityLabel = document.createElement("td");
+        let startMultiplicityTextBoxContainer = document.createElement("td");
+        let p_startMultiplicity = document.createElement("p");
     
-          this.graph.model.setValue(sender.cells[0], classToChange);
+        p_startMultiplicity.innerText = "Start Multiplicity: ";
+        startMultiplicityLabel.appendChild(p_startMultiplicity);
+    
+        let startMultiplicityInput = document.createElement("input");
+        startMultiplicityInput.type = "text";
+        startMultiplicityInput.value = selectedConnection.multiplicity_right != null ? selectedConnection.multiplicity_right : "";
+    
+        startMultiplicityInput.onchange = () => {
+          if (selectedConnection !== null) {
+            selectedConnection.setStartMultiplicity(startMultiplicityInput.value);
+          }
           
-          this.graph.model.setStyle(sender.cells[0], this.getUpdatedCellStyle(classToChange));
     
-          this.graph.getModel().endUpdate();
+          this.UpdateLine(sender,selectedConnection);
         };
     
-        td3_2.appendChild(select_EndArrow);
-        tr3.appendChild(td3_1);
-        tr3.appendChild(td3_2);
+        startMultiplicityTextBoxContainer.appendChild(startMultiplicityInput);
+        startMultiplicityRow.appendChild(startMultiplicityLabel);
+        startMultiplicityRow.appendChild(startMultiplicityTextBoxContainer);
 
 
-    return [tr1, tr2, tr3];
+    return [lineLabelRow, lineTypeRow, startArrowRow, endArrowRow, startMultiplicityRow];
   }
  
 
@@ -315,6 +337,15 @@ export default class ConnectionInputCreator{
       return "endArrow=classic;endFill=1;";
     }
     return "endArrow=dash;";
+  }
+
+  private UpdateLine(sender: any, connectionToEdit: IConnection){
+    this.graph.getModel().beginUpdate();
+
+    this.graph.model.setValue(sender.cells[0], connectionToEdit);
+    this.graph.model.setStyle(sender.cells[0], this.getUpdatedCellStyle(connectionToEdit));
+
+    this.graph.getModel().endUpdate();
   }
 
 

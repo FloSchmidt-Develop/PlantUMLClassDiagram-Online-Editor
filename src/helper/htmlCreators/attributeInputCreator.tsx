@@ -1,4 +1,6 @@
 import IClass from "../../interfaces/class";
+import ClassUpdateController from '../../classes/controller/classUpdateController';
+
 
 export default class AttributeInputCreator {
   graph: any;
@@ -8,18 +10,18 @@ export default class AttributeInputCreator {
   }
 
   public createNameInputDiv(
-    selectedClass: IClass,
+    elementToChange: IClass,
     sender: any
   ): HTMLDivElement {
     let container_div = document.createElement("div");
     
 
-    if(selectedClass !== null && selectedClass.attributes !== null && typeof selectedClass.attributes !== 'undefined'){
+    if(elementToChange !== null && elementToChange.attributes !== null && typeof elementToChange.attributes !== 'undefined'){
     container_div.appendChild(document.createElement('hr'));
 
 
-    for (let index = 0; index < selectedClass.attributes.length; index++) {
-      const attribute = selectedClass.attributes[index];
+    for (let index = 0; index < elementToChange.attributes.length; index++) {
+      const attribute = elementToChange.attributes[index];
       let row_div = document.createElement("div");
 
       //visibility
@@ -34,15 +36,14 @@ export default class AttributeInputCreator {
       input_visibility.style.width = "20px";
 
       input_visibility.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.attributes[index].setVisibility(input_visibility.value);
+        if (elementToChange !== null) {
+          elementToChange.attributes[index].setVisibility(input_visibility.value);
         }
 
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
-        this.graph.getModel().endUpdate();
+      //Update Cell
+      this.graph.getModel().beginUpdate();
+      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+      this.graph.getModel().endUpdate();
 
       };
       row_div.appendChild(input_visibility);
@@ -59,15 +60,14 @@ export default class AttributeInputCreator {
       input_name.value = attribute.name;
 
       input_name.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.attributes[index].setName(input_name.value);
+        if (elementToChange !== null) {
+          elementToChange.attributes[index].setName(input_name.value);
         }
 
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
-        this.graph.getModel().endUpdate();
+      //Update Cell
+      this.graph.getModel().beginUpdate();
+      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+      this.graph.getModel().endUpdate();
 
       };
       row_div.appendChild(input_name);
@@ -85,14 +85,13 @@ export default class AttributeInputCreator {
       input_type.value = attribute.dataType;
 
       input_type.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.attributes[index].setDataType(input_type.value);
+        if (elementToChange !== null) {
+          elementToChange.attributes[index].setDataType(input_type.value);
         }
 
         //Update Cell
         this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
+        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
         this.graph.getModel().endUpdate();
         
       };

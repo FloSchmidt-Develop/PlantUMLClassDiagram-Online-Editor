@@ -1,4 +1,5 @@
 import IClass from "../../interfaces/class";
+import ClassUpdateController from '../../classes/controller/classUpdateController';
 
 export default class {
   graph: any;
@@ -8,7 +9,7 @@ export default class {
   }
 
   public createTypeSeclectDiv(
-    selectedClass: IClass,
+    elementToChange: IClass,
     sender: any
   ): HTMLTableRowElement {
 
@@ -46,26 +47,25 @@ export default class {
     select.appendChild(option_object);
 
     select.selectedIndex =
-      selectedClass.type === "class"
+    elementToChange.type === "class"
         ? 0
-        : selectedClass.type === "interface"
+        : elementToChange.type === "interface"
         ? 1
-        : selectedClass.type === "object"
+        : elementToChange.type === "object"
         ? 2
         : 0;
 
     select.onchange = () => {
-      var classToChange = selectedClass;
-      if (classToChange !== null) {
-        classToChange.setType(
+
+      if (elementToChange !== null) {
+        elementToChange.setType(
           (document.getElementById("type-select") as HTMLSelectElement).value
         );
       }
 
+      //Update Cell
       this.graph.getModel().beginUpdate();
-
-      this.graph.model.setValue(sender.cells[0], classToChange);
-
+      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
       this.graph.getModel().endUpdate();
     };
 

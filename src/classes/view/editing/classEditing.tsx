@@ -6,6 +6,7 @@ import TypeSelectCreator from '../../../helper/htmlCreators/typeSelectCreator';
 import NameSelectCreator from '../../../helper/htmlCreators/nameInputCreator';
 import AttributeInputCreator from '../../../helper/htmlCreators/attributeInputCreator';
 import MethodInputCreator from '../../../helper/htmlCreators/methodInputCreator';
+import ClassUpdateController from '../../controller/classUpdateController';
 
 
 
@@ -24,10 +25,15 @@ export default class ClassEditingView{
           newAttributeButton.innerText = '+ Attribute';
           newAttributeButton.onclick = () =>{
             if (selectedClass != null){
-                selectedClass.attributes.push(new Attribute('name','dataType',''));
+              selectedClass.attributes.push(new Attribute('name','dataType',''));
+              
               graph.getModel().beginUpdate();
-              graph.model.setValue(sender.cells[0], selectedClass);
+              ClassUpdateController.updateClassValues(graph,sender.cells[0], selectedClass);
               graph.getModel().endUpdate();
+
+              let tempSelectedCell = sender.cells[0];
+              graph.getSelectionModel().clear();
+              graph.getSelectionModel().addCell(tempSelectedCell);
             }
             
           }
@@ -48,9 +54,15 @@ export default class ClassEditingView{
             let classToaddMethod = (selectedClass);
             if (classToaddMethod != null){
               classToaddMethod.methods.push(new Method('name',''));
+
               graph.getModel().beginUpdate();
-              graph.model.setValue(sender.cells[0], classToaddMethod);
+              ClassUpdateController.updateClassValues(graph,sender.cells[0], selectedClass);
               graph.getModel().endUpdate();
+
+              let tempSelectedCell = sender.cells[0];
+              graph.getSelectionModel().clear();
+              graph.getSelectionModel().addCell(tempSelectedCell);
+
             }
           }
 

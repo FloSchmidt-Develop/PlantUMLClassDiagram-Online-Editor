@@ -17,6 +17,7 @@ export default interface Class extends ITyped, IName{
     AddAttribute(attribute: IAttribute): void;
 
     getWidth(): number;
+    getHeight(): number;
 
     setType(type: string);
 }

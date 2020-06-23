@@ -26,9 +26,15 @@ export default class Connection implements IConnection{
             this.stereoType = stereoType;
         
     }
-
+    public setStartMultiplicity(multiplicity: string) {
+        this.multiplicity_right = multiplicity;
+    }
 
     public setConnector(connector: string){
         this.connector.resetConnections(connector);
+    }
+
+    public setStereoType(stereoType: string){
+        this.stereoType = stereoType;
     }
 }

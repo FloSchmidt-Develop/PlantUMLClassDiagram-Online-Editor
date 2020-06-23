@@ -11,14 +11,15 @@ import Declaration from '../classes/parserRep/declaration';
 import { EROFS } from 'constants';
 
 export default class DiagramCreator{
+
+    public static diagram = new Diagram();
  
     constructor(){
     }
 
-    createDiagram(serverResponse: any): IDiagram{
+    createDiagram(serverResponse: any): Diagram{
         console.log(serverResponse);
         
-        var diagram = new Diagram();
         if(
         serverResponse !== null &&
         serverResponse.Res !== null &&
@@ -29,18 +30,19 @@ export default class DiagramCreator{
             let jsonDiagram = serverResponse.Res.diagram;
             //check if the server result contains classes
             if(jsonDiagram.class_declaration !== null){        
-               this.addClasses(jsonDiagram.class_declaration, diagram);    
+               this.addClasses(jsonDiagram.class_declaration, DiagramCreator.diagram);    
 
             }     
             if(jsonDiagram.connection_declaration !== null){
                 
-                this.addConnections(jsonDiagram.connection_declaration, diagram);
+                this.addConnections(jsonDiagram.connection_declaration, DiagramCreator.diagram);
             }
 
         }
-        console.log(diagram);
+        console.log('diagram creator');
+        console.log(DiagramCreator.diagram);
         
-        return diagram;
+        return DiagramCreator.diagram;
     }
 
     private addConnections(jsonConnections: any, diagram: IDiagram){
@@ -63,7 +65,7 @@ export default class DiagramCreator{
         for (let index = 0; index < jsonClasses.length; index++) {
             var jasonClass = jsonClasses[index];
             
-            let cls = new Class(jasonClass.name, jasonClass.type,diagram);
+            let cls = new Class(jasonClass.name, jasonClass.type);
             cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
             

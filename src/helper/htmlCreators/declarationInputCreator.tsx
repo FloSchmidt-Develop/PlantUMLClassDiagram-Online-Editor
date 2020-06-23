@@ -1,4 +1,6 @@
 import IClass from "../../interfaces/class";
+import ClassUpdateController from '../../classes/controller/classUpdateController';
+
 
 export default class DeclarationInputCreator {
   graph: any;
@@ -8,17 +10,17 @@ export default class DeclarationInputCreator {
   }
 
   public createNameInputDiv(
-    selectedClass: IClass,
+    elementToChange: IClass,
     sender: any
   ): HTMLDivElement {
     let container_div = document.createElement("div");
 
-    if(selectedClass !== null && selectedClass.declarations !== null && typeof selectedClass.declarations !== 'undefined'){
+    if(elementToChange !== null && elementToChange.declarations !== null && typeof elementToChange.declarations !== 'undefined'){
 
 
 
-    for (let index = 0; index < selectedClass.declarations.length; index++) {
-      const declaration = selectedClass.declarations[index];
+    for (let index = 0; index < elementToChange.declarations.length; index++) {
+      const declaration = elementToChange.declarations[index];
       let row_div = document.createElement("div");
 
       //name
@@ -30,41 +32,42 @@ export default class DeclarationInputCreator {
       let input_name = document.createElement("input");
       input_name.type = "text";
       input_name.value = declaration.name;
+      row_div.appendChild(input_name);
 
       input_name.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.declarations[index].setName(input_name.value);
+
+        if (elementToChange !== null) {
+          elementToChange.declarations[index].setName(input_name.value);
         }
 
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
-        this.graph.getModel().endUpdate();
+      //Update Cell
+      this.graph.getModel().beginUpdate();
+      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+      this.graph.getModel().endUpdate();
 
       };
-      row_div.appendChild(input_name);
+
 
       //DataType
       let type_p = document.createElement("p");
-      name_p.style.display = "inline";
-      name_p.innerText = " name: ";
-      row_div.appendChild(name_p);
+      type_p.style.display = "inline";
+      type_p.innerText = " type: ";
+      row_div.appendChild(type_p);
 
       let input_type = document.createElement("input");
       input_type.type = "text";
       input_type.value = declaration.declaration_value
 
       input_type.onchange = () => {
-        var classToChange = selectedClass;
-        if (classToChange !== null) {
-          classToChange.declarations[index].setDeclarationValue(input_type.value);
+        if (elementToChange !== null) {
+          elementToChange.declarations[index].setDeclarationValue(input_type.value);
         }
-
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        this.graph.model.setValue(sender.cells[0], classToChange);
-        this.graph.getModel().endUpdate();
+      
+      
+      //Update Cell
+      this.graph.getModel().beginUpdate();
+      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+      this.graph.getModel().endUpdate();
         
       };
       row_div.appendChild(input_type);

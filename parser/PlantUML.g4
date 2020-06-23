@@ -126,7 +126,7 @@ connection_symbol:
 	CONNECTOR
 	;
 
-multiplicity: ('*' | '0..1' | '0..*' | '1..*' | '1');
+multiplicity: ('*' | '0..1' | '0..*' | '1..*' | DIGIT );
 
 visibility:
     '+'     

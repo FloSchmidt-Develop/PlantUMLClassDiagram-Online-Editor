@@ -3,6 +3,7 @@ export default interface Declaration {
   declaration_value: string;
 
   setName(newName: string);
-
   setDeclarationValue(newDeclarationValue: string);
+
+  getWidth(): number;
 }

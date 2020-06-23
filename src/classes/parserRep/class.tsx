@@ -2,7 +2,6 @@ import IClass from '../../interfaces/class'
 import IAttribute from '../../interfaces/attribute'
 import IMethod from '../../interfaces/methode'
 import IDeclaration from '../../interfaces/declaration'
-import IDiagram from '../../interfaces/diagram';
 
 
 export default class Class implements IClass{
@@ -13,12 +12,12 @@ export default class Class implements IClass{
     public package: string = '';
     public type: string;
     public alias: string = '';
-    public diagram: IDiagram;
+    //public diagram: IAddOnlyDiagram;
 
-    constructor(name: string, type: string, diagram: IDiagram){
+    constructor(name: string, type: string){
         this.name = name;
         this.type = type;
-        this.diagram = diagram;
+        //this.diagram = diagram;
     }
 
     public setName(newName: string){
@@ -62,8 +61,25 @@ export default class Class implements IClass{
             }
             
         }
+
+        for (let index = 0; index < this.declarations.length; index++) {
+            let declaration = this.declarations[index];
+            if(declaration.getWidth() > max){
+                max = declaration.getWidth();
+            }
+        }
         
-        return max;
+        return max * 0.60;
+    }
+
+    public getHeight(): number {
+
+        return 67 
+        + (this.attributes.length * 11) 
+        + (this.methods.length * 11) 
+        + (this.declarations.length * 11) 
+        - (this.attributes.length !== 0 ? 3 : 0) 
+        - (this.methods.length !== 0 ? 3 : 0);
     }
 
 }
