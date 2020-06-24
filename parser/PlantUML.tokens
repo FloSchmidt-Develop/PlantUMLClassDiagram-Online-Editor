@@ -40,7 +40,6 @@ DOTDOT=39
 WHITESPACE=40
 QUOTATION=41
 COMMENT=42
-DIGIT=43
 '@startuml'=1
 '@enduml'=2
 '{'=3

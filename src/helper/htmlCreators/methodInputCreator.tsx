@@ -1,5 +1,6 @@
 import IClass from "../../interfaces/class";
 import ClassUpdateController from '../../classes/controller/classUpdateController';
+import Attribute from "../../classes/parserRep/attribute";
 
 
 export default class MethodInputCreator {
@@ -40,13 +41,28 @@ export default class MethodInputCreator {
         }
 
         //Update Cell
-        this.graph.getModel().beginUpdate();
-        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-        this.graph.getModel().endUpdate();
+        this.UpdateClass(sender,elementToChange);
 
       };
       row_div.appendChild(input_visibility);
+
+      let deleteMethodButton = document.createElement('button');
+      deleteMethodButton.innerText = 'x';
+      deleteMethodButton.style.float = 'right';
+      deleteMethodButton.style.marginRight = '10px';
+
+
+        deleteMethodButton.onclick = () => {
+          elementToChange.DeleteMethod(method);  
+          this.UpdateClass(sender,elementToChange);
+          }
+
+
+
+      row_div.appendChild(deleteMethodButton);
       row_div.appendChild(document.createElement('br'));
+
+
 
       //name
       let name_p = document.createElement("p");
@@ -64,9 +80,7 @@ export default class MethodInputCreator {
         }
 
         //Update Cell
-        this.graph.getModel().beginUpdate();
-        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-        this.graph.getModel().endUpdate();
+        this.UpdateClass(sender,elementToChange);
 
       };
       row_div.appendChild(input_name);
@@ -87,10 +101,7 @@ export default class MethodInputCreator {
           elementToChange.methods[index].setDataType(input_type.value);
         }
 
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-        this.graph.getModel().endUpdate();
+        this.UpdateClass(sender,elementToChange);
 
       };
       row_div.appendChild(input_type);
@@ -116,6 +127,20 @@ export default class MethodInputCreator {
           p.innerText = '#' + (index + 1);
           container_div.appendChild(p);
 
+          let deleteFunctionArgumentButton = document.createElement('button');
+          deleteFunctionArgumentButton.innerText = 'x';
+          deleteFunctionArgumentButton.style.float = 'right';
+          deleteFunctionArgumentButton.style.marginRight = '50px';
+
+
+          deleteFunctionArgumentButton.onclick = () => {
+            method.DeleteAttribute(argument);
+
+            
+            this.UpdateClass(sender,elementToChange);
+          }
+
+          container_div.appendChild(deleteFunctionArgumentButton);
 
           //argument Name
           let argumentName_p = document.createElement("p");
@@ -131,9 +156,7 @@ export default class MethodInputCreator {
               argument.setName(input_argument_name.value);
             
           //Update Cell
-          this.graph.getModel().beginUpdate();
-          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-          this.graph.getModel().endUpdate();
+          this.UpdateClass(sender,elementToChange);
 
           }
           functionArgumentDiv.appendChild(input_argument_name);
@@ -154,18 +177,28 @@ export default class MethodInputCreator {
               argument.setDataType(input_argument_dataType.value);
             
 
-          //Update Cell
-          this.graph.getModel().beginUpdate();
-          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-          this.graph.getModel().endUpdate();
+            this.UpdateClass(sender,elementToChange);
 
           }
           functionArgumentDiv.appendChild(input_argument_dataType);
-
           container_div.appendChild(functionArgumentDiv);
 
-          };     
+          }   
         }
+
+        let newFunctionArgumentButton = document.createElement('button');
+        newFunctionArgumentButton.innerText = '+';
+        newFunctionArgumentButton.onclick = () =>{
+
+            method.attributeList?.push(new Attribute('function','return value','+'));
+
+            this.UpdateClass(sender,elementToChange);
+       }
+
+
+       container_div.appendChild(newFunctionArgumentButton);
+
+       
 
         container_div.appendChild(document.createElement("hr"));
       
@@ -181,5 +214,16 @@ export default class MethodInputCreator {
   }
 
     return container_div;
+  }
+
+
+  private UpdateClass(sender,elementToChange){
+    this.graph.getModel().beginUpdate();
+            ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+            this.graph.getModel().endUpdate();
+
+            let tempSelectedCell = sender.cells[0];
+            this.graph.getSelectionModel().clear();
+            this.graph.getSelectionModel().addCell(tempSelectedCell);
   }
 }

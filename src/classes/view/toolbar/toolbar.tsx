@@ -8,6 +8,8 @@ import Class from "../../parserRep/class";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
+import Swimlane from "../../../images/swimlane.gif"
+import Rectangle from "../../../images/rectangle.gif"
 
 
 
@@ -29,15 +31,15 @@ export default class Toolbar{
             var cls = new Class('new Class','class');
             var pkg = new Package('new Package');
     
-            Toolbar.addVertex(graph,toolbar,pkg,'../../../images/swimlane.gif', 120, 160, 'shape=swimlane;startSize=20;');
-            Toolbar.addVertex(graph,toolbar,cls,'../../../images/rectangle.gif', 100, 40, '');
+            Toolbar.addVertex(graph,toolbar,pkg, Swimlane, 120, 160, 'shape=swimlane;startSize=20;');
+            Toolbar.addVertex(graph,toolbar,cls, Rectangle, 100, 40, '');
         }
     }
 
     private static addVertex(graph, toolbar,type: IClass | IPackage, icon, w, h, style){
 
         var vertex = new mxCell(type, new mxGeometry(0, 0, w, h), style);
-
+        
 		vertex.setVertex(true);
 				
 		Toolbar.addToolbarItem(graph, toolbar, vertex, icon);
@@ -56,8 +58,13 @@ export default class Toolbar{
             var vertex = graph.getModel().cloneCell(prototype);
 
             //TODO need to create a new Class for vertex value otherwise it will always create last imported Class
-            //console.log(vertex);
-            //vertex.value = bestCopyEver(prototype.value);
+            if(vertex.value instanceof Class){
+                vertex.value = new Class('Class Name','class');
+            }
+            else if(vertex.value instanceof Package){
+                vertex.value = new Package('Package Name');
+            }
+            
             
             
             vertex.geometry.x = pt.x;
@@ -66,9 +73,6 @@ export default class Toolbar{
             graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
         }
 
-        function bestCopyEver(src) {
-            return Object.assign({}, src);
-          }
 
         // Creates the image which is used as the drag icon (preview)
         var img = toolbar.addMode(null, image, funct);

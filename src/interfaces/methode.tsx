@@ -1,8 +1,9 @@
 import IAttribute from './attribute'
 import IName from './named';
+import ID from './id';
 
 
-export default interface Methode extends IName{
+export default interface Methode extends IName, ID{
     name: string,
     dataType: string,
     attributeList?: IAttribute[],
@@ -14,4 +15,5 @@ export default interface Methode extends IName{
     setName(newName : string);
     setVisibility(newVisibility: string);
     setDataType(newDatatype: string);
+    DeleteAttribute(attribute: IAttribute);
 }

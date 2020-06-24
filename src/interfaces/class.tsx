@@ -3,8 +3,9 @@ import IMethod from './methode';
 import IDeclaration from './declaration';
 import ITyped from './typed';
 import IName from './named';
+import ID from './id';
 
-export default interface Class extends ITyped, IName{
+export default interface Class extends ITyped, IName, ID{
     attributes: IAttribute[],
     methods: IMethod[],
     declarations: IDeclaration[];
@@ -13,6 +14,7 @@ export default interface Class extends ITyped, IName{
     alias: string
 
     AddMethods(method:IMethod ): void;
+    DeleteMethod(method: IMethod): void;
 
     AddAttribute(attribute: IAttribute): void;
 

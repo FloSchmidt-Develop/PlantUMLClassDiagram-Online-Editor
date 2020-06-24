@@ -1,8 +1,9 @@
 import IConnection from '../../interfaces/connection';
 import IConnector from '../../interfaces/connector';
 import Connector from './connector';
+import ID from './id';
 
-export default class Connection implements IConnection{
+export default class Connection extends ID implements IConnection{
     public connector: IConnector;
     public multiplicity_left: string;
     public multiplicity_right: string;
@@ -18,6 +19,7 @@ export default class Connection implements IConnection{
         sourceElement: string,
         stereoType: string) {
 
+            super();
             this.connector = new Connector(connector);
             this.multiplicity_left = multiplicity_left;
             this.multiplicity_right = multiplicity_right;

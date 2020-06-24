@@ -7,6 +7,7 @@ import IDiagram from "./interfaces/diagram";
 import DiagramCreator from "./helper/diagramCreator";
 import MxGraphCreator from "./helper/mxGraphCreator";
 import Toolbar from './classes/view/toolbar/toolbar';
+import Bild from './images/Arrow_big.jpg';
 
 import {
   mxGraph,
@@ -14,16 +15,13 @@ import {
   mxUtils,
   mxEvent,
   mxKeyHandler,
-  mxCircleLayout,
-  mxCodec
+  mxXmlCanvas2D,
+  mxImageExport,
+  mxRubberband,
+  mxUndoManager
 } from "mxgraph-js";
 
 axios.defaults.baseURL = "http://localhost:4000";
-
-function useForceUpdate() {
-  const [value, setValue] = useState(0); // integer state
-  return () => setValue((value) => ++value); // update the state to force render
-}
 
 const App = () => {
   const [file, setFile] = useState("");
@@ -41,11 +39,28 @@ const App = () => {
     setFilename(e.target.files[0].name);
   };
 
-  const exportDiagram = () => {
-    var enc = new mxCodec(mxUtils.createXmlDocument());
-    var node = enc.encode(graph.getModel());
-    console.log(node);
-  };
+  const exportDiagram = async () => {
+    var xmlDoc = mxUtils.createXmlDocument();
+    var root = xmlDoc.createElement('output');
+    xmlDoc.appendChild(root);
+
+    var xmlCanvas = new mxXmlCanvas2D(root);
+    var imgExport = new mxImageExport();
+    imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
+
+    var bounds = graph.getGraphBounds();
+    var w = Math.ceil(bounds.x + bounds.width);
+    var h = Math.ceil(bounds.y + bounds.height);
+
+    var xml = mxUtils.getXml(root);
+    let requestData = 'http://localhost:4000/export?format=png&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml);
+    console.log(requestData);
+    
+    //new mxXmlRequest('http://localhost:4000/export', 'format=png&w=' + w +
+    // '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
+    // .simulate(document, '_blank');
+    const res = await axios.get(requestData);
+    };
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -69,7 +84,6 @@ const App = () => {
 
       setDiagram(DiagramCreator.diagram);
       setChange(true);
-      console.log('----diagram setted---');
       
     } catch (err) {
       /*
@@ -90,11 +104,13 @@ const App = () => {
       } 
       else {
 
-
+        //mxConnectionHandler.prototype.waypointsEnabled = true;
+        graph.setConnectableEdges(true);
+        new mxRubberband(graph);
         graph.setConnectable(true);
         graph.setHtmlLabels(true);
-
         mxEvent.disableContextMenu(divGraph.current);
+
 
         if (typeof diagram !== "undefined") {
           console.log('start');
@@ -135,7 +151,46 @@ const App = () => {
 
       setGraph(graph);
       setDiagram(diag);
+      /*
+      //----------------------------------------------------------------------------------- Test
+      document.body.appendChild(mxUtils.button('Zoom In', function()
+      {
+        graph.zoomIn();
+      }));
+      
+      document.body.appendChild(mxUtils.button('Zoom Out', function()
+      {
+        graph.zoomOut();
+      }));
+      
+      // Undo/redo
+      var undoManager = new mxUndoManager();
+      var listener = function(sender, evt)
+      {
+        undoManager.undoableEditHappened(evt.getProperty('edit'));
+      };
+      graph.getModel().addListener(mxEvent.UNDO, listener);
+      graph.getView().addListener(mxEvent.UNDO, listener);
+      
+      document.body.appendChild(mxUtils.button('Undo', function()
+      {
+        undoManager.undo();
+      }));
+      
+      document.body.appendChild(mxUtils.button('Redo', function()
+      {
+        undoManager.redo();
+      }));
 
+      // Shows XML for debugging the actual model
+      document.body.appendChild(mxUtils.button('Delete', function()
+      {
+          graph.removeCells();
+          console.log('delete');
+          
+      }));
+      //-----------------------------------------------------------------------------------------
+      */
     }
   });
 
@@ -153,6 +208,7 @@ const App = () => {
             {filename}
           </label>
           <input className="my-button-style" type="submit" value="Upload" />
+          <input className="exportButton" type="button" onClick={exportDiagram} value='Export' />
         </div>
       </form>
       <div className="graph-container" ref={divGraph} id="divGraph"></div>
@@ -161,9 +217,7 @@ const App = () => {
           <p>nothing Selected</p>
         </div>
       </div>
-      <form>
-        <input className="exportButton" type="button" onClick={exportDiagram} value='Export' />
-      </form>
+
 
     </Fragment>
   );

@@ -2,9 +2,10 @@ import IClass from '../../interfaces/class'
 import IAttribute from '../../interfaces/attribute'
 import IMethod from '../../interfaces/methode'
 import IDeclaration from '../../interfaces/declaration'
+import ID from './id';
 
 
-export default class Class implements IClass{
+export default class Class extends ID implements IClass {
     public attributes: IAttribute[] = [];
     public methods: IMethod[] = [];
     public declarations: IDeclaration[] = [];
@@ -15,6 +16,7 @@ export default class Class implements IClass{
     //public diagram: IAddOnlyDiagram;
 
     constructor(name: string, type: string){
+        super();
         this.name = name;
         this.type = type;
         //this.diagram = diagram;
@@ -30,6 +32,10 @@ export default class Class implements IClass{
 
     public AddMethods(method:IMethod ){
         this.methods.push(method);
+    }
+
+    public DeleteMethod(method: IMethod){
+        this.methods = this.methods.filter(e => e.id != method.id);
     }
 
     public AddAttribute(attribute: IAttribute){

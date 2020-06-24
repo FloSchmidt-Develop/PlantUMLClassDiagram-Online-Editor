@@ -1,4 +1,6 @@
-export default interface Declaration {
+import ID from "./id";
+
+export default interface Declaration extends ID {
   name: string;
   declaration_value: string;
 

@@ -3,11 +3,16 @@ import IClass from '../../interfaces/class';
 import IConnection from '../../interfaces/connection';
 import IPackage from '../../interfaces/package';
 import Package from './package';
+import ID from './id';
 
-export default class Diagram implements IDiagram{
+export default class Diagram extends ID implements IDiagram{
     public class_declarations: IClass[] = [];
     public connection_declarations : IConnection[] = [];
     public package_declarations : IPackage [] = [];
+
+    constructor() {
+        super();
+    }
 
     public addClass(newClass : IClass) :void{
         this.class_declarations.push(newClass);

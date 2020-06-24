@@ -126,7 +126,7 @@ connection_symbol:
 	CONNECTOR
 	;
 
-multiplicity: ('*' | '0..1' | '0..*' | '1..*' | DIGIT );
+multiplicity: ('*' | '0..1' | '0..*' | '1..*' | WORD );
 
 visibility:
     '+'     
@@ -179,7 +179,7 @@ variable_name:
     ;
 	
 connection_name:
-	WORD
+	WORD | ('(' WORD ',' WHITESPACE? WORD ')')
 	;
 
 
@@ -256,6 +256,10 @@ DIRECTION:
 	| 'down'
 	| 'right'
 	| 'left'
+    | 'r'
+    | 'l'
+    | 'u'
+    | 'd'
 	;
 	
 	
@@ -273,7 +277,7 @@ NEWPAGE : 'newpage' -> channel(HIDDEN)
 NEWLINE  :   '\n\n' | '\n' ;
 
 ARRAY : NONDIGIT ( DIGIT | NONDIGIT )* '.'? '[]';
-WORD  : NONDIGIT ( DIGIT | NONDIGIT )*;
+WORD  : (NONDIGIT | DIGIT) ( DIGIT | NONDIGIT )*;
 INTEGER: DIGIT (DIGIT)*;
 ANYARRAY : '*[]';
 ANY   : '*';

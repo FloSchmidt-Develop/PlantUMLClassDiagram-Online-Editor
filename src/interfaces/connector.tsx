@@ -1,4 +1,6 @@
-export default interface Connector{
+import ID from "./id";
+
+export default interface Connector extends ID{
     startArrowSymbol: Arrows;
     endArrowSymbol: Arrows;
     lineStyle: Lines;

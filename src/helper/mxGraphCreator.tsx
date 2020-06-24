@@ -28,7 +28,8 @@ import {
   mxEdgeStyle,
   mxHierarchicalLayout,
   mxRubberband,
-  mxCodec
+  mxCodec,
+  mxUndoManager
 } from "mxgraph-js";
 import Declaration from "../classes/parserRep/declaration";
 import Package from "../classes/parserRep/package";
@@ -392,12 +393,13 @@ export default class MxGraphCreator {
         let sourceClass : Class;
         let targetClass: Class;
         if(edge != null){
+          console.log(edge);
+          
           if(edge.source != null && edge.target != null){
             sourceClass = edge.source.value as Class;
             targetClass = edge.target.value as Class;
               if(targetClass != null && sourceClass != null){
                 //TODO Find solution
-                let diag = new DiagramCreator();
                 DiagramCreator.diagram.addConnection(
                   new Connection('-->','','',targetClass.alias,sourceClass.alias,'')
                   )
@@ -410,12 +412,12 @@ export default class MxGraphCreator {
     });
 
     this.graph.dropEnabled = true;
-    new mxRubberband(this.graph);
 
     this.graph.getModel().beginUpdate();
 
     var activeVertexes: { [id: string]: any } = {};
     var activePackages: { [id: string]: any } = {};
+    var activeEdges: {[id: string]: any } = {};
     var x = 200;
     var y = 0;
     
@@ -480,18 +482,38 @@ export default class MxGraphCreator {
     for (let index = 0; index < edgeCount; index++) {
       let connection = this.diagram?.connection_declarations[index];
 
-      const e1 = this.graph.insertEdge(
-        this.parentContainer,
-        null,
-        connection,
-        activeVertexes[connection.sourceElement],
-        activeVertexes[connection.destinationElement],
-        this.getEdgeStyle(connection.connector)
-      );
+      if(connection.sourceElement.includes('(')){
+        console.log('--------COnnection Connection');
+        
+        console.log(connection);
+        
+      }
+      else if(connection.destinationElement.includes('(')){
+   
+        let e  = this.graph.insertEdge(
+          this.parentContainer,
+          null,
+          connection,
+          activeVertexes[connection.sourceElement],
+          activeEdges[connection.destinationElement],
+          this.getEdgeStyle(connection.connector)
+        );
+      }
+      else{
+        activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'] = this.graph.insertEdge(
+          this.parentContainer,
+          null,
+          connection,
+          activeVertexes[connection.sourceElement],
+          activeVertexes[connection.destinationElement],
+          this.getEdgeStyle(connection.connector)
+        );
+      }
+    
     }
-
+    /*
     var layout = new mxHierarchicalLayout(this.graph, mxConstants.DIRECTION_NORTH, true);
-
+    
     var packages = Object.keys(activePackages);
     for (let index = 0; index < packages.length; index++) {
       let packageName = packages[index];
@@ -500,7 +522,7 @@ export default class MxGraphCreator {
     if(packages.length === 0){
       layout.execute(this.parentContainer);
     }
-
+    */
     this.graph.getModel().parentForCellChanged = function(cell,parent,index){
       if(parent != null){
         parent.insert(cell,index);

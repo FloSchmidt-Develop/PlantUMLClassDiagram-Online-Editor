@@ -6,6 +6,7 @@ var DiagramListener = require('./parser/DiagramListener').DiagramListener;
 const express = require('./node_modules/express');
 const fileUpload = require('./node_modules/express-fileupload');
 const cors = require('./node_modules/cors');
+//const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.post('/upload', (req, res) => {
     if(req.file === null){
         return res.status(400).json({msg: 'no file uploaded'})
     }
+    //console.log(req);
 
     const file = req.files.file;
     console.log(file.data);
@@ -33,9 +35,19 @@ app.post('/upload', (req, res) => {
     var listener = new DiagramListener(o);
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
     
-    console.log(listener.Res.class_declaration);
+    console.log(listener.Res.diagram);
 
     res.json(listener);
+})
+
+app.get('/export', (request, res) => {
+    if(req.file === null){
+        return res.status(400).json({msg: 'no file uploaded'})
+    }
+    console.log('export');
+    console.log(request,query);
+
+    //res.json(listener);
 })
 
 

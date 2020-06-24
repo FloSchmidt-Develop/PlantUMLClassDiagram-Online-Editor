@@ -7,11 +7,6 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
 .App-header {
   background-color: #282c34;
@@ -34,7 +29,6 @@
   white-space: nowrap;
   top:50px;
   left:20px;
-  margin-left: 1vh;
   border: 2px solid black;
 }
 
@@ -62,8 +56,7 @@
 }
 
 .exportButton{
-  position: absolute;
-  right: 30vw;
+  margin-left: 2vw;
   top: 1vh;
   font-size: larger;
 }
@@ -93,15 +86,12 @@
   background-size: cover;
 }
 
+select#line-select option[value="normal"]  {
+  background-image: url('./images/line_normal.jpg');
+  z-index: 100;
+}
+
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

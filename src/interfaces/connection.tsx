@@ -1,7 +1,8 @@
 import IConnector from './connector'
 import ITyped from './typed';
+import ID from './id';
 
-export default interface Connection extends ITyped{
+export default interface Connection extends ITyped, ID{
     connector: IConnector,
     multiplicity_left: string,
     multiplicity_right: string,

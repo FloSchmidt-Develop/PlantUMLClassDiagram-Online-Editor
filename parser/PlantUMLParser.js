@@ -8,7 +8,7 @@ var grammarFileName = "PlantUML.g4";
 
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0003-\u01dc\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
+    "\u0003,\u01e5\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
     "\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f\u0004",
     "\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010\t\u0010\u0004",
@@ -73,15 +73,16 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     " \u018b\n \u0003 \u0003 \u0005 \u018f\n \u0003!\u0007!\u0192\n!\f!\u000e",
     "!\u0195\u000b!\u0003\"\u0007\"\u0198\n\"\f\"\u000e\"\u019b\u000b\"\u0003",
     "#\u0007#\u019e\n#\f#\u000e#\u01a1\u000b#\u0003$\u0007$\u01a4\n$\f$\u000e",
-    "$\u01a7\u000b$\u0003%\u0003%\u0003&\u0003&\u0005&\u01ad\n&\u0003\'\u0003",
-    "\'\u0003\'\u0003\'\u0003\'\u0003\'\u0005\'\u01b5\n\'\u0003\'\u0005\'",
-    "\u01b8\n\'\u0003\'\u0003\'\u0003\'\u0003(\u0003(\u0003(\u0005(\u01c0",
-    "\n(\u0003(\u0003(\u0003(\u0003(\u0003(\u0003(\u0003(\u0005(\u01c9\n",
-    "(\u0003)\u0003)\u0003)\u0006)\u01ce\n)\r)\u000e)\u01cf\u0003*\u0003",
-    "*\u0003*\u0003*\u0003*\u0005*\u01d7\n*\u0003*\u0005*\u01da\n*\u0003",
+    "$\u01a7\u000b$\u0003%\u0003%\u0003%\u0003%\u0003%\u0005%\u01ae\n%\u0003",
+    "%\u0003%\u0005%\u01b2\n%\u0003&\u0003&\u0005&\u01b6\n&\u0003\'\u0003",
+    "\'\u0003\'\u0003\'\u0003\'\u0003\'\u0005\'\u01be\n\'\u0003\'\u0005\'",
+    "\u01c1\n\'\u0003\'\u0003\'\u0003\'\u0003(\u0003(\u0003(\u0005(\u01c9",
+    "\n(\u0003(\u0003(\u0003(\u0003(\u0003(\u0003(\u0003(\u0005(\u01d2\n",
+    "(\u0003)\u0003)\u0003)\u0006)\u01d7\n)\r)\u000e)\u01d8\u0003*\u0003",
+    "*\u0003*\u0003*\u0003*\u0005*\u01e0\n*\u0003*\u0005*\u01e3\n*\u0003",
     "*\u0002\u0002+\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016",
     "\u0018\u001a\u001c\u001e \"$&(*,.02468:<>@BDFHJLNPR\u0002\u0004\u0005",
-    "\u0002\u000e\u0010((--\u0003\u0002\u0011\u0013\u0002\u020f\u0002T\u0003",
+    "\u0002\u000e\u0010%%((\u0003\u0002\u0011\u0013\u0002\u021a\u0002T\u0003",
     "\u0002\u0002\u0002\u0004a\u0003\u0002\u0002\u0002\u0006d\u0003\u0002",
     "\u0002\u0002\bz\u0003\u0002\u0002\u0002\n\u0082\u0003\u0002\u0002\u0002",
     "\f\u009e\u0003\u0002\u0002\u0002\u000e\u00a1\u0003\u0002\u0002\u0002",
@@ -98,9 +99,9 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0003\u0002\u0002\u0002<\u0178\u0003\u0002\u0002\u0002>\u0181\u0003",
     "\u0002\u0002\u0002@\u0193\u0003\u0002\u0002\u0002B\u0199\u0003\u0002",
     "\u0002\u0002D\u019f\u0003\u0002\u0002\u0002F\u01a5\u0003\u0002\u0002",
-    "\u0002H\u01a8\u0003\u0002\u0002\u0002J\u01ac\u0003\u0002\u0002\u0002",
-    "L\u01ae\u0003\u0002\u0002\u0002N\u01c8\u0003\u0002\u0002\u0002P\u01cd",
-    "\u0003\u0002\u0002\u0002R\u01d1\u0003\u0002\u0002\u0002TW\u0007\u0003",
+    "\u0002H\u01b1\u0003\u0002\u0002\u0002J\u01b5\u0003\u0002\u0002\u0002",
+    "L\u01b7\u0003\u0002\u0002\u0002N\u01d1\u0003\u0002\u0002\u0002P\u01d6",
+    "\u0003\u0002\u0002\u0002R\u01da\u0003\u0002\u0002\u0002TW\u0007\u0003",
     "\u0002\u0002UX\u0007#\u0002\u0002VX\u0005\u0004\u0003\u0002WU\u0003",
     "\u0002\u0002\u0002WV\u0003\u0002\u0002\u0002XY\u0003\u0002\u0002\u0002",
     "YZ\u0007\u0004\u0002\u0002Z\u0003\u0003\u0002\u0002\u0002[`\u0005\n",
@@ -301,42 +302,47 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u01a2\u01a4\u0007%\u0002\u0002\u01a3\u01a2\u0003\u0002\u0002\u0002",
     "\u01a4\u01a7\u0003\u0002\u0002\u0002\u01a5\u01a3\u0003\u0002\u0002\u0002",
     "\u01a5\u01a6\u0003\u0002\u0002\u0002\u01a6G\u0003\u0002\u0002\u0002",
-    "\u01a7\u01a5\u0003\u0002\u0002\u0002\u01a8\u01a9\u0007%\u0002\u0002",
-    "\u01a9I\u0003\u0002\u0002\u0002\u01aa\u01ad\u0007\u0015\u0002\u0002",
-    "\u01ab\u01ad\u0007\u0016\u0002\u0002\u01ac\u01aa\u0003\u0002\u0002\u0002",
-    "\u01ac\u01ab\u0003\u0002\u0002\u0002\u01adK\u0003\u0002\u0002\u0002",
-    "\u01ae\u01af\u0007+\u0002\u0002\u01af\u01b4\u0005> \u0002\u01b0\u01b1",
-    "\u0007\b\u0002\u0002\u01b1\u01b2\u0005> \u0002\u01b2\u01b3\u0007\t\u0002",
-    "\u0002\u01b3\u01b5\u0003\u0002\u0002\u0002\u01b4\u01b0\u0003\u0002\u0002",
-    "\u0002\u01b4\u01b5\u0003\u0002\u0002\u0002\u01b5\u01b7\u0003\u0002\u0002",
-    "\u0002\u01b6\u01b8\u0007)\u0002\u0002\u01b7\u01b6\u0003\u0002\u0002",
-    "\u0002\u01b7\u01b8\u0003\u0002\u0002\u0002\u01b8\u01b9\u0003\u0002\u0002",
-    "\u0002\u01b9\u01ba\u0007%\u0002\u0002\u01ba\u01bb\u0007+\u0002\u0002",
-    "\u01bbM\u0003\u0002\u0002\u0002\u01bc\u01bd\u0005> \u0002\u01bd\u01bf",
-    "\u0007\u0017\u0002\u0002\u01be\u01c0\u0005<\u001f\u0002\u01bf\u01be",
-    "\u0003\u0002\u0002\u0002\u01bf\u01c0\u0003\u0002\u0002\u0002\u01c0\u01c1",
-    "\u0003\u0002\u0002\u0002\u01c1\u01c2\u0007\u0018\u0002\u0002\u01c2\u01c9",
-    "\u0003\u0002\u0002\u0002\u01c3\u01c4\u0005> \u0002\u01c4\u01c5\u0007",
-    "\u000b\u0002\u0002\u01c5\u01c6\u0007\r\u0002\u0002\u01c6\u01c9\u0003",
-    "\u0002\u0002\u0002\u01c7\u01c9\u0005> \u0002\u01c8\u01bc\u0003\u0002",
-    "\u0002\u0002\u01c8\u01c3\u0003\u0002\u0002\u0002\u01c8\u01c7\u0003\u0002",
-    "\u0002\u0002\u01c9O\u0003\u0002\u0002\u0002\u01ca\u01cb\u0005> \u0002",
-    "\u01cb\u01cc\u0007#\u0002\u0002\u01cc\u01ce\u0003\u0002\u0002\u0002",
-    "\u01cd\u01ca\u0003\u0002\u0002\u0002\u01ce\u01cf\u0003\u0002\u0002\u0002",
-    "\u01cf\u01cd\u0003\u0002\u0002\u0002\u01cf\u01d0\u0003\u0002\u0002\u0002",
-    "\u01d0Q\u0003\u0002\u0002\u0002\u01d1\u01d2\u0007\u0019\u0002\u0002",
-    "\u01d2\u01d9\u0005> \u0002\u01d3\u01d4\u0007\u0005\u0002\u0002\u01d4",
-    "\u01d6\u0007#\u0002\u0002\u01d5\u01d7\u0005P)\u0002\u01d6\u01d5\u0003",
-    "\u0002\u0002\u0002\u01d6\u01d7\u0003\u0002\u0002\u0002\u01d7\u01d8\u0003",
-    "\u0002\u0002\u0002\u01d8\u01da\u0007\u0006\u0002\u0002\u01d9\u01d3\u0003",
-    "\u0002\u0002\u0002\u01d9\u01da\u0003\u0002\u0002\u0002\u01daS\u0003",
-    "\u0002\u0002\u0002QW_aflrtx}\u0080\u0084\u0088\u008f\u0091\u0095\u0099",
-    "\u009e\u00a1\u00a5\u00a9\u00ae\u00b2\u00ba\u00bd\u00c2\u00c6\u00cb\u00d1",
-    "\u00d7\u00da\u00dd\u00e2\u00e7\u00ea\u00ed\u00f2\u00f6\u00f9\u00fd\u0101",
-    "\u0108\u010d\u0112\u011a\u0122\u0128\u012c\u0130\u0134\u0137\u013b\u013e",
-    "\u0141\u0149\u014d\u0150\u0153\u015e\u0162\u0169\u016e\u0173\u017d\u0181",
-    "\u0186\u018a\u018e\u0193\u0199\u019f\u01a5\u01ac\u01b4\u01b7\u01bf\u01c8",
-    "\u01cf\u01d6\u01d9"].join("");
+    "\u01a7\u01a5\u0003\u0002\u0002\u0002\u01a8\u01b2\u0007%\u0002\u0002",
+    "\u01a9\u01aa\u0007\b\u0002\u0002\u01aa\u01ab\u0007%\u0002\u0002\u01ab",
+    "\u01ad\u0007\f\u0002\u0002\u01ac\u01ae\u0007*\u0002\u0002\u01ad\u01ac",
+    "\u0003\u0002\u0002\u0002\u01ad\u01ae\u0003\u0002\u0002\u0002\u01ae\u01af",
+    "\u0003\u0002\u0002\u0002\u01af\u01b0\u0007%\u0002\u0002\u01b0\u01b2",
+    "\u0007\t\u0002\u0002\u01b1\u01a8\u0003\u0002\u0002\u0002\u01b1\u01a9",
+    "\u0003\u0002\u0002\u0002\u01b2I\u0003\u0002\u0002\u0002\u01b3\u01b6",
+    "\u0007\u0015\u0002\u0002\u01b4\u01b6\u0007\u0016\u0002\u0002\u01b5\u01b3",
+    "\u0003\u0002\u0002\u0002\u01b5\u01b4\u0003\u0002\u0002\u0002\u01b6K",
+    "\u0003\u0002\u0002\u0002\u01b7\u01b8\u0007+\u0002\u0002\u01b8\u01bd",
+    "\u0005> \u0002\u01b9\u01ba\u0007\b\u0002\u0002\u01ba\u01bb\u0005> \u0002",
+    "\u01bb\u01bc\u0007\t\u0002\u0002\u01bc\u01be\u0003\u0002\u0002\u0002",
+    "\u01bd\u01b9\u0003\u0002\u0002\u0002\u01bd\u01be\u0003\u0002\u0002\u0002",
+    "\u01be\u01c0\u0003\u0002\u0002\u0002\u01bf\u01c1\u0007)\u0002\u0002",
+    "\u01c0\u01bf\u0003\u0002\u0002\u0002\u01c0\u01c1\u0003\u0002\u0002\u0002",
+    "\u01c1\u01c2\u0003\u0002\u0002\u0002\u01c2\u01c3\u0007%\u0002\u0002",
+    "\u01c3\u01c4\u0007+\u0002\u0002\u01c4M\u0003\u0002\u0002\u0002\u01c5",
+    "\u01c6\u0005> \u0002\u01c6\u01c8\u0007\u0017\u0002\u0002\u01c7\u01c9",
+    "\u0005<\u001f\u0002\u01c8\u01c7\u0003\u0002\u0002\u0002\u01c8\u01c9",
+    "\u0003\u0002\u0002\u0002\u01c9\u01ca\u0003\u0002\u0002\u0002\u01ca\u01cb",
+    "\u0007\u0018\u0002\u0002\u01cb\u01d2\u0003\u0002\u0002\u0002\u01cc\u01cd",
+    "\u0005> \u0002\u01cd\u01ce\u0007\u000b\u0002\u0002\u01ce\u01cf\u0007",
+    "\r\u0002\u0002\u01cf\u01d2\u0003\u0002\u0002\u0002\u01d0\u01d2\u0005",
+    "> \u0002\u01d1\u01c5\u0003\u0002\u0002\u0002\u01d1\u01cc\u0003\u0002",
+    "\u0002\u0002\u01d1\u01d0\u0003\u0002\u0002\u0002\u01d2O\u0003\u0002",
+    "\u0002\u0002\u01d3\u01d4\u0005> \u0002\u01d4\u01d5\u0007#\u0002\u0002",
+    "\u01d5\u01d7\u0003\u0002\u0002\u0002\u01d6\u01d3\u0003\u0002\u0002\u0002",
+    "\u01d7\u01d8\u0003\u0002\u0002\u0002\u01d8\u01d6\u0003\u0002\u0002\u0002",
+    "\u01d8\u01d9\u0003\u0002\u0002\u0002\u01d9Q\u0003\u0002\u0002\u0002",
+    "\u01da\u01db\u0007\u0019\u0002\u0002\u01db\u01e2\u0005> \u0002\u01dc",
+    "\u01dd\u0007\u0005\u0002\u0002\u01dd\u01df\u0007#\u0002\u0002\u01de",
+    "\u01e0\u0005P)\u0002\u01df\u01de\u0003\u0002\u0002\u0002\u01df\u01e0",
+    "\u0003\u0002\u0002\u0002\u01e0\u01e1\u0003\u0002\u0002\u0002\u01e1\u01e3",
+    "\u0007\u0006\u0002\u0002\u01e2\u01dc\u0003\u0002\u0002\u0002\u01e2\u01e3",
+    "\u0003\u0002\u0002\u0002\u01e3S\u0003\u0002\u0002\u0002SW_aflrtx}\u0080",
+    "\u0084\u0088\u008f\u0091\u0095\u0099\u009e\u00a1\u00a5\u00a9\u00ae\u00b2",
+    "\u00ba\u00bd\u00c2\u00c6\u00cb\u00d1\u00d7\u00da\u00dd\u00e2\u00e7\u00ea",
+    "\u00ed\u00f2\u00f6\u00f9\u00fd\u0101\u0108\u010d\u0112\u011a\u0122\u0128",
+    "\u012c\u0130\u0134\u0137\u013b\u013e\u0141\u0149\u014d\u0150\u0153\u015e",
+    "\u0162\u0169\u016e\u0173\u017d\u0181\u0186\u018a\u018e\u0193\u0199\u019f",
+    "\u01a5\u01ad\u01b1\u01b5\u01bd\u01c0\u01c8\u01d1\u01d8\u01df\u01e2"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -359,7 +365,7 @@ var symbolicNames = [ null, null, null, null, null, null, null, null, null,
                       "CLASS", "INTERFACE", "ABSTRACT", "OBJECT", "PACKAGE", 
                       "AS", "NEWPAGE", "NEWLINE", "ARRAY", "WORD", "INTEGER", 
                       "ANYARRAY", "ANY", "DOTDOT", "WHITESPACE", "QUOTATION", 
-                      "COMMENT", "DIGIT" ];
+                      "COMMENT" ];
 
 var ruleNames =  [ "diagram", "class_diagram", "package_section", "package_name", 
                    "class_declaration", "class_type", "class_description", 
@@ -435,7 +441,6 @@ PlantUMLParser.DOTDOT = 39;
 PlantUMLParser.WHITESPACE = 40;
 PlantUMLParser.QUOTATION = 41;
 PlantUMLParser.COMMENT = 42;
-PlantUMLParser.DIGIT = 43;
 
 PlantUMLParser.RULE_diagram = 0;
 PlantUMLParser.RULE_class_diagram = 1;
@@ -665,7 +670,7 @@ PlantUMLParser.prototype.class_diagram = function() {
         this.state = 95;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(((((_la - 26)) & ~0x1f) == 0 && ((1 << (_la - 26)) & ((1 << (PlantUMLParser.CLASS - 26)) | (1 << (PlantUMLParser.INTERFACE - 26)) | (1 << (PlantUMLParser.ABSTRACT - 26)) | (1 << (PlantUMLParser.OBJECT - 26)) | (1 << (PlantUMLParser.PACKAGE - 26)) | (1 << (PlantUMLParser.NEWLINE - 26)) | (1 << (PlantUMLParser.WORD - 26)))) !== 0)) {
+        while(((((_la - 6)) & ~0x1f) == 0 && ((1 << (_la - 6)) & ((1 << (PlantUMLParser.T__5 - 6)) | (1 << (PlantUMLParser.CLASS - 6)) | (1 << (PlantUMLParser.INTERFACE - 6)) | (1 << (PlantUMLParser.ABSTRACT - 6)) | (1 << (PlantUMLParser.OBJECT - 6)) | (1 << (PlantUMLParser.PACKAGE - 6)) | (1 << (PlantUMLParser.NEWLINE - 6)) | (1 << (PlantUMLParser.WORD - 6)))) !== 0)) {
             this.state = 93;
             this._errHandler.sync(this);
             switch(this._input.LA(1)) {
@@ -676,6 +681,7 @@ PlantUMLParser.prototype.class_diagram = function() {
                 this.state = 89;
                 this.class_declaration();
                 break;
+            case PlantUMLParser.T__5:
             case PlantUMLParser.WORD:
                 this.state = 90;
                 this.connection();
@@ -857,7 +863,7 @@ PlantUMLParser.prototype.package_section = function() {
             this.state = 114;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
-            while(((((_la - 26)) & ~0x1f) == 0 && ((1 << (_la - 26)) & ((1 << (PlantUMLParser.CLASS - 26)) | (1 << (PlantUMLParser.INTERFACE - 26)) | (1 << (PlantUMLParser.ABSTRACT - 26)) | (1 << (PlantUMLParser.OBJECT - 26)) | (1 << (PlantUMLParser.NEWLINE - 26)) | (1 << (PlantUMLParser.WORD - 26)))) !== 0)) {
+            while(((((_la - 6)) & ~0x1f) == 0 && ((1 << (_la - 6)) & ((1 << (PlantUMLParser.T__5 - 6)) | (1 << (PlantUMLParser.CLASS - 6)) | (1 << (PlantUMLParser.INTERFACE - 6)) | (1 << (PlantUMLParser.ABSTRACT - 6)) | (1 << (PlantUMLParser.OBJECT - 6)) | (1 << (PlantUMLParser.NEWLINE - 6)) | (1 << (PlantUMLParser.WORD - 6)))) !== 0)) {
                 this.state = 112;
                 this._errHandler.sync(this);
                 switch(this._input.LA(1)) {
@@ -868,6 +874,7 @@ PlantUMLParser.prototype.package_section = function() {
                     this.state = 109;
                     this.class_declaration();
                     break;
+                case PlantUMLParser.T__5:
                 case PlantUMLParser.WORD:
                     this.state = 110;
                     this.connection();
@@ -2831,7 +2838,7 @@ PlantUMLParser.prototype.connection_left = function() {
             this.state = 306;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
-            if(((((_la - 12)) & ~0x1f) == 0 && ((1 << (_la - 12)) & ((1 << (PlantUMLParser.T__11 - 12)) | (1 << (PlantUMLParser.T__12 - 12)) | (1 << (PlantUMLParser.T__13 - 12)) | (1 << (PlantUMLParser.ANY - 12)) | (1 << (PlantUMLParser.DIGIT - 12)))) !== 0)) {
+            if(((((_la - 12)) & ~0x1f) == 0 && ((1 << (_la - 12)) & ((1 << (PlantUMLParser.T__11 - 12)) | (1 << (PlantUMLParser.T__12 - 12)) | (1 << (PlantUMLParser.T__13 - 12)) | (1 << (PlantUMLParser.WORD - 12)) | (1 << (PlantUMLParser.ANY - 12)))) !== 0)) {
                 this.state = 305;
                 localctx.mult = this.multiplicity();
             }
@@ -2938,7 +2945,7 @@ PlantUMLParser.prototype.connection_right = function() {
             this.state = 313;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
-            if(((((_la - 12)) & ~0x1f) == 0 && ((1 << (_la - 12)) & ((1 << (PlantUMLParser.T__11 - 12)) | (1 << (PlantUMLParser.T__12 - 12)) | (1 << (PlantUMLParser.T__13 - 12)) | (1 << (PlantUMLParser.ANY - 12)) | (1 << (PlantUMLParser.DIGIT - 12)))) !== 0)) {
+            if(((((_la - 12)) & ~0x1f) == 0 && ((1 << (_la - 12)) & ((1 << (PlantUMLParser.T__11 - 12)) | (1 << (PlantUMLParser.T__12 - 12)) | (1 << (PlantUMLParser.T__13 - 12)) | (1 << (PlantUMLParser.WORD - 12)) | (1 << (PlantUMLParser.ANY - 12)))) !== 0)) {
                 this.state = 312;
                 localctx.mult = this.multiplicity();
             }
@@ -3201,8 +3208,8 @@ MultiplicityContext.prototype.ANY = function() {
     return this.getToken(PlantUMLParser.ANY, 0);
 };
 
-MultiplicityContext.prototype.DIGIT = function() {
-    return this.getToken(PlantUMLParser.DIGIT, 0);
+MultiplicityContext.prototype.WORD = function() {
+    return this.getToken(PlantUMLParser.WORD, 0);
 };
 
 MultiplicityContext.prototype.enterRule = function(listener) {
@@ -3239,7 +3246,7 @@ PlantUMLParser.prototype.multiplicity = function() {
         this.enterOuterAlt(localctx, 1);
         this.state = 341;
         _la = this._input.LA(1);
-        if(!(((((_la - 12)) & ~0x1f) == 0 && ((1 << (_la - 12)) & ((1 << (PlantUMLParser.T__11 - 12)) | (1 << (PlantUMLParser.T__12 - 12)) | (1 << (PlantUMLParser.T__13 - 12)) | (1 << (PlantUMLParser.ANY - 12)) | (1 << (PlantUMLParser.DIGIT - 12)))) !== 0))) {
+        if(!(((((_la - 12)) & ~0x1f) == 0 && ((1 << (_la - 12)) & ((1 << (PlantUMLParser.T__11 - 12)) | (1 << (PlantUMLParser.T__12 - 12)) | (1 << (PlantUMLParser.T__13 - 12)) | (1 << (PlantUMLParser.WORD - 12)) | (1 << (PlantUMLParser.ANY - 12)))) !== 0))) {
         this._errHandler.recoverInline(this);
         }
         else {
@@ -4290,8 +4297,20 @@ function Connection_nameContext(parser, parent, invokingState) {
 Connection_nameContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 Connection_nameContext.prototype.constructor = Connection_nameContext;
 
-Connection_nameContext.prototype.WORD = function() {
-    return this.getToken(PlantUMLParser.WORD, 0);
+Connection_nameContext.prototype.WORD = function(i) {
+	if(i===undefined) {
+		i = null;
+	}
+    if(i===null) {
+        return this.getTokens(PlantUMLParser.WORD);
+    } else {
+        return this.getToken(PlantUMLParser.WORD, i);
+    }
+};
+
+
+Connection_nameContext.prototype.WHITESPACE = function() {
+    return this.getToken(PlantUMLParser.WHITESPACE, 0);
 };
 
 Connection_nameContext.prototype.enterRule = function(listener) {
@@ -4323,10 +4342,40 @@ PlantUMLParser.prototype.connection_name = function() {
 
     var localctx = new Connection_nameContext(this, this._ctx, this.state);
     this.enterRule(localctx, 70, PlantUMLParser.RULE_connection_name);
+    var _la = 0; // Token type
     try {
-        this.enterOuterAlt(localctx, 1);
-        this.state = 422;
-        this.match(PlantUMLParser.WORD);
+        this.state = 431;
+        this._errHandler.sync(this);
+        switch(this._input.LA(1)) {
+        case PlantUMLParser.WORD:
+            this.enterOuterAlt(localctx, 1);
+            this.state = 422;
+            this.match(PlantUMLParser.WORD);
+            break;
+        case PlantUMLParser.T__5:
+            this.enterOuterAlt(localctx, 2);
+            this.state = 423;
+            this.match(PlantUMLParser.T__5);
+            this.state = 424;
+            this.match(PlantUMLParser.WORD);
+            this.state = 425;
+            this.match(PlantUMLParser.T__9);
+            this.state = 427;
+            this._errHandler.sync(this);
+            _la = this._input.LA(1);
+            if(_la===PlantUMLParser.WHITESPACE) {
+                this.state = 426;
+                this.match(PlantUMLParser.WHITESPACE);
+            }
+
+            this.state = 429;
+            this.match(PlantUMLParser.WORD);
+            this.state = 430;
+            this.match(PlantUMLParser.T__6);
+            break;
+        default:
+            throw new antlr4.error.NoViableAltException(this);
+        }
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -4391,17 +4440,17 @@ PlantUMLParser.prototype.modifiers = function() {
     var localctx = new ModifiersContext(this, this._ctx, this.state);
     this.enterRule(localctx, 72, PlantUMLParser.RULE_modifiers);
     try {
-        this.state = 426;
+        this.state = 435;
         this._errHandler.sync(this);
         switch(this._input.LA(1)) {
         case PlantUMLParser.T__18:
             this.enterOuterAlt(localctx, 1);
-            this.state = 424;
+            this.state = 433;
             localctx.static_mod = this.match(PlantUMLParser.T__18);
             break;
         case PlantUMLParser.T__19:
             this.enterOuterAlt(localctx, 2);
-            this.state = 425;
+            this.state = 434;
             localctx.abstract_mod = this.match(PlantUMLParser.T__19);
             break;
         default:
@@ -4503,34 +4552,34 @@ PlantUMLParser.prototype.stereotype = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 428;
+        this.state = 437;
         this.match(PlantUMLParser.QUOTATION);
-        this.state = 429;
+        this.state = 438;
         this.ident();
-        this.state = 434;
+        this.state = 443;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===PlantUMLParser.T__5) {
-            this.state = 430;
+            this.state = 439;
             this.match(PlantUMLParser.T__5);
-            this.state = 431;
+            this.state = 440;
             localctx._ident = this.ident();
             localctx.args.push(localctx._ident);
-            this.state = 432;
+            this.state = 441;
             this.match(PlantUMLParser.T__6);
         }
 
-        this.state = 437;
+        this.state = 446;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===PlantUMLParser.DOTDOT) {
-            this.state = 436;
+            this.state = 445;
             this.match(PlantUMLParser.DOTDOT);
         }
 
-        this.state = 439;
+        this.state = 448;
         this.match(PlantUMLParser.WORD);
-        this.state = 440;
+        this.state = 449;
         this.match(PlantUMLParser.QUOTATION);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -4687,44 +4736,44 @@ PlantUMLParser.prototype.type_declaration = function() {
     var localctx = new Type_declarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 76, PlantUMLParser.RULE_type_declaration);
     try {
-        this.state = 454;
+        this.state = 463;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,75,this._ctx);
+        var la_ = this._interp.adaptivePredict(this._input,77,this._ctx);
         switch(la_) {
         case 1:
             localctx = new Template_typeContext(this, localctx);
             this.enterOuterAlt(localctx, 1);
-            this.state = 442;
+            this.state = 451;
             this.ident();
-            this.state = 443;
+            this.state = 452;
             this.match(PlantUMLParser.T__20);
-            this.state = 445;
+            this.state = 454;
             this._errHandler.sync(this);
-            var la_ = this._interp.adaptivePredict(this._input,74,this._ctx);
+            var la_ = this._interp.adaptivePredict(this._input,76,this._ctx);
             if(la_===1) {
-                this.state = 444;
+                this.state = 453;
                 this.template_argument_list();
 
             }
-            this.state = 447;
+            this.state = 456;
             this.match(PlantUMLParser.T__21);
             break;
 
         case 2:
             localctx = new List_typeContext(this, localctx);
             this.enterOuterAlt(localctx, 2);
-            this.state = 449;
+            this.state = 458;
             this.ident();
-            this.state = 450;
+            this.state = 459;
             this.match(PlantUMLParser.T__8);
-            this.state = 451;
+            this.state = 460;
             this.match(PlantUMLParser.T__10);
             break;
 
         case 3:
             localctx = new Simple_typeContext(this, localctx);
             this.enterOuterAlt(localctx, 3);
-            this.state = 453;
+            this.state = 462;
             this.ident();
             break;
 
@@ -4815,15 +4864,15 @@ PlantUMLParser.prototype.item_list = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 459; 
+        this.state = 468; 
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         do {
-            this.state = 456;
+            this.state = 465;
             this.ident();
-            this.state = 457;
+            this.state = 466;
             this.match(PlantUMLParser.NEWLINE);
-            this.state = 461; 
+            this.state = 470; 
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         } while(((((_la - 31)) & ~0x1f) == 0 && ((1 << (_la - 31)) & ((1 << (PlantUMLParser.AS - 31)) | (1 << (PlantUMLParser.NEWLINE - 31)) | (1 << (PlantUMLParser.WORD - 31)) | (1 << (PlantUMLParser.QUOTATION - 31)))) !== 0));
@@ -4902,27 +4951,27 @@ PlantUMLParser.prototype.enum_declaration = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 463;
+        this.state = 472;
         this.match(PlantUMLParser.T__22);
-        this.state = 464;
+        this.state = 473;
         this.ident();
-        this.state = 471;
+        this.state = 480;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===PlantUMLParser.T__2) {
-            this.state = 465;
+            this.state = 474;
             this.match(PlantUMLParser.T__2);
-            this.state = 466;
+            this.state = 475;
             this.match(PlantUMLParser.NEWLINE);
-            this.state = 468;
+            this.state = 477;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
             if(((((_la - 31)) & ~0x1f) == 0 && ((1 << (_la - 31)) & ((1 << (PlantUMLParser.AS - 31)) | (1 << (PlantUMLParser.NEWLINE - 31)) | (1 << (PlantUMLParser.WORD - 31)) | (1 << (PlantUMLParser.QUOTATION - 31)))) !== 0)) {
-                this.state = 467;
+                this.state = 476;
                 this.item_list();
             }
 
-            this.state = 470;
+            this.state = 479;
             this.match(PlantUMLParser.T__3);
         }
 

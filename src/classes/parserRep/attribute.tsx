@@ -1,12 +1,14 @@
 import IAttribute from '../../interfaces/attribute'
+import ID from './id';
 
 
-export default class Attribute implements IAttribute {
+export default class Attribute extends ID implements IAttribute {
     public name: string;
     public dataType: string;
     public visibility: string;
 
     constructor(name: string, dataType: string, visibility: string){
+        super();
         this.name = name;
         this.dataType = dataType;        
         this.visibility = (typeof visibility === 'undefined') ? '' : visibility;

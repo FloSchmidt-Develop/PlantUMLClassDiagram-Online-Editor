@@ -1,13 +1,14 @@
 import IConnector, {Arrows, Lines }from '../../interfaces/connector';
+import ID from './id';
 
 
-export default class Connector implements IConnector{
+export default class Connector extends ID implements IConnector{
     startArrowSymbol: Arrows = Arrows.none;
     endArrowSymbol: Arrows = Arrows.none;
     lineStyle: Lines = Lines.normal;
 
     constructor(connector: string){
-
+        super();
         this.setStartConnector(connector);
         this.setEndConnector(connector);
         this.setLineStyle(connector);

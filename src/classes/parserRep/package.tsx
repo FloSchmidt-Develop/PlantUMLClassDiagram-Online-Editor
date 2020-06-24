@@ -1,14 +1,16 @@
 import IClass from '../../interfaces/class';
 import IPackage from '../../interfaces/package';
+import ID from './id';
 
 
-export default class Package implements IPackage{
+export default class Package extends ID implements IPackage{
 
     public name: string;
     public  ClassReferences: IClass[] = [];
     public readonly type = 'Package';
 
     constructor(packageName: string) {
+        super();
         this.name = packageName;
     }
 

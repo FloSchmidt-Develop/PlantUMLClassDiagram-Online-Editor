@@ -1,13 +1,15 @@
 import IMethod from '../../interfaces/methode';
 import IAttribute from '../../interfaces/attribute';
+import ID from './id';
 
-export default class Method implements IMethod{
+export default class Method extends ID implements IMethod{
     name: string;
     dataType: string = '';
     attributeList: IAttribute[] = [];
     visibility: string;
 
     constructor(name :string, visibility : string ){
+        super();
         this.name = name;
         this.visibility = (visibility === 'undefined') ? '' : visibility;
     }
@@ -23,14 +25,8 @@ export default class Method implements IMethod{
         return result;
     }
 
-    private getWidthOfAttributeList(): number{
-        let width = 0;
-        for (let index = 0; index < this.attributeList.length; index++) {
-            const attribute = this.attributeList[index];
-            width += attribute.getWidth();
-            
-        }
-        return width;
+    public DeleteAttribute(attribute: IAttribute){
+        this.attributeList = this.attributeList.filter(e => e.id != attribute.id)
     }
 
     public setName(newName : string){
