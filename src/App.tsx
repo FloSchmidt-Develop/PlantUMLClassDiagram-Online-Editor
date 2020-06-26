@@ -53,12 +53,11 @@ const App = () => {
     var h = Math.ceil(bounds.y + bounds.height);
 
     var xml = mxUtils.getXml(root);
-    let requestData = 'http://localhost:4000/export?format=png&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml);
-    console.log(requestData);
+    let requestData = 'http://localhost:8000?format=png&w='
+     + w + '&h=' + h + '&xmldata=' + encodeURIComponent(xml);
+
     
-    //new mxXmlRequest('http://localhost:4000/export', 'format=png&w=' + w +
-    // '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
-    // .simulate(document, '_blank');
+
     const res = await axios.get(requestData);
     };
 
@@ -74,7 +73,8 @@ const App = () => {
         },
       });
 
-
+      console.log(res);
+      
 
       diagramCreator.createDiagram(res.data);
 
@@ -83,7 +83,7 @@ const App = () => {
       }
 
       setDiagram(DiagramCreator.diagram);
-      setChange(true);
+      setChange(change ? false : true);
       
     } catch (err) {
       /*

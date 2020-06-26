@@ -21,6 +21,7 @@ import {
   mxClient,
   mxUtils,
   mxEvent,
+  mxPoint,
   mxDragSource,
   mxGraphHandler,
   mxEdgeHandler,
@@ -75,6 +76,7 @@ export default class MxGraphCreator {
             if( senderClass.value != null 
             && (typeof senderClass.value) !== 'undefined'
             && ((senderClass.value as Class).type === 'class'
+              || (senderClass.value as Class).type === 'abstractclass'
               || (senderClass.value as Class).type === 'interface'
               || (senderClass.value as Class).type === 'object')) {
 
@@ -93,6 +95,7 @@ export default class MxGraphCreator {
           view.appendChild(table);
 
           if((senderClass.value as Class).type === 'class'
+          || (senderClass.value as Class).type === 'abstractclass'
           || (senderClass.value as Class).type === 'interface'){
             
           ClassEditingView.CreateClassEditingView(senderClass.value as Class,sender,graph,view);
@@ -213,7 +216,7 @@ export default class MxGraphCreator {
       var actual_class: IClass = cell.value;
       if(actual_class !== null 
         && typeof actual_class !== 'undefined' 
-        && (actual_class.type === 'interface' 
+        && (actual_class.type === 'interface' || actual_class.type === 'absstractclass'
           || actual_class.type === 'class' ||actual_class.type === 'object')){
       if (actual_class !== null) {
         var table = document.createElement("table");
@@ -371,6 +374,9 @@ export default class MxGraphCreator {
     
           graph.getModel().endUpdate();
         }
+        else{
+          return cell.value;   
+        }
     }
 }
   }
@@ -463,7 +469,7 @@ export default class MxGraphCreator {
       let element = this.diagram?.class_declarations[index];
       activeVertexes[element.alias] = this.graph.insertVertex(
         element.package !== '' ? activePackages[element.package] : this.parentContainer,
-        null,
+        element.id,
         element,
         x,
         y,
@@ -483,16 +489,21 @@ export default class MxGraphCreator {
       let connection = this.diagram?.connection_declarations[index];
 
       if(connection.sourceElement.includes('(')){
-        console.log('--------COnnection Connection');
-        
-        console.log(connection);
+        activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement.replace('(','').replace(')', '') + ')']  = this.graph.insertEdge(
+          this.parentContainer,
+          connection.id,
+          connection,
+          activeEdges[connection.sourceElement],
+          activeVertexes[connection.destinationElement],
+          this.getEdgeStyle(connection.connector)
+        );
         
       }
       else if(connection.destinationElement.includes('(')){
    
-        let e  = this.graph.insertEdge(
+        activeEdges['(' + connection.destinationElement.replace('(','').replace(')', '') + ',' + connection.sourceElement + ')']   = this.graph.insertEdge(
           this.parentContainer,
-          null,
+          connection.id,
           connection,
           activeVertexes[connection.sourceElement],
           activeEdges[connection.destinationElement],
@@ -502,14 +513,31 @@ export default class MxGraphCreator {
       else{
         activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'] = this.graph.insertEdge(
           this.parentContainer,
-          null,
+          connection.id,
           connection,
           activeVertexes[connection.sourceElement],
           activeVertexes[connection.destinationElement],
           this.getEdgeStyle(connection.connector)
         );
       }
-    
+      if(connection.multiplicity_left != 'none'){
+        var e21 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], connection.id + 'L', connection.multiplicity_left, -1, 0, 0, 0,
+                'fontSize=12;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);        
+        this.graph.updateCellSize(e21);
+      
+        //e21.geometry.offset = new mxPoint(e21.geometry.width, e21.geometry.height);
+      }
+      if(connection.multiplicity_right != 'none'){
+        var e12 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], null, connection.multiplicity_right, 1, 0, 0, 0,
+                'fontSize=16;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
+        console.log(connection);
+        
+        this.graph.updateCellSize(e12);
+        //e21.geometry.offset = new mxPoint(-e12.geometry.width, -e12.geometry.height);
+      }
+
+
+     
     }
     /*
     var layout = new mxHierarchicalLayout(this.graph, mxConstants.DIRECTION_NORTH, true);
@@ -530,11 +558,11 @@ export default class MxGraphCreator {
         if(parent.value != null && cell.value != null){
           let newPackage = parent.value as Package;
           let changedClass = cell.value as Class;
-          if(newPackage != null && changedClass != null){
+          if(newPackage != null && changedClass != null && newPackage instanceof Package && changedClass instanceof Class){
             changedClass.package = newPackage.name;
           }
         }
-        else if(cell.value != null){
+        else if(cell.value != null && cell.value instanceof Class){
           let changedClass = cell.value as Class;
           if(changedClass != null){
             changedClass.package = '';

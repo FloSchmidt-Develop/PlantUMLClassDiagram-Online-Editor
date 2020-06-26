@@ -243,23 +243,27 @@ CONNECTOR:
     | '<-o'
 	| '*-' DIRECTION? '-'
     | '-' DIRECTION? '-*'
+    | '*-' DIRECTION '-*'
 	| '<|-' DIRECTION? '-'
 	| '-' DIRECTION? '-|>'
+    | '<|-' DIRECTION? '-|>'
     | 'o-' DIRECTION? '-'
     | '-' DIRECTION? '-o'
+    | 'o-' DIRECTION? '-o'
     | '<-' DIRECTION '-'
     | '-' DIRECTION '->'
+    | '<-' DIRECTION '->'
     ;
 	
 DIRECTION:
-	'up'
+	'[hidden]'? ('up'
 	| 'down'
 	| 'right'
 	| 'left'
     | 'r'
     | 'l'
     | 'u'
-    | 'd'
+    | 'd')
 	;
 	
 	
@@ -287,7 +291,7 @@ WHITESPACE  : (' ' | '\t' | '\r' | '\n')+ -> skip ;
 QUOTATION : '"';
 
 COMMENT :
-    ('/' '/' .*? '\n' | '/*' .*? '*/') -> channel(HIDDEN)
+    ('/' '/' .*? '\n' | '/*' .*? '*/' ''') -> channel(HIDDEN)
     ;
 
 
