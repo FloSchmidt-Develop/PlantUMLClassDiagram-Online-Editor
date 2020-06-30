@@ -74,11 +74,9 @@ export default class MxGraphCreator {
 		{
       
       let view = document.createElement('div');
-      console.log('----change----');
-      console.log(evt);
-      
 
         var senderClass = sender.cells[0];
+        console.log(sender.cells[0]);
         
         
           if ( typeof senderClass !== 'undefined'){
@@ -215,8 +213,6 @@ export default class MxGraphCreator {
     {
       return this.getModel().isEdge(cell);
     };
-
-  
     
 
 
@@ -535,8 +531,8 @@ export default class MxGraphCreator {
         element,
         x,
         y,
-        0,
-        0,
+        element.getWidth(),
+        element.getHeight(),
         'bottom'
       );
       x = x + 400;
