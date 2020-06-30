@@ -8,8 +8,11 @@ import Class from "../../parserRep/class";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
-import Swimlane from "../../../images/swimlane.gif"
-import Rectangle from "../../../images/rectangle.gif"
+import ClassImg from "../../../images/ToolbarClass.png";
+import InterfaceImg from "../../../images/ToolbarInterface.png";
+import AbstractImg from "../../../images/ToolbarAbstract.png";
+import ObjectImg from "../../../images/ToolbarObject.png";
+import PackageImg from "../../../images/ToolbarPackage.png";
 
 
 
@@ -29,10 +32,16 @@ export default class Toolbar{
             toolbar.enabled = false;
 
             var cls = new Class('new Class','class');
+            var itf = new Class('new Interface','interface');
+            var abs = new Class('new Class', 'abstractclass');
+            var obj = new Class('new Object', 'object');
             var pkg = new Package('new Package');
     
-            Toolbar.addVertex(graph,toolbar,pkg, Swimlane, 120, 160, 'shape=swimlane;startSize=20;');
-            Toolbar.addVertex(graph,toolbar,cls, Rectangle, 100, 40, '');
+            Toolbar.addVertex(graph,toolbar,pkg, PackageImg, 250, 100, 'shape=swimlane;startSize=20;');
+            Toolbar.addVertex(graph,toolbar,cls, ClassImg, 250, 100, '');
+            Toolbar.addVertex(graph,toolbar,itf, InterfaceImg, 270, 100, '');
+            Toolbar.addVertex(graph,toolbar,obj, ObjectImg, 250, 80, '');
+            Toolbar.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, '');
         }
     }
 
@@ -57,9 +66,17 @@ export default class Toolbar{
             var pt = graph.getPointForEvent(evt);
             var vertex = graph.getModel().cloneCell(prototype);
 
-            //TODO need to create a new Class for vertex value otherwise it will always create last imported Class
-            if(vertex.value instanceof Class){
+            if(vertex.value.type === 'class'){
                 vertex.value = new Class('Class Name','class');
+            }
+            if(vertex.value.type === 'interface'){
+                vertex.value = new Class('Interface Name','interface');
+            }
+            if(vertex.value.type === 'abstractclass'){
+                vertex.value = new Class('Class Name','abstractclass');
+            }
+            if(vertex.value.type === 'object'){
+                vertex.value = new Class('Object Name','object');
             }
             else if(vertex.value instanceof Package){
                 vertex.value = new Package('Package Name');

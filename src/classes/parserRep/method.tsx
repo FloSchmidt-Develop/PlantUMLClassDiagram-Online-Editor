@@ -42,6 +42,8 @@ export default class Method extends ID implements IMethod{
     }
 
     public getWidth(): number{
-        return (this.name.length + this.dataType.length + this.visibility?.length +  2 + this.getAttributeListAsString().length) * 10 
+        console.log(this.getAttributeListAsString());
+        
+        return ((this.name.length + this.dataType.length + this.visibility?.length +  2 + this.getAttributeListAsString().length) * 10 )* 0.60;
     }
 }

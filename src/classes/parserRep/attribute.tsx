@@ -27,6 +27,6 @@ export default class Attribute extends ID implements IAttribute {
     }
 
     public getWidth(): number{
-        return (this.name.length + this.dataType.length + this.visibility?.length + 2) * 10;
+        return ((this.name.length + this.dataType.length + this.visibility?.length + 2) * 10);
     }
 }

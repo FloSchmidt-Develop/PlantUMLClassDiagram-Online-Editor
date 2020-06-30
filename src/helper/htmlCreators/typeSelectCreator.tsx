@@ -37,6 +37,11 @@ export default class {
     let interface_text = document.createTextNode("Interface");
     option_interface.appendChild(interface_text);
 
+    let option_abstract = document.createElement("option");
+    option_abstract.value = "abstractclass";
+    let abstract_text = document.createTextNode("Abstract");
+    option_abstract.appendChild(abstract_text);
+
     let option_object = document.createElement("option");
     option_object.value = "object";
     let object_text = document.createTextNode("Object");
@@ -44,6 +49,7 @@ export default class {
 
     select.appendChild(option_class);
     select.appendChild(option_interface);
+    select.appendChild(option_abstract);
     select.appendChild(option_object);
 
     select.selectedIndex =
@@ -51,8 +57,10 @@ export default class {
         ? 0
         : elementToChange.type === "interface"
         ? 1
-        : elementToChange.type === "object"
+        : elementToChange.type === "abstractclass"
         ? 2
+        : elementToChange.type === "object"
+        ? 3
         : 0;
 
     select.onchange = () => {

@@ -124,8 +124,6 @@ const App = () => {
           graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
 
           mxGraphCreator.start();
-
-          graph.getModel().endUpdate();
         }
         graph.getModel().endUpdate();
 
@@ -135,9 +133,16 @@ const App = () => {
         var keyHandler = new mxKeyHandler(graph);
         keyHandler.bindKey(46, function(evt)
         {
+
+          
+          let selected = graph.getSelectionCell();
+          console.log(selected);
+          
           if (graph.isEnabled())
           {
-            graph.removeCells();
+            //graph.getModel().beginUpdate();
+            graph.getSelectionModel().removeCell(selected);
+            //graph.getModel().endUpdate();
           }
         });
 

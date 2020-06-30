@@ -1,5 +1,6 @@
 import IConnection from "../../interfaces/connection";
 import IConnector, { Lines, Arrows } from "../../interfaces/connector";
+import Connection from "../../classes/parserRep/connection";
 
 export default class ConnectionInputCreator{
   graph: any;
@@ -278,7 +279,7 @@ export default class ConnectionInputCreator{
     
         let startMultiplicityInput = document.createElement("input");
         startMultiplicityInput.type = "text";
-        startMultiplicityInput.value = selectedConnection.multiplicity_right != null ? selectedConnection.multiplicity_right : "";
+        startMultiplicityInput.value = selectedConnection.multiplicity_left.value != null ? selectedConnection.multiplicity_left.value : "";
     
         startMultiplicityInput.onchange = () => {
           if (selectedConnection !== null) {
@@ -294,7 +295,34 @@ export default class ConnectionInputCreator{
         startMultiplicityRow.appendChild(startMultiplicityTextBoxContainer);
 
 
-    return [lineLabelRow, lineTypeRow, startArrowRow, endArrowRow, startMultiplicityRow];
+        //Multiplicity End--------------------------------------------------
+        let endMultiplicityRow = document.createElement("tr");
+        let endMultiplicityLabel = document.createElement("td");
+        let endMultiplicityTextBoxContainer = document.createElement("td");
+        let p_endMultiplicity = document.createElement("p");
+    
+        p_endMultiplicity.innerText = "End Multiplicity: ";
+        endMultiplicityLabel.appendChild(p_endMultiplicity);
+    
+        let endMultiplicityInput = document.createElement("input");
+        endMultiplicityInput.type = "text";
+        endMultiplicityInput.value = selectedConnection.multiplicity_right.value != null ? selectedConnection.multiplicity_right.value : "";
+    
+        endMultiplicityInput.onchange = () => {
+          if (selectedConnection !== null) {
+            selectedConnection.setEndMultiplicity(endMultiplicityInput.value);
+          }
+          
+    
+          this.UpdateLine(sender,selectedConnection);
+        };
+    
+        endMultiplicityTextBoxContainer.appendChild(endMultiplicityInput);
+        endMultiplicityRow.appendChild(endMultiplicityLabel);
+        endMultiplicityRow.appendChild(endMultiplicityTextBoxContainer);
+
+
+    return [lineLabelRow, lineTypeRow, startArrowRow, endArrowRow, startMultiplicityRow, endMultiplicityRow];
   }
  
 
@@ -341,6 +369,14 @@ export default class ConnectionInputCreator{
 
   private UpdateLine(sender: any, connectionToEdit: IConnection){
     this.graph.getModel().beginUpdate();
+
+    var vertexL = connectionToEdit.multiplicity_left.vertex;
+    var vertexR = connectionToEdit.multiplicity_right.vertex;
+
+    this.graph.model.setValue(vertexL,  connectionToEdit.multiplicity_left);
+    this.graph.model.setValue(vertexR,  connectionToEdit.multiplicity_right);
+    
+
 
     this.graph.model.setValue(sender.cells[0], connectionToEdit);
     this.graph.model.setStyle(sender.cells[0], this.getUpdatedCellStyle(connectionToEdit));

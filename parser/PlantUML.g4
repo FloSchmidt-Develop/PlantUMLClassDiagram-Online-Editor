@@ -9,7 +9,7 @@ diagram:
 class_diagram
     : (class_declaration | connection | package_section | NEWLINE)*
     ;
-	
+
 package_section:
 	PACKAGE WHITESPACE? QUOTATION package_name QUOTATION WHITESPACE? ('{'
 	(class_declaration | connection | NEWLINE)*
@@ -129,9 +129,10 @@ connection_symbol:
 multiplicity: ('*' | '0..1' | '0..*' | '1..*' | WORD );
 
 visibility:
-    '+'     
+    '{abstract}'?
+    ('+'     
     |'-'    
-    |'#'    
+    |'#')    
     ;
 
 function_argument:
@@ -291,7 +292,7 @@ WHITESPACE  : (' ' | '\t' | '\r' | '\n')+ -> skip ;
 QUOTATION : '"';
 
 COMMENT :
-    ('/' '/' .*? '\n' | '/*' .*? '*/' ''') -> channel(HIDDEN)
+    ('/' '/' .*? '\n' | '/*' .*? '*/') -> channel(HIDDEN)
     ;
 
 

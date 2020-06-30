@@ -11,6 +11,10 @@ import ConnectionInputCreator from './htmlCreators/connectionInputCreator';
 import ClassEditingView from '../classes/view/editing/classEditing';
 
 import IName from '../interfaces/named';
+import ClassIcon from '../images/Class.png'
+import AbstractClassIcon from '../images/AbstractClass.png'
+import InterfaceIcon from '../images/Interface.png'
+import ObjectIcon from '../images/Object.png'
 
 import { start } from "repl";
 
@@ -36,6 +40,7 @@ import Declaration from "../classes/parserRep/declaration";
 import Package from "../classes/parserRep/package";
 import DiagramCreator from "./diagramCreator";
 import ClassUpdateController from "../classes/controller/classUpdateController";
+import Multiplicity from "../classes/parserRep/multiplicity";
 
 export default class MxGraphCreator {
   graph: any;
@@ -69,8 +74,12 @@ export default class MxGraphCreator {
 		{
       
       let view = document.createElement('div');
+      console.log('----change----');
+      console.log(evt);
+      
 
         var senderClass = sender.cells[0];
+        
         
           if ( typeof senderClass !== 'undefined'){
             if( senderClass.value != null 
@@ -155,6 +164,7 @@ export default class MxGraphCreator {
         table.appendChild(type_tr[2]);
         table.appendChild(type_tr[3]);
         table.appendChild(type_tr[4]);
+        table.appendChild(type_tr[5]);
 
 
 
@@ -206,6 +216,9 @@ export default class MxGraphCreator {
       return this.getModel().isEdge(cell);
     };
 
+  
+    
+
 
     
     this.diagram = diagram;
@@ -216,7 +229,7 @@ export default class MxGraphCreator {
       var actual_class: IClass = cell.value;
       if(actual_class !== null 
         && typeof actual_class !== 'undefined' 
-        && (actual_class.type === 'interface' || actual_class.type === 'absstractclass'
+        && (actual_class.type === 'interface' || actual_class.type === 'abstractclass'
           || actual_class.type === 'class' ||actual_class.type === 'object')){
       if (actual_class !== null) {
         var table = document.createElement("table");
@@ -240,17 +253,44 @@ export default class MxGraphCreator {
         container_div.style.borderBottom = "1px solid black";
 
         var header_div = document.createElement("div");
-        var className_div = document.createElement("div");
-        mxUtils.write(header_div, "<<" + actual_class.type + ">>");
-        mxUtils.write(className_div, actual_class.name);
+        var dummy_div = document.createElement("div");
+        var header_icon = document.createElement("img");
+        var header_text = document.createElement("p");
 
+        header_icon.src = actual_class.type === 'class' 
+          ? ClassIcon : actual_class.type === 'abstractclass' 
+          ? AbstractClassIcon : actual_class.type === 'interface' 
+          ? InterfaceIcon : actual_class.type === 'object'
+          ? ObjectIcon : ClassIcon;
+        header_icon.style.width = '40px';
+        header_icon.style.height = '40px';
+        header_icon.style.marginLeft = '20px';
+        header_icon.style.marginRight= '20px';
+
+        dummy_div.style.width = '40px';
+        dummy_div.style.height = '40px';
+        dummy_div.style.marginRight = '20px';
+        dummy_div.style.marginLeft = '20px';
+
+        header_text.innerText = actual_class.name;
+        header_text.style.marginTop = '13px';
+        header_text.style.fontSize = '14px';
+        header_text.style.marginBottom = '13px';
+
+        header_div.style.display = 'flex';
+        header_div.style.justifyContent = 'space-between';
+
+        header_div.appendChild(header_icon);
+        header_div.appendChild(header_text);
+
+
+        header_div.appendChild(dummy_div);
         container_div.appendChild(header_div);
-        container_div.appendChild(className_div);
         tr1.appendChild(container_div);
 
         body.appendChild(tr1);
 
-        if (actual_class.type === "interface" || actual_class.type === "class") {
+        if (actual_class.type === "interface" || actual_class.type === "class" || actual_class.type === "abstractclass") {
 
         //Attributes
             var tr2 = document.createElement("tr");
@@ -265,6 +305,7 @@ export default class MxGraphCreator {
             const attribute = actual_class.attributes[index];
 
             var attribute_div = document.createElement("div");
+            attribute_div.style.display = 'flex';
 
             var content_string =
                 attribute.visibility +
@@ -273,8 +314,11 @@ export default class MxGraphCreator {
                 ": " +
                 attribute.dataType;
 
+            //attribute_div.appendChild(icon);
             mxUtils.write(attribute_div, content_string);
+            
 
+            //attribute_container_div.appendChild(icon);
             attribute_container_div.appendChild(attribute_div);
             }
 
@@ -350,6 +394,7 @@ export default class MxGraphCreator {
 
         return table;
       }
+
     }
     //Connection
     else if((cell.value as Connection) != null && (cell.value as Connection).type === 'Connection'){ 
@@ -361,6 +406,11 @@ export default class MxGraphCreator {
       let actualPackage = (cell.value as Package);
       return actualPackage.name;
     }
+    //Multiplicity
+    else if((cell.value as Multiplicity) != null && (cell.value as Multiplicity).type === 'Multiplicity'){ 
+      let actualMultiplicity = (cell.value as Multiplicity);
+      return actualMultiplicity.value;
+    }
     else{  
         if(cell.edge && cell.target != null && cell.source != null){
           var connection = new Connection('<--','','', cell.target.value.alias,cell.source.value.alias,'');
@@ -371,6 +421,16 @@ export default class MxGraphCreator {
           graph.model.setValue(cell, connection);
           
           graph.model.setStyle(cell, "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;");
+
+          var e21 = graph.insertVertex(cell, connection.id + 'L', connection.multiplicity_left, -1, 0, 0, 0,
+          'fontSize=12;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
+          connection.multiplicity_left.vertex = e21;
+
+          var e12 = graph.insertVertex(cell, null, connection.multiplicity_right, 1, 0, 0, 0,
+          'fontSize=16;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
+          connection.multiplicity_right.vertex = e12;
+
+
     
           graph.getModel().endUpdate();
         }
@@ -378,7 +438,7 @@ export default class MxGraphCreator {
           return cell.value;   
         }
     }
-}
+  }
   }
 
   public start(): void {
@@ -395,11 +455,11 @@ export default class MxGraphCreator {
     //Connect of Two Cells
     this.graph.connectionHandler.addListener(mxEvent.CONNECT, 
       function(sender, evt) {
+
         var edge = evt.getProperty('cell');
         let sourceClass : Class;
         let targetClass: Class;
         if(edge != null){
-          console.log(edge);
           
           if(edge.source != null && edge.target != null){
             sourceClass = edge.source.value as Class;
@@ -408,9 +468,11 @@ export default class MxGraphCreator {
                 //TODO Find solution
                 DiagramCreator.diagram.addConnection(
                   new Connection('-->','','',targetClass.alias,sourceClass.alias,'')
-                  )
+                  );
+
           }     
         }
+        
       }
         
         
@@ -473,8 +535,8 @@ export default class MxGraphCreator {
         element,
         x,
         y,
-        element.getWidth(),
-        element.getHeight(),
+        0,
+        0,
         'bottom'
       );
       x = x + 400;
@@ -520,21 +582,21 @@ export default class MxGraphCreator {
           this.getEdgeStyle(connection.connector)
         );
       }
-      if(connection.multiplicity_left != 'none'){
+
         var e21 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], connection.id + 'L', connection.multiplicity_left, -1, 0, 0, 0,
                 'fontSize=12;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);        
         this.graph.updateCellSize(e21);
+        connection.multiplicity_left.vertex = e21;
       
         //e21.geometry.offset = new mxPoint(e21.geometry.width, e21.geometry.height);
-      }
-      if(connection.multiplicity_right != 'none'){
+
         var e12 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], null, connection.multiplicity_right, 1, 0, 0, 0,
                 'fontSize=16;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
         console.log(connection);
+        connection.multiplicity_right.vertex = e12;
         
         this.graph.updateCellSize(e12);
         //e21.geometry.offset = new mxPoint(-e12.geometry.width, -e12.geometry.height);
-      }
 
 
      

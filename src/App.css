@@ -21,14 +21,14 @@
 
 .graph-container{
   position:absolute;
-  width: 75vw;
+  width: 70vw;
   height: 90vh;
   background:url('./images/grid.gif');
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
   top:50px;
-  left:20px;
+  left:110px;
   border: 2px solid black;
 }
 
@@ -51,8 +51,13 @@
   padding : 2px;
   left : 0px;
   top : 50px;
-  width : 24px;
+  width : 100px;
   bottom : 0px;
+  margin-left: 2px;
+}
+.toolbar img{
+  width: 100px;
+  height: 40px;
 }
 
 .exportButton{
@@ -77,6 +82,17 @@
   bottom: 3vh;
   left: 3vw;
   background-color: lightgray;
+}
+
+class-type-icon{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left:0;
+  top: 0;
+}
+class-header-div{
+  position: relative;
 }
 
 .connector-option-normal-line{

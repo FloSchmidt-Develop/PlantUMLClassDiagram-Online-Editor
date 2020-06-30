@@ -43,27 +43,31 @@ export default class Class extends ID implements IClass {
     }
 
     public getWidth(): number{
-        let max = 75; // min width
+        let max = 250; // min width
 
-        let lengthName = (this.name.length) * 12;
-        if(lengthName > max)
+        //charakters in name + (image_width + margin) * 2
+        let lengthName = (((this.name.length) * 14) + 120) * 0.9;
+        if(lengthName > max){
+            console.log('Name:');        
             max = lengthName;
-
-        let lengthType = (this.type.length  + 4) * 12;
-        if(lengthType > max)
-            max = lengthType;
+            console.log(max);
+        }
         
         for (let index = 0; index < this.attributes.length; index++) {
             let attribute = this.attributes[index];
             if(attribute.getWidth() > max){
+                console.log('Attribute:');
                 max = attribute.getWidth();
+                console.log(max);
             }
         }
 
         for (let index = 0; index < this.methods.length; index++) {
             let method = this.methods[index];
             if(method.getWidth() > max){
+                console.log('Method: ');
                 max = method.getWidth();
+                console.log(max);
             }
             
         }
@@ -71,16 +75,19 @@ export default class Class extends ID implements IClass {
         for (let index = 0; index < this.declarations.length; index++) {
             let declaration = this.declarations[index];
             if(declaration.getWidth() > max){
+                console.log('Declaration');
                 max = declaration.getWidth();
+                console.log(max);
+                
             }
         }
-        
-        return max * 0.60;
+
+        return max;
     }
 
     public getHeight(): number {
 
-        return 67 
+        return 100
         + (this.attributes.length * 11) 
         + (this.methods.length * 11) 
         + (this.declarations.length * 11) 
