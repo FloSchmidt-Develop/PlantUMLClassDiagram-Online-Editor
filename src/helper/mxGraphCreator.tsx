@@ -575,7 +575,7 @@ export default class MxGraphCreator {
         activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'] = this.graph.insertEdge(
           this.parentContainer,
           connection.id,
-          connection.stereoType,
+          connection,
           activeVertexes[connection.sourceElement],
           activeVertexes[connection.destinationElement],
           this.getEdgeStyle(connection.connector)
@@ -583,14 +583,14 @@ export default class MxGraphCreator {
       }
 
         var e21 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], connection.id + 'L', connection.multiplicity_left, -0.9, 0, 0, 0,
-                'fontSize=12;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);        
+                'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);        
         this.graph.updateCellSize(e21);
         connection.multiplicity_left.vertex = e21;
       
         //e21.geometry.offset = new mxPoint(e21.geometry.width, e21.geometry.height);
 
         var e12 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], null, connection.multiplicity_right, 0.9, 0, 0, 0,
-                'fontSize=16;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
+                'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
         console.log(connection);
         connection.multiplicity_right.vertex = e12;
         
