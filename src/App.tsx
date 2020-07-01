@@ -137,8 +137,9 @@ const App = () => {
         {
 
             console.log('delete');
-            graph.removeCells();
-            //graph.getModel().endUpdate();
+            graph.getModel().beginUpdate();
+            graph.getSelectionModel().removeCells();
+            graph.getModel().endUpdate();
         });
 
         
