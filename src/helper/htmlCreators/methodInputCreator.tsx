@@ -72,7 +72,7 @@ export default class MethodInputCreator {
 
       let input_name = document.createElement("input");
       input_name.type = "text";
-      input_name.value = method.name;
+      input_name.value = method.getName();
 
       input_name.onchange = () => {
         if (elementToChange !== null) {
@@ -150,7 +150,7 @@ export default class MethodInputCreator {
 
           let input_argument_name = document.createElement("input");
           input_argument_name.type = "text";
-          input_argument_name.value = argument.name;
+          input_argument_name.value = argument.getName();
 
           input_argument_name.onchange = () => {
               argument.setName(input_argument_name.value);

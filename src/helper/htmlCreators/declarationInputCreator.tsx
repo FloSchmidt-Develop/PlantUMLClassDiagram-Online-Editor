@@ -31,7 +31,7 @@ export default class DeclarationInputCreator {
 
       let input_name = document.createElement("input");
       input_name.type = "text";
-      input_name.value = declaration.name;
+      input_name.value = declaration.getName();
       row_div.appendChild(input_name);
 
       input_name.onchange = () => {

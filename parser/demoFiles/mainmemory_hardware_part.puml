@@ -1,0 +1,39 @@
+@startuml
+package "mainMemory: HardwarePart" {
+
+    object "memoryBank0: StaticLatencyMemory" as memoryBank0 {
+        size = 8192
+        dataWidth = 4
+        readLatency = 4
+        writeLatency = 4
+    }
+
+    object "memoryBank1: StaticLatencyMemory" as memoryBank1 {
+        size = 4096
+        dataWidth = 4
+        readLatency = 2
+        writeLatency = 8
+    }
+
+    object "logarithmicMemoryInterconnect: LogarithmicMemoryInterconnect" as logarithmicMemoryInterconnect {
+        latency = 1
+        readPorts = 6
+        writePorts = 3 
+    }
+
+    object "memoryMap: MemoryMap" as memoryMap {
+        numMemoryBanks = 3
+        memoryBanks = [memoryBank0, memoryBank1, controlRegister]
+        startAddresses = [0, 8192, 12288]
+    }
+
+    memoryBank0 <-right-> logarithmicMemoryInterconnect : "read()/write():data"
+    memoryBank1 <-right-> logarithmicMemoryInterconnect : "read()/write():data"
+    memoryBank0 -[hidden]left- memoryBank1 
+
+    memoryMap -up-o logarithmicMemoryInterconnect
+    memoryBank0 --o memoryMap
+    memoryBank1 --o memoryMap
+}
+
+@enduml

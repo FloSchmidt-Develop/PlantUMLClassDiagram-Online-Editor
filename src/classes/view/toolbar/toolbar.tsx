@@ -8,6 +8,7 @@ import Class from "../../parserRep/class";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
+import IDiagram from "../../../interfaces/diagram";
 import ClassImg from "../../../images/ToolbarClass.png";
 import InterfaceImg from "../../../images/ToolbarInterface.png";
 import AbstractImg from "../../../images/ToolbarAbstract.png";
@@ -19,7 +20,10 @@ import PackageImg from "../../../images/ToolbarPackage.png";
 
 export default class Toolbar{
 
-    public static getCreateToolbarContainer(graph: any){
+    private static diagram: IDiagram;
+
+    public static getCreateToolbarContainer(graph: any, diagramToAddClasses: IDiagram){
+        Toolbar.diagram = diagramToAddClasses;
 
         var tbContainer = document.getElementById('toolbar');
         if(tbContainer === null){
@@ -68,18 +72,22 @@ export default class Toolbar{
 
             if(vertex.value.type === 'class'){
                 vertex.value = new Class('Class Name','class');
+                Toolbar.diagram.addClass(vertex.value);
             }
             if(vertex.value.type === 'interface'){
                 vertex.value = new Class('Interface Name','interface');
+                Toolbar.diagram.addClass(vertex.value);
             }
             if(vertex.value.type === 'abstractclass'){
                 vertex.value = new Class('Class Name','abstractclass');
+                Toolbar.diagram.addClass(vertex.value);
             }
             if(vertex.value.type === 'object'){
                 vertex.value = new Class('Object Name','object');
+                Toolbar.diagram.addClass(vertex.value);
             }
             else if(vertex.value instanceof Package){
-                vertex.value = new Package('Package Name');
+                Toolbar.diagram.addPackage(vertex.value.name);
             }
             
             

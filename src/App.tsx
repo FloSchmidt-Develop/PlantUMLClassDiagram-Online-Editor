@@ -16,6 +16,7 @@ import DiagramCreator from "./helper/diagramCreator";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
+
   return (
     <div
       role="tabpanel"
@@ -26,7 +27,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -76,10 +77,10 @@ function App(){
         <Editor index={0}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Editor/>
+        <Editor index={1}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Editor/>
+        <Editor index={2}/>
       </TabPanel>
     </div>
 

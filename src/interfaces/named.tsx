@@ -1,5 +1,6 @@
 
 export default interface Named{
-    name: string;
+    //name: string;
     setName(name: string);
+    getName(): string;
 }

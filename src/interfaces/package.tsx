@@ -6,7 +6,9 @@ import ID from './id';
 
 export default interface Package extends ITyped, IName, ID{
 
-    ClassReferences: IClass[];
+    classReferences: IClass[];
     
     AddClassReference(classToAdd : IClass): void;
+    RemoveClassReference(classToRemove: IClass): void;
+    setName(name: string): void;
 }

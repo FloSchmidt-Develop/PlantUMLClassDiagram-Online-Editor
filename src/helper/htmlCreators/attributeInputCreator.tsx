@@ -57,7 +57,7 @@ export default class AttributeInputCreator {
 
       let input_name = document.createElement("input");
       input_name.type = "text";
-      input_name.value = attribute.name;
+      input_name.value = attribute.getName();
 
       input_name.onchange = () => {
         if (elementToChange !== null) {

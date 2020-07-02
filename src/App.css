@@ -84,6 +84,22 @@
   background-color: lightgray;
 }
 
+#zoomButtons{
+  position: absolute;
+  left: 70vw;
+  top: 110px;
+}
+
+#zoomButtons button{
+  width: 30px;
+}
+
+#editButtons{
+  position: absolute;
+  left: 110px;
+  top: 70px;
+}
+
 class-type-icon{
   width: 30px;
   height: 30px;

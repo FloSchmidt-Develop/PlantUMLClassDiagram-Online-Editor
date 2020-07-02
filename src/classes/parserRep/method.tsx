@@ -3,7 +3,7 @@ import IAttribute from '../../interfaces/attribute';
 import ID from './id';
 
 export default class Method extends ID implements IMethod{
-    name: string;
+    private name: string;
     dataType: string = '';
     attributeList: IAttribute[] = [];
     visibility: string;
@@ -18,7 +18,7 @@ export default class Method extends ID implements IMethod{
         var result = "(";
         for (let index = 0; index < this.attributeList.length; index++) {
             const element = this.attributeList[index];
-            result += element.name + ": " + element.dataType + (index < this.attributeList.length -1 ? ',' : '')
+            result += element.getName() + ": " + element.dataType + (index < this.attributeList.length -1 ? ',' : '')
             
         }
         result += ")"
@@ -31,6 +31,10 @@ export default class Method extends ID implements IMethod{
 
     public setName(newName : string){
         this.name = newName;
+    }
+
+    public getName(): string{
+        return this.name;
     }
 
     public setVisibility(newVisibility: string){

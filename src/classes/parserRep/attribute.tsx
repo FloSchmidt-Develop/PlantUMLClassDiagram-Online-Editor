@@ -1,9 +1,10 @@
 import IAttribute from '../../interfaces/attribute'
+import IName from '../../interfaces/named'
 import ID from './id';
 
 
-export default class Attribute extends ID implements IAttribute {
-    public name: string;
+export default class Attribute extends ID implements IName, IAttribute {
+    private name: string;
     public dataType: string;
     public visibility: string;
 
@@ -16,6 +17,10 @@ export default class Attribute extends ID implements IAttribute {
 
     public setName(newName : string){
         this.name = newName;
+    }
+
+    public getName():string{
+        return this.name;
     }
 
     public setVisibility(newVisibility: string){
