@@ -12,6 +12,7 @@ export default class Connection extends ID implements IConnection{
     public sourceElement: string;
     public stereoType: string;
     public readonly type = 'Connection';
+  geometry: any;
 
     constructor(connector: string,
         multiplicity_left: string,

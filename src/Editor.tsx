@@ -20,6 +20,10 @@ import {
   mxRubberband,
   mxUndoManager
 } from "mxgraph-js";
+import Class from "./classes/parserRep/class";
+import Connection from "./classes/parserRep/connection";
+import ClassUpdateController from "./classes/controller/classUpdateController";
+import Package from "./classes/parserRep/package";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -98,7 +102,7 @@ const Editor = (props) => {
 
   //this is called evertime one of the states is changed
   useEffect(() => {
-      console.log('---new Loaded---');
+      
       console.log(graph);
       
       
@@ -113,7 +117,12 @@ const Editor = (props) => {
         new mxRubberband(graph);
         graph.setConnectable(true);
         graph.setHtmlLabels(true);
+        console.log('---drop enaled Loaded---');
+        graph.dropEnabled = true;
+        let toolbar = new Toolbar();
+        toolbar.getCreateToolbarContainer(graph);
         mxEvent.disableContextMenu(divGraph.current);
+        
 
 
         if (typeof diagram !== "undefined") {
@@ -152,51 +161,41 @@ const Editor = (props) => {
     else{
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null);
-      Toolbar.getCreateToolbarContainer(graph);
-
+      
+      let toolbar = new Toolbar();
+      toolbar.getCreateToolbarContainer(graph);
+      graph.dropEnabled = true;
       setGraph(graph);
       setDiagram(diag);
-      /*
-      //----------------------------------------------------------------------------------- Test
-      document.body.appendChild(mxUtils.button('Zoom In', function()
-      {
-        graph.zoomIn();
-      }));
-      
-      document.body.appendChild(mxUtils.button('Zoom Out', function()
-      {
-        graph.zoomOut();
-      }));
-      
-      // Undo/redo
-      var undoManager = new mxUndoManager();
-      var listener = function(sender, evt)
-      {
-        undoManager.undoableEditHappened(evt.getProperty('edit'));
-      };
-      graph.getModel().addListener(mxEvent.UNDO, listener);
-      graph.getView().addListener(mxEvent.UNDO, listener);
-      
-      document.body.appendChild(mxUtils.button('Undo', function()
-      {
-        undoManager.undo();
-      }));
-      
-      document.body.appendChild(mxUtils.button('Redo', function()
-      {
-        undoManager.redo();
-      }));
-
-      // Shows XML for debugging the actual model
-      document.body.appendChild(mxUtils.button('Delete', function()
-      {
-          graph.removeCells();
-          console.log('delete');
-          
-      }));
-      //-----------------------------------------------------------------------------------------
-      */
     }
+    graph?.model.addListener(mxEvent.CHANGE, function(sender, evt)
+    {
+      for (let index = 0; index < evt.properties?.changes?.length; index++) {
+        let changedCell = evt.properties?.changes[index]?.cell;
+        let geometry = evt.properties?.changes[index]?.geometry
+        if(changedCell != null && geometry != null && changedCell.value instanceof Class){
+          let changedClass = changedCell.value as Class;
+          changedClass.x = geometry.x;
+          changedClass.y = geometry.y;
+          changedClass.setHight(geometry.hight);
+          changedClass.setWidth(geometry.width);
+          ClassUpdateController.updateClassValues(graph,changedCell,changedClass)
+        }
+        if(changedCell != null && geometry != null && changedCell.value instanceof Connection){
+          let changedConnection = changedCell.value as Connection;
+          changedConnection.geometry = geometry;
+        }
+        if(changedCell != null && geometry != null && changedCell.value instanceof Package){
+          console.log('------Package------');
+          console.log(evt);
+          let changedPackage = changedCell.value as Package;
+          changedPackage.x = geometry.x;
+          changedPackage.y = geometry.y;
+          changedPackage.setHight(geometry.hight);
+          changedPackage.setWidth(geometry.width);
+        }
+      }
+    });
   });
 
   return (

@@ -12,7 +12,7 @@ export default interface Diagram extends ID {
 
     addClass(newClass : IClass);
     addConnection(newConnection: IConnection);
-    addPackage(packageName: string);
+    addPackage(NewPackage: IPackage);
 
     removeClass(classToRemove: IClass);
     removeConnection(connectionToRemove: IConnection);

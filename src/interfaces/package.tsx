@@ -5,6 +5,15 @@ import ID from './id';
 
 
 export default interface Package extends ITyped, IName, ID{
+    y: number;
+    x: number;
+
+
+
+    setWidth(width: number);
+    setHight(hight: number);
+    getWidth(): number;
+    getHight():number;
 
     classReferences: IClass[];
     

@@ -9,6 +9,7 @@ import Method from '../classes/parserRep/method';
 import Connection from '../classes/parserRep/connection';
 import Declaration from '../classes/parserRep/declaration';
 import { EROFS } from 'constants';
+import Package from '../classes/parserRep/package';
 
 export default class DiagramCreator{
 
@@ -72,7 +73,8 @@ export default class DiagramCreator{
             cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
             
-            let resPackage = diagram.addPackage(cls.package);
+            let newPackage = new Package(cls.package);
+            let resPackage = diagram.addPackage(newPackage);
             if(resPackage != null)
                 resPackage.AddClassReference(cls);
 
