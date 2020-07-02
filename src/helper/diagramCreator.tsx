@@ -12,13 +12,16 @@ import { EROFS } from 'constants';
 
 export default class DiagramCreator{
 
-    public static diagram = new Diagram();
+    public static diagram: IDiagram[] = [];
+    public static activeIndex: number = 0;
  
     constructor(){
     }
 
-    createDiagram(serverResponse: any): Diagram{
+    createDiagram(serverResponse: any): any{
         console.log(serverResponse);
+        if(DiagramCreator.diagram[DiagramCreator.activeIndex] == null)
+            DiagramCreator.diagram[DiagramCreator.activeIndex] = new Diagram();
         
         if(
         serverResponse !== null &&
@@ -30,19 +33,19 @@ export default class DiagramCreator{
             let jsonDiagram = serverResponse.Res.diagram;
             //check if the server result contains classes
             if(jsonDiagram.class_declaration !== null){        
-               this.addClasses(jsonDiagram.class_declaration, DiagramCreator.diagram);    
+               this.addClasses(jsonDiagram.class_declaration, DiagramCreator.diagram[DiagramCreator.activeIndex]);    
 
             }     
             if(jsonDiagram.connection_declaration !== null){
                 
-                this.addConnections(jsonDiagram.connection_declaration, DiagramCreator.diagram);
+                this.addConnections(jsonDiagram.connection_declaration, DiagramCreator.diagram[DiagramCreator.activeIndex]);
             }
 
         }
         console.log('diagram creator');
         console.log(DiagramCreator.diagram);
         
-        return DiagramCreator.diagram;
+        return DiagramCreator.diagram[DiagramCreator.activeIndex];
     }
 
     private addConnections(jsonConnections: any, diagram: IDiagram){

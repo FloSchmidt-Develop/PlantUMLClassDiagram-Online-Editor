@@ -47,27 +47,21 @@ export default class Class extends ID implements IClass {
 
         //charakters in name + (image_width + margin) * 2
         let lengthName = (((this.name.length) * 14) + 120) * 0.9;
-        if(lengthName > max){
-            console.log('Name:');        
+        if(lengthName > max){   
             max = lengthName;
-            console.log(max);
         }
         
         for (let index = 0; index < this.attributes.length; index++) {
             let attribute = this.attributes[index];
             if(attribute.getWidth() > max){
-                console.log('Attribute:');
                 max = attribute.getWidth();
-                console.log(max);
             }
         }
 
         for (let index = 0; index < this.methods.length; index++) {
             let method = this.methods[index];
             if(method.getWidth() > max){
-                console.log('Method: ');
                 max = method.getWidth();
-                console.log(max);
             }
             
         }
@@ -75,10 +69,7 @@ export default class Class extends ID implements IClass {
         for (let index = 0; index < this.declarations.length; index++) {
             let declaration = this.declarations[index];
             if(declaration.getWidth() > max){
-                console.log('Declaration');
-                max = declaration.getWidth();
-                console.log(max);
-                
+                max = declaration.getWidth(); 
             }
         }
 

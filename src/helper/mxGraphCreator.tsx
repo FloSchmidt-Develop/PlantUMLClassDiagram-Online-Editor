@@ -79,7 +79,7 @@ export default class MxGraphCreator {
       let view = document.createElement('div');
 
         var senderClass = sender.cells[0];
-        console.log(sender.cells[0]);
+        console.log(DiagramCreator.diagram[DiagramCreator.activeIndex]);
         
         
           if ( typeof senderClass !== 'undefined'){
@@ -465,7 +465,7 @@ export default class MxGraphCreator {
             targetClass = edge.target.value as Class;
               if(targetClass != null && sourceClass != null){
                 //TODO Find solution
-                DiagramCreator.diagram.addConnection(
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(
                   new Connection('-->','','',targetClass.alias,sourceClass.alias,'')
                   );
 
@@ -591,7 +591,6 @@ export default class MxGraphCreator {
 
         var e12 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], null, connection.multiplicity_right, 0.9, 0, 0, 0,
                 'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
-        console.log(connection);
         connection.multiplicity_right.vertex = e12;
         
         this.graph.updateCellSize(e12);

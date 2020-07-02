@@ -41,9 +41,7 @@ export default class Method extends ID implements IMethod{
         this.dataType = newDatatype;
     }
 
-    public getWidth(): number{
-        console.log(this.getAttributeListAsString());
-        
+    public getWidth(): number{        
         return ((this.name.length + this.dataType.length + this.visibility?.length +  2 + this.getAttributeListAsString().length) * 10 )* 0.60;
     }
 }
