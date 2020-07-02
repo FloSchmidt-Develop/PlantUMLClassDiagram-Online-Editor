@@ -19,10 +19,10 @@ export default class DiagramCreator{
     constructor(){
     }
 
-    createDiagram(serverResponse: any): any{
+    createDiagram(serverResponse: any, diagramName: string): any{
         console.log(serverResponse);
         if(DiagramCreator.diagram[DiagramCreator.activeIndex] == null)
-            DiagramCreator.diagram[DiagramCreator.activeIndex] = new Diagram();
+            DiagramCreator.diagram[DiagramCreator.activeIndex] = new Diagram(diagramName);
         
         if(
         serverResponse !== null &&
@@ -30,6 +30,7 @@ export default class DiagramCreator{
         serverResponse.Res.diagram !== null )
         {
             console.log(serverResponse.Res.diagram);
+            DiagramCreator.diagram[DiagramCreator.activeIndex].name = diagramName;
             
             let jsonDiagram = serverResponse.Res.diagram;
             //check if the server result contains classes

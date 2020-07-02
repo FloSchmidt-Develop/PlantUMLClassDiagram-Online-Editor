@@ -75,13 +75,11 @@ export default class MxGraphCreator {
     //Function to show the Element in the editing Panel
     this.graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
 		{
+      console.log(evt);
       
       let view = document.createElement('div');
-      console.log(diagram);
-      
 
         var senderClass = sender.cells[0];
-        console.log(DiagramCreator.diagram[DiagramCreator.activeIndex]);
         
         
           if ( typeof senderClass !== 'undefined'){

@@ -6,12 +6,14 @@ import Package from './package';
 import ID from './id';
 
 export default class Diagram extends ID implements IDiagram{
+    public name: string;
     public class_declarations: IClass[] = [];
     public connection_declarations : IConnection[] = [];
     public package_declarations : IPackage [] = [];
 
-    constructor() {
+    constructor(name: string) {
         super();
+        this.name = name;
     }
 
     public addClass(newClass : IClass) :void{

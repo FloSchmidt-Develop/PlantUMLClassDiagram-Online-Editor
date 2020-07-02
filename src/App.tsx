@@ -11,6 +11,8 @@ import Box from '@material-ui/core/Box';
 import "./App.css";
 import Editor from "./Editor";
 import DiagramCreator from "./helper/diagramCreator";
+import { Button, Toolbar } from "@material-ui/core";
+import { brotliDecompress } from "zlib";
 
 
 function TabPanel(props) {
@@ -52,36 +54,47 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  button: {
+    fontWeight: 'bold',
+    color: 'white'
+  }
 }));
 
 
 function App(){
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [diagrams, setDiagrams] = React.useState([0]);
+  const [index,setIndex] = React.useState(1);
 
   const handleChange = (event, newValue) => {
     DiagramCreator.activeIndex = newValue;
     setValue(newValue);
   };
 
+  const addDiagram = () => {
+    let temp = [...diagrams, index];
+    setDiagrams(temp);
+    setIndex(index + 1);
+    
+    //setDiagrams(temp);
+  }
+
   return (
      <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          {diagrams.map( (number) =>   
+            <Tab label={DiagramCreator.diagram[number]?.name != null ? DiagramCreator.diagram[number]?.name : 'new Diagram' } {...a11yProps(number)} />
+          )};
+          <Button className={classes.button} onClick={addDiagram}>+</Button>
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        <Editor index={0}/>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Editor index={1}/>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Editor index={2}/>
-      </TabPanel>
+      {diagrams.map((number) => 
+        <TabPanel value={value} index={number}>
+          <Editor index={number}/>
+        </TabPanel>
+      )}
     </div>
 
   )

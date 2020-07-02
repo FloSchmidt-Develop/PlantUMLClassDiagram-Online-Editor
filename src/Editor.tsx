@@ -7,7 +7,6 @@ import IDiagram from "./interfaces/diagram";
 import DiagramCreator from "./helper/diagramCreator";
 import MxGraphCreator from "./helper/mxGraphCreator";
 import Toolbar from './classes/view/toolbar/toolbar';
-import Bild from './images/Arrow_big.jpg';
 
 import {
   mxGraph,
@@ -77,10 +76,8 @@ const Editor = (props) => {
         },
       });
 
-      console.log(res);
       
-
-      diagramCreator.createDiagram(res.data);
+      diagramCreator.createDiagram(res.data,filename);
 
       if (typeof graph === "undefined") {
         setGraph(new mxGraph(divGraph.current));
@@ -160,7 +157,7 @@ const Editor = (props) => {
     }
     else{
       let graph = new mxGraph(divGraph.current)
-      let diag = diagramCreator.createDiagram(null);
+      let diag = diagramCreator.createDiagram(null, 'New Diagram');
       
       let toolbar = new Toolbar();
       toolbar.getCreateToolbarContainer(graph);
@@ -170,6 +167,10 @@ const Editor = (props) => {
     }
     graph?.model.addListener(mxEvent.CHANGE, function(sender, evt)
     {
+      console.log('Change');
+      console.log(evt);
+      
+      
       for (let index = 0; index < evt.properties?.changes?.length; index++) {
         let changedCell = evt.properties?.changes[index]?.cell;
         let geometry = evt.properties?.changes[index]?.geometry
@@ -179,15 +180,13 @@ const Editor = (props) => {
           changedClass.y = geometry.y;
           changedClass.setHight(geometry.hight);
           changedClass.setWidth(geometry.width);
-          ClassUpdateController.updateClassValues(graph,changedCell,changedClass)
+          //ClassUpdateController.updateClassValues(graph,changedCell,changedClass)
         }
         if(changedCell != null && geometry != null && changedCell.value instanceof Connection){
           let changedConnection = changedCell.value as Connection;
           changedConnection.geometry = geometry;
         }
         if(changedCell != null && geometry != null && changedCell.value instanceof Package){
-          console.log('------Package------');
-          console.log(evt);
           let changedPackage = changedCell.value as Package;
           changedPackage.x = geometry.x;
           changedPackage.y = geometry.y;
