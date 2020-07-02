@@ -25,13 +25,43 @@ export default class Diagram extends ID implements IDiagram{
     public addPackage(packageName: string): IPackage | null{
         if(packageName === '')
             return null;
-        let newPackage = this.package_declarations.find(e => e.name === packageName)
+        let newPackage = this.package_declarations.find(e => e.getName() === packageName)
         if(newPackage != null){
             return newPackage
         }
         newPackage = new Package(packageName)
         this.package_declarations.push(newPackage);
         return newPackage;
+    }
+
+    public removeClass(classToRemove: IClass){
+        this.class_declarations = this.class_declarations.filter(
+             e => e.id !== classToRemove.id);
+
+        let connectionsToRemove = this.connection_declarations.filter(
+            e => (e.destinationElement === classToRemove.alias || e.sourceElement === classToRemove.alias)
+        );
+        //Remove Connections from Classes
+        for (let index = 0; index < connectionsToRemove.length; index++) {
+            this.removeConnection(connectionsToRemove[index]);
+        }
+        let packageOfClass = this.package_declarations.find(e => e.getName() === classToRemove.getName());
+        packageOfClass?.RemoveClassReference(classToRemove);
+    }
+
+    public removeConnection(connectionToRemove: IConnection){
+        this.connection_declarations = this.connection_declarations.filter(
+            e => e.id !== connectionToRemove.id);
+        console.log('Connection Removed');
+        console.log(connectionToRemove);
+    }
+
+    public removePackage(packageToRemove: IPackage){
+        this.package_declarations = this.package_declarations.filter(
+            e => e.id !== packageToRemove.id
+        )
+        packageToRemove.classReferences.forEach( e => this.removeClass(e));
+
     }
 
 }

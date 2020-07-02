@@ -27,7 +27,7 @@
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
-  top:50px;
+  top:100px;
   left:110px;
   border: 2px solid black;
 }
@@ -36,7 +36,7 @@
   position: absolute;
   width: 20vw;
   height: 90vh;
-  top: 50px;
+  top: 100px;
   right: 0px;
   overflow-y: auto;
   overflow-x: auto;
@@ -50,7 +50,7 @@
   overflow : hidden;
   padding : 2px;
   left : 0px;
-  top : 50px;
+  top : 100px;
   width : 100px;
   bottom : 0px;
   margin-left: 2px;
@@ -82,6 +82,22 @@
   bottom: 3vh;
   left: 3vw;
   background-color: lightgray;
+}
+
+#zoomButtons{
+  position: absolute;
+  left: 70vw;
+  top: 110px;
+}
+
+#zoomButtons button{
+  width: 30px;
+}
+
+#editButtons{
+  position: absolute;
+  left: 110px;
+  top: 70px;
 }
 
 class-type-icon{

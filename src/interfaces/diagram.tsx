@@ -14,4 +14,8 @@ export default interface Diagram extends ID {
     addConnection(newConnection: IConnection);
     addPackage(packageName: string);
 
+    removeClass(classToRemove: IClass);
+    removeConnection(connectionToRemove: IConnection);
+    removePackage(packageToRemove: IPackage);
+
 }

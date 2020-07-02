@@ -18,8 +18,14 @@ import {
   mxXmlCanvas2D,
   mxImageExport,
   mxRubberband,
-  mxUndoManager
+  mxUndoManager,
+  mxGraphHandler
 } from "mxgraph-js";
+import Class from "./classes/parserRep/class";
+import { callbackify } from "util";
+import Connection from "./classes/parserRep/connection";
+import Package from "./classes/parserRep/package";
+import Diagram from "./interfaces/diagram";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -31,12 +37,14 @@ const App = () => {
   const [change, setChange] = useState(false);
   const divGraph = React.useRef<HTMLDivElement>(null);
   const editPanel = React.useRef<HTMLDivElement>(null);
+  const undoManager = new mxUndoManager();
 
   const diagramCreator = new DiagramCreator();
 
   const onChange = (e: any) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
+    
   };
 
   const exportDiagram = async () => {
@@ -106,10 +114,63 @@ const App = () => {
 
         //mxConnectionHandler.prototype.waypointsEnabled = true;
         graph.setConnectableEdges(true);
+        graph.setAllowDanglingEdges(false);
         new mxRubberband(graph);
         graph.setConnectable(true);
         graph.setHtmlLabels(true);
         mxEvent.disableContextMenu(divGraph.current);
+        mxGraphHandler.shouldRemoveCellsFromParent = function(parent,cells,evt){
+          console.log('shouldRemoveCellsFromParent');
+          console.log(parent);
+        }
+
+        //delete of cells
+        graph.isCellDeletable = function(cell){
+          if(cell.value != null){
+
+            if(cell.value instanceof Class){
+              graph.model.beginUpdate();
+              cell.setVisible(false);
+              graph.getModel().endUpdate();
+              diagram?.removeClass(cell.value);
+            }
+            else if(cell.value instanceof Connection){
+              graph.model.beginUpdate();
+              cell.setVisible(false);
+              graph.getModel().endUpdate();
+              diagram?.removeConnection(cell.value);
+              graph.getModel().remove((cell.value as Connection).multiplicity_left.vertex);
+              graph.getModel().remove((cell.value as Connection).multiplicity_right.vertex);
+            }
+            else if(cell.value instanceof Package){
+              cell.setVisible(false);
+
+              diagram?.removePackage(cell.value);
+              
+              let children = cell.children;
+              for (let index = 0; index < children?.length; index++) {
+                graph.getModel().remove(children[index]);
+                if(children[index].value instanceof Class)
+                  diagram?.removeClass(children[index].value);
+              }              
+            }
+            else{
+              console.log('delete other');
+              
+              console.log(cell);
+              
+            }
+
+            
+          }
+
+          return true;
+        }
+        var keyHandler = new mxKeyHandler(graph);
+        keyHandler.bindKey(46, function(evt)
+        {
+            graph.removeCells();
+        });
 
 
         if (typeof diagram !== "undefined") {
@@ -128,19 +189,8 @@ const App = () => {
           graph.getModel().endUpdate();
         }
         graph.getModel().endUpdate();
-
-        console.log(graph.getModel());
         
 
-        var keyHandler = new mxKeyHandler(graph);
-        keyHandler.bindKey(46, function(evt)
-        {
-
-            console.log('delete');
-            graph.getModel().beginUpdate();
-            graph.getSelectionModel().removeCells();
-            graph.getModel().endUpdate();
-        });
 
         
       }
@@ -148,31 +198,23 @@ const App = () => {
     else{
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null);
-      Toolbar.getCreateToolbarContainer(graph);
+      
 
       setGraph(graph);
       setDiagram(diag);
-      /*
-      //----------------------------------------------------------------------------------- Test
-      document.body.appendChild(mxUtils.button('Zoom In', function()
-      {
-        graph.zoomIn();
-      }));
+      console.log(diag);
       
-      document.body.appendChild(mxUtils.button('Zoom Out', function()
-      {
-        graph.zoomOut();
-      }));
+      Toolbar.getCreateToolbarContainer(graph,diag as IDiagram);
       
       // Undo/redo
-      var undoManager = new mxUndoManager();
       var listener = function(sender, evt)
       {
         undoManager.undoableEditHappened(evt.getProperty('edit'));
       };
+
       graph.getModel().addListener(mxEvent.UNDO, listener);
       graph.getView().addListener(mxEvent.UNDO, listener);
-      
+      /*
       document.body.appendChild(mxUtils.button('Undo', function()
       {
         undoManager.undo();
@@ -182,18 +224,28 @@ const App = () => {
       {
         undoManager.redo();
       }));
-
-      // Shows XML for debugging the actual model
-      document.body.appendChild(mxUtils.button('Delete', function()
-      {
-          graph.removeCells();
-          console.log('delete');
-          
-      }));
-      //-----------------------------------------------------------------------------------------
       */
+
     }
   });
+
+  const zoomIn = () => {
+    graph.zoomIn();
+  }
+  const zoomOut = () => {
+    graph.zoomOut();
+  }
+  const undo = () => {
+    console.log(undoManager);
+    
+    undoManager.undo();
+  }
+  const redo = () => {
+    undoManager.redo();
+  }
+  const remove = () => {
+    graph.removeCells();
+  }
 
   return (
     <Fragment>
@@ -217,6 +269,15 @@ const App = () => {
         <div ref={editPanel} id="editPanel">
           <p>nothing Selected</p>
         </div>
+      </div>
+      <div id='zoomButtons'>
+        <button type='button' id='zoomIn' onClick={zoomIn} >+</button>
+        <button type='button' id='zoomOut' onClick={zoomOut} >-</button>
+      </div>
+      <div id='editButtons'>
+        <button type='button' id='undo' disabled={true} onClick={undo} >undo</button>
+        <button type='button' id='redo' disabled={true} onClick={redo} >redo</button>
+        <button type='button' id='delete' onClick={remove} >Delete</button>
       </div>
 
 

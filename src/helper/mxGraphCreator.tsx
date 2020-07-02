@@ -77,6 +77,8 @@ export default class MxGraphCreator {
 		{
       
       let view = document.createElement('div');
+      console.log(diagram);
+      
 
         var senderClass = sender.cells[0];
         console.log(sender.cells[0]);
@@ -271,7 +273,7 @@ export default class MxGraphCreator {
         dummy_div.style.marginRight = '20px';
         dummy_div.style.marginLeft = '20px';
 
-        header_text.innerText = actual_class.name;
+        header_text.innerText = actual_class.getName();
         header_text.style.marginTop = '13px';
         header_text.style.fontSize = '14px';
         header_text.style.marginBottom = '13px';
@@ -309,7 +311,7 @@ export default class MxGraphCreator {
             var content_string =
                 attribute.visibility +
                 " " +
-                attribute.name +
+                attribute.getName() +
                 ": " +
                 attribute.dataType;
 
@@ -340,7 +342,7 @@ export default class MxGraphCreator {
             var content_string =
                 method.visibility +
                 " " +
-                method.name +
+                method.getName() +
                 " " +
                 method.getAttributeListAsString() +
                 ": " +
@@ -374,7 +376,7 @@ export default class MxGraphCreator {
                 var declaration_div = document.createElement("div");
     
                 var content_string =
-                    declaration.name +
+                    declaration.getName() +
                     "= " +
                     declaration.declaration_value;
     
@@ -403,7 +405,7 @@ export default class MxGraphCreator {
     //Package
     else if((cell.value as Package) != null && (cell.value as Package).type === 'Package'){ 
       let actualPackage = (cell.value as Package);
-      return actualPackage.name;
+      return actualPackage.getName();
     }
     //Multiplicity
     else if((cell.value as Multiplicity) != null && (cell.value as Multiplicity).type === 'Multiplicity'){ 
@@ -451,33 +453,6 @@ export default class MxGraphCreator {
     style[mxConstants.STYLE_SPACING] = '0';
     this.graph.getStylesheet().putCellStyle('bottom', style);
 
-    //Connect of Two Cells
-    this.graph.connectionHandler.addListener(mxEvent.CONNECT, 
-      function(sender, evt) {
-
-        var edge = evt.getProperty('cell');
-        let sourceClass : Class;
-        let targetClass: Class;
-        if(edge != null){
-          
-          if(edge.source != null && edge.target != null){
-            sourceClass = edge.source.value as Class;
-            targetClass = edge.target.value as Class;
-              if(targetClass != null && sourceClass != null){
-                //TODO Find solution
-                DiagramCreator.diagram.addConnection(
-                  new Connection('-->','','',targetClass.alias,sourceClass.alias,'')
-                  );
-
-          }     
-        }
-        
-      }
-        
-        
-        
-    });
-
     this.graph.dropEnabled = true;
 
     this.graph.getModel().beginUpdate();
@@ -499,7 +474,7 @@ export default class MxGraphCreator {
     for (let index = 0; index < packageCount; index++) {
       let activePackage = this.diagram?.package_declarations[index];
       
-        activePackages[activePackage.name] = this.graph.insertVertex(
+        activePackages[activePackage.getName()] = this.graph.insertVertex(
           this.parentContainer,
           null,
           activePackage,
@@ -509,14 +484,11 @@ export default class MxGraphCreator {
           y,
           'shape=swimlane;startSize=20;'
         )
-      
     }
 
     var count = this.diagram?.class_declarations.length
       ? this.diagram?.class_declarations.length
       : 0;
-
-
 
     for (let index = 0; index < count; index++) {
 
@@ -539,7 +511,6 @@ export default class MxGraphCreator {
         'bottom'
       );
       x = x + 400;
-
     }
 
     var edgeCount = this.diagram?.connection_declarations.length
@@ -613,6 +584,8 @@ export default class MxGraphCreator {
     }
     */
     this.graph.getModel().parentForCellChanged = function(cell,parent,index){
+      console.log('parent Changed');
+      
       if(parent != null){
         parent.insert(cell,index);
       
@@ -620,23 +593,23 @@ export default class MxGraphCreator {
           let newPackage = parent.value as Package;
           let changedClass = cell.value as Class;
           if(newPackage != null && changedClass != null && newPackage instanceof Package && changedClass instanceof Class){
-            changedClass.package = newPackage.name;
+
+            newPackage.AddClassReference(changedClass);
           }
         }
         else if(cell.value != null && cell.value instanceof Class){
           let changedClass = cell.value as Class;
           if(changedClass != null){
-            changedClass.package = '';
+            console.log('remove from Package');
+
+            let packageOfClass = DiagramCreator.diagram.package_declarations.find(e => e.getName() === changedClass.package)
+            packageOfClass?.RemoveClassReference(changedClass);
+            
           }
         } 
       }
   
     }
-
-
-    
-    //this.graph.getModel().endUpdate();
-
   }
 
 

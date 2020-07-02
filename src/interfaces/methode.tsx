@@ -4,7 +4,6 @@ import ID from './id';
 
 
 export default interface Methode extends IName, ID{
-    name: string,
     dataType: string,
     attributeList?: IAttribute[],
     visibility: string,

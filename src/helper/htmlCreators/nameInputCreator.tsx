@@ -26,7 +26,7 @@ export default class NameInputCreator {
 
     let input2 = document.createElement("input");
     input2.type = "text";
-    input2.value = selectedElement.name;
+    input2.value = selectedElement.getName();
 
     input2.onchange = () => {
       var elementToChange = selectedElement;

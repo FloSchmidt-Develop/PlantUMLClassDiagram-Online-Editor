@@ -9,7 +9,7 @@ export default class Class extends ID implements IClass {
     public attributes: IAttribute[] = [];
     public methods: IMethod[] = [];
     public declarations: IDeclaration[] = [];
-    public name: string;
+    private name: string;
     public package: string = '';
     public type: string;
     public alias: string = '';
@@ -19,11 +19,16 @@ export default class Class extends ID implements IClass {
         super();
         this.name = name;
         this.type = type;
+        this.alias = this.id;
         //this.diagram = diagram;
     }
 
     public setName(newName: string){
         this.name = newName;
+    }
+
+    public getName(): string{
+        return this.name;
     }
 
     public setType(newType: string){

@@ -3,7 +3,7 @@ import ID from './id';
 
 
 export default class Declaration extends ID implements IDeclaration{
-    name: string;
+    private name: string;
     declaration_value: string;
 
     constructor(name: string, value: string){
@@ -14,6 +14,10 @@ export default class Declaration extends ID implements IDeclaration{
 
     public setName(newName : string){
         this.name = newName;
+    }
+
+    public getName(): string{
+        return this.name;
     }
     
     public setDeclarationValue(newDeclarationValue: string){
