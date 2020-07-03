@@ -5,6 +5,7 @@ import {
     mxUtils
   } from "mxgraph-js";
 import Class from "../../parserRep/class";
+import MyObject from "../../parserRep/object";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
@@ -36,7 +37,7 @@ export default class Toolbar{
             var cls = new Class('new Class','class');
             var itf = new Class('new Interface','interface');
             var abs = new Class('new Class', 'abstractclass');
-            var obj = new Class('new Object', 'object');
+            var obj = new MyObject('new Object', 'object');
             var pkg = new Package('new Package');
     
             this.addVertex(graph,toolbar,pkg, PackageImg, 250, 100, 'shape=swimlane;startSize=20;');
@@ -81,7 +82,7 @@ export default class Toolbar{
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             if(vertex.value.type === 'object'){
-                vertex.value = new Class('Object Name','object');
+                vertex.value = new MyObject('new Object', 'object');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             else if(vertex.value instanceof Package){

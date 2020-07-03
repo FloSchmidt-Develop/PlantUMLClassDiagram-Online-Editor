@@ -23,6 +23,20 @@ export default class MethodInputCreator {
       const method = elementToChange.methods[index];
       let row_div = document.createElement("div");
 
+      let moveUpMethodButton = document.createElement('button');
+      moveUpMethodButton.innerText = '/\\';
+      moveUpMethodButton.style.float = 'right';
+      moveUpMethodButton.style.marginRight = '10px';
+
+      moveUpMethodButton.onclick = () => {
+        elementToChange.ChangeMethodPosition(method,true);  
+        
+        this.UpdateClass(sender,elementToChange);
+    }
+
+      row_div.appendChild(moveUpMethodButton);
+      row_div.appendChild(document.createElement('br'));
+
       //visibility
       let visibility_p = document.createElement("p");
       visibility_p.style.display = "inline";
@@ -197,6 +211,20 @@ export default class MethodInputCreator {
 
 
        container_div.appendChild(newFunctionArgumentButton);
+
+       let moveDownMethodButton = document.createElement('button');
+       moveDownMethodButton.innerText = '\\/';
+       moveDownMethodButton.style.float = 'right';
+       moveDownMethodButton.style.marginRight = '10px';
+ 
+       moveDownMethodButton.onclick = () => {
+         elementToChange.ChangeMethodPosition(method,false);  
+         
+         this.UpdateClass(sender,elementToChange);
+     }
+ 
+       row_div.appendChild(moveDownMethodButton);
+       row_div.appendChild(document.createElement('br'));
 
        
 

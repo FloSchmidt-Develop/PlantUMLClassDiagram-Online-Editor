@@ -18,7 +18,11 @@ export default interface Class extends ITyped, IName, ID{
     AddMethods(method:IMethod ): void;
     DeleteMethod(method: IMethod): void;
 
+    DeleteAttribute(attribute: IAttribute): void;
     AddAttribute(attribute: IAttribute): void;
+
+    ChangeAttributePosition(attribute: IAttribute, up: boolean): void;
+    ChangeMethodPosition(method: IMethod, up: boolean): void;
 
     getWidth(): number;
     getHeight(): number;

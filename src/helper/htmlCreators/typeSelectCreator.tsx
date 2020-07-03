@@ -20,7 +20,7 @@ export default class {
     let td2 = document.createElement("td");
     let p = document.createElement("p");
 
-    p.innerText = "Line Style: ";
+    p.innerText = "Type: ";
     td1.appendChild(p);
 
     let select = document.createElement("select");

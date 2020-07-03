@@ -3,11 +3,13 @@ import IClass from "../interfaces/class";
 import IConnector, {Arrows, Lines} from '../interfaces/connector'
 
 import Class from "../classes/parserRep/class";
+import MyObject from '../classes/parserRep/object';
 import Connection from "../classes/parserRep/connection";
 import TypeSelectCreator from './htmlCreators/typeSelectCreator';
 import NameSelectCreator from './htmlCreators/nameInputCreator';
 import DeclarationInputCreator from './htmlCreators/declarationInputCreator';
 import ConnectionInputCreator from './htmlCreators/connectionInputCreator';
+import ObjectDataTypeInputCreator from './htmlCreators/objectDataTypeInputCreator';
 import ClassEditingView from '../classes/view/editing/classEditing';
 
 import IName from '../interfaces/named';
@@ -116,7 +118,11 @@ export default class MxGraphCreator {
           (senderClass.value as Class).type === 'object'
         ){
           
-          //method
+          //declarations
+          let dataTypeInputCreator = new ObjectDataTypeInputCreator(graph);
+          let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as Class, sender);
+
+
           let declarationInputCreator = new DeclarationInputCreator(graph);
           let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as Class, sender);
           let declarationHeader = document.createElement('h3');
@@ -140,6 +146,7 @@ export default class MxGraphCreator {
             }
           }
 
+          view.appendChild(dataTypediv);
           view.appendChild(declarationHeader);
           view.appendChild(declaration_div);
           view.appendChild(newDeclarationButton);
@@ -223,7 +230,7 @@ export default class MxGraphCreator {
     this.graph.getLabel = function (cell) {
 
       //Class------------------------------------------------------------------------------------------------
-      var actual_class: IClass = cell.value;
+      var actual_class: IClass | MyObject = cell.value;
       if(actual_class !== null 
         && typeof actual_class !== 'undefined' 
         && (actual_class.type === 'interface' || actual_class.type === 'abstractclass'
@@ -269,7 +276,7 @@ export default class MxGraphCreator {
         dummy_div.style.marginRight = '20px';
         dummy_div.style.marginLeft = '20px';
 
-        header_text.innerText = actual_class.getName();
+        header_text.innerText = actual_class.getName() + (actual_class.type === 'object' ? (':' + (actual_class as MyObject).dataType) : '');
         header_text.style.marginTop = '13px';
         header_text.style.fontSize = '14px';
         header_text.style.marginBottom = '13px';
@@ -414,8 +421,9 @@ export default class MxGraphCreator {
         if(cell.edge && cell.target != null && cell.source != null){
           console.log('added new Connection');
           console.log(cell.source);
+          console.log(cell.target);
           
-          let connection = new Connection('<--','','',cell.target.value.name,cell.source.value.name,'');
+          let connection = new Connection('<--','','',cell.target.value.alias,cell.source.value.alias,'');
           diagram.addConnection(connection);
           
           graph.getModel().beginUpdate();

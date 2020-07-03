@@ -187,7 +187,6 @@ const Editor = (props) => {
 
 
     var vertexStyle  = graph.getStylesheet().getDefaultVertexStyle();
-      vertexStyle[mxConstants.STYLE_WHITE_SPACE] = 'wrap';
       vertexStyle[mxConstants.STYLE_OVERFLOW] = 'width';
 
       var edgeStyle  = graph.getStylesheet().getDefaultEdgeStyle();
@@ -257,12 +256,6 @@ const Editor = (props) => {
               if(children[index].value instanceof Class)
                 diagram?.removeClass(children[index].value);
             }              
-          }
-          else{
-            console.log('delete other');
-            
-            console.log(cell);
-            
           }
 
           

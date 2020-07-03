@@ -24,6 +24,22 @@ export default class AttributeInputCreator {
       const attribute = elementToChange.attributes[index];
       let row_div = document.createElement("div");
 
+      
+      
+      let moveUpAttributeButton = document.createElement('button');
+      moveUpAttributeButton.innerText = '/\\';
+      moveUpAttributeButton.style.float = 'right';
+      moveUpAttributeButton.style.marginRight = '10px';
+
+      moveUpAttributeButton.onclick = () => {
+        elementToChange.ChangeAttributePosition(attribute,true);  
+        
+        this.UpdateClass(sender,elementToChange);
+    }
+
+      row_div.appendChild(moveUpAttributeButton);
+      row_div.appendChild(document.createElement('br'));
+
       //visibility
       let visibility_p = document.createElement("p");
       visibility_p.style.display = "inline";
@@ -40,13 +56,27 @@ export default class AttributeInputCreator {
           elementToChange.attributes[index].setVisibility(input_visibility.value);
         }
 
-      //Update Cell
-      this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-      this.graph.getModel().endUpdate();
+      this.UpdateClass(sender,elementToChange);
 
       };
       row_div.appendChild(input_visibility);
+      row_div.appendChild(document.createElement('br'));
+
+      let deleteAttributeButton = document.createElement('button');
+      deleteAttributeButton.innerText = 'x';
+      deleteAttributeButton.style.float = 'right';
+      deleteAttributeButton.style.marginRight = '10px';
+
+
+      deleteAttributeButton.onclick = () => {
+          elementToChange.DeleteAttribute(attribute);  
+          
+          this.UpdateClass(sender,elementToChange);
+      }
+
+
+
+      row_div.appendChild(deleteAttributeButton);
       row_div.appendChild(document.createElement('br'));
 
       //name
@@ -97,6 +127,20 @@ export default class AttributeInputCreator {
       };
       row_div.appendChild(input_type);
 
+      let moveDownAttributeButton = document.createElement('button');
+      moveDownAttributeButton.innerText = '\\/';
+      moveDownAttributeButton.style.float = 'right';
+      moveDownAttributeButton.style.marginRight = '10px';
+
+      moveDownAttributeButton.onclick = () => {
+        elementToChange.ChangeAttributePosition(attribute,false);  
+        
+        this.UpdateClass(sender,elementToChange);
+    }
+
+      row_div.appendChild(moveDownAttributeButton);
+      row_div.appendChild(document.createElement('br'));
+
 
       container_div.appendChild(row_div);
       container_div.appendChild(document.createElement('hr'));
@@ -104,5 +148,15 @@ export default class AttributeInputCreator {
   }
 
     return container_div;
+  }
+
+  private UpdateClass(sender,elementToChange){
+    this.graph.getModel().beginUpdate();
+    ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+    this.graph.getModel().endUpdate();
+
+    let tempSelectedCell = sender.cells[0];
+    this.graph.getSelectionModel().clear();
+    this.graph.getSelectionModel().addCell(tempSelectedCell);
   }
 }

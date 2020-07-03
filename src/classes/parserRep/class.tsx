@@ -3,6 +3,8 @@ import IAttribute from '../../interfaces/attribute'
 import IMethod from '../../interfaces/methode'
 import IDeclaration from '../../interfaces/declaration'
 import ID from './id';
+import Attribute from './attribute';
+import Method from './method';
 
 
 export default class Class extends ID implements IClass {
@@ -49,6 +51,39 @@ export default class Class extends ID implements IClass {
 
     public AddAttribute(attribute: IAttribute){
         this.attributes.push(attribute);
+    }
+
+    public DeleteAttribute(attribute: IAttribute){
+        this.attributes = this.attributes.filter(e => e.id != attribute.id);
+        this.hight -= 11;
+    }
+
+    public ChangeAttributePosition(attribute: IAttribute, up: boolean){
+
+        let old_index = this.attributes.indexOf(attribute);
+        let new_index = up ? old_index - 1 : old_index + 1;
+
+        if (new_index >= this.attributes.length) {
+            var k = new_index - this.attributes.length + 1;
+            while (k--) {
+                 this.attributes.push(new Attribute('','',''));
+            }
+            }
+         this.attributes.splice(new_index, 0, this.attributes.splice(old_index, 1)[0]);
+    }
+    
+    public ChangeMethodPosition(method: IMethod, up: boolean){
+
+        let old_index = this.methods.indexOf(method);
+        let new_index = up ? old_index - 1 : old_index + 1;
+
+        if (new_index >= this.methods.length) {
+            var k = new_index - this.methods.length + 1;
+            while (k--) {
+                 this.methods.push(new Method('',''));
+            }
+            }
+         this.methods.splice(new_index, 0, this.methods.splice(old_index, 1)[0]);
     }
 
     public setWidth(width: number){

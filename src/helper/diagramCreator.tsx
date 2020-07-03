@@ -4,6 +4,7 @@ import IClass from '../interfaces/class';
 import IConnection from '../interfaces/connection';
 
 import Class from '../classes/parserRep/class';
+import MyObject from '../classes/parserRep/object';
 import Attribute from '../classes/parserRep/attribute';
 import Method from '../classes/parserRep/method';
 import Connection from '../classes/parserRep/connection';
@@ -70,7 +71,12 @@ export default class DiagramCreator{
         for (let index = 0; index < jsonClasses.length; index++) {
             var jasonClass = jsonClasses[index];
             
-            let cls = new Class(jasonClass.name, jasonClass.type);
+            let cls;
+            if(jasonClass.type !== 'object') 
+                cls = new Class(jasonClass.name, jasonClass.type);
+            else{
+                cls = new MyObject(jasonClass.name, jasonClass.type);
+            }
             cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
             
