@@ -9,16 +9,20 @@ import Method from '../classes/parserRep/method';
 import Connection from '../classes/parserRep/connection';
 import Declaration from '../classes/parserRep/declaration';
 import { EROFS } from 'constants';
+import Package from '../classes/parserRep/package';
 
 export default class DiagramCreator{
 
-    public static diagram = new Diagram();
+    public static diagram: IDiagram[] = [];
+    public static activeIndex: number = 0;
  
     constructor(){
     }
 
-    createDiagram(serverResponse: any): Diagram{
+    createDiagram(serverResponse: any, diagramName: string): any{
         console.log(serverResponse);
+        if(DiagramCreator.diagram[DiagramCreator.activeIndex] == null)
+            DiagramCreator.diagram[DiagramCreator.activeIndex] = new Diagram(diagramName);
         
         if(
         serverResponse !== null &&
@@ -26,23 +30,24 @@ export default class DiagramCreator{
         serverResponse.Res.diagram !== null )
         {
             console.log(serverResponse.Res.diagram);
+            DiagramCreator.diagram[DiagramCreator.activeIndex].name = diagramName;
             
             let jsonDiagram = serverResponse.Res.diagram;
             //check if the server result contains classes
             if(jsonDiagram.class_declaration !== null){        
-               this.addClasses(jsonDiagram.class_declaration, DiagramCreator.diagram);    
+               this.addClasses(jsonDiagram.class_declaration, DiagramCreator.diagram[DiagramCreator.activeIndex]);    
 
             }     
             if(jsonDiagram.connection_declaration !== null){
                 
-                this.addConnections(jsonDiagram.connection_declaration, DiagramCreator.diagram);
+                this.addConnections(jsonDiagram.connection_declaration, DiagramCreator.diagram[DiagramCreator.activeIndex]);
             }
 
         }
         console.log('diagram creator');
         console.log(DiagramCreator.diagram);
         
-        return DiagramCreator.diagram;
+        return DiagramCreator.diagram[DiagramCreator.activeIndex];
     }
 
     private addConnections(jsonConnections: any, diagram: IDiagram){
@@ -69,7 +74,8 @@ export default class DiagramCreator{
             cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
             
-            let resPackage = diagram.addPackage(cls.package);
+            let newPackage = new Package(cls.package);
+            let resPackage = diagram.addPackage(newPackage);
             if(resPackage != null)
                 resPackage.AddClassReference(cls);
 

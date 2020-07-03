@@ -4,6 +4,27 @@ import ID from './id';
 
 
 export default class Package extends ID implements IPackage{
+    y: number = 0;
+    x: number = 0;
+    private width: number = 50;
+    private hight: number = 400;
+
+
+    setWidth(width: number) {
+        if(width != null)
+            this.width = width;
+    }
+    setHight(hight: number) {
+        if(hight != null)
+            this.hight = hight;
+    }
+
+    getWidth(): number {
+        return this.width;
+      }
+    getHight():number {
+        return this.hight;
+      }
 
     private name: string;
     public  classReferences: IClass[] = [];

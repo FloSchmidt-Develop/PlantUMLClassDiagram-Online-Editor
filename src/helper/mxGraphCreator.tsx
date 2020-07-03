@@ -56,7 +56,7 @@ export default class MxGraphCreator {
 
     this.graph.setHtmlLabels(true);
     this.graph.setCellsResizable(true);
-    //this.graph.setResizeContainer(false);
+    this.graph.setResizeContainer(false);
 
     var style = graph.getStylesheet().getDefaultEdgeStyle();
     style[mxConstants.STYLE_ROUNDED] = true;
@@ -75,13 +75,12 @@ export default class MxGraphCreator {
     //Function to show the Element in the editing Panel
     this.graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
 		{
+      console.log(DiagramCreator.diagram);
+      
       
       let view = document.createElement('div');
-      console.log(diagram);
-      
 
         var senderClass = sender.cells[0];
-        console.log(sender.cells[0]);
         
         
           if ( typeof senderClass !== 'undefined'){
@@ -219,9 +218,6 @@ export default class MxGraphCreator {
       return this.getModel().isEdge(cell);
     };
     
-
-
-    
     this.diagram = diagram;
 
     this.graph.getLabel = function (cell) {
@@ -291,7 +287,9 @@ export default class MxGraphCreator {
 
         body.appendChild(tr1);
 
-        if (actual_class.type === "interface" || actual_class.type === "class" || actual_class.type === "abstractclass") {
+        if (actual_class.type === "interface" 
+        || actual_class.type === "class" 
+        || actual_class.type === "abstractclass") {
 
         //Attributes
             var tr2 = document.createElement("tr");
@@ -414,25 +412,29 @@ export default class MxGraphCreator {
     }
     else{  
         if(cell.edge && cell.target != null && cell.source != null){
-          var connection = new Connection('<--','','', cell.target.value.alias,cell.source.value.alias,'');
+          console.log('added new Connection');
+          console.log(cell.source);
+          
+          let connection = new Connection('<--','','',cell.target.value.name,cell.source.value.name,'');
           diagram.addConnection(connection);
           
           graph.getModel().beginUpdate();
     
           graph.model.setValue(cell, connection);
+          connection.geometry = cell.geometry;
           
           graph.model.setStyle(cell, "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;");
 
           var e21 = graph.insertVertex(cell, connection.id + 'L', connection.multiplicity_left, -0.9, 0, 0, 0,
-          'fontSize=12;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
+          'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
           connection.multiplicity_left.vertex = e21;
+          e21.isConnectable = () => false;
 
           var e12 = graph.insertVertex(cell, null, connection.multiplicity_right, 0.9, 0, 0, 0,
-          'fontSize=16;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
+          'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
           connection.multiplicity_right.vertex = e12;
+          e12.isConnectable = false;
 
-
-    
           graph.getModel().endUpdate();
         }
         else{
@@ -453,15 +455,13 @@ export default class MxGraphCreator {
     style[mxConstants.STYLE_SPACING] = '0';
     this.graph.getStylesheet().putCellStyle('bottom', style);
 
-    this.graph.dropEnabled = true;
-
     this.graph.getModel().beginUpdate();
 
     var activeVertexes: { [id: string]: any } = {};
     var activePackages: { [id: string]: any } = {};
     var activeEdges: {[id: string]: any } = {};
-    var x = 200;
-    var y = 0;
+    var x = 100;
+    var y = 100;
     
 
 
@@ -473,15 +473,21 @@ export default class MxGraphCreator {
 
     for (let index = 0; index < packageCount; index++) {
       let activePackage = this.diagram?.package_declarations[index];
+
+        if (activePackage.x === 0)
+          activePackage.x = x;
+        if (activePackage.y === 0)
+          activePackage.y = y;
+      
       
         activePackages[activePackage.getName()] = this.graph.insertVertex(
           this.parentContainer,
           null,
           activePackage,
-          50,
-          400,
-          x,
-          y,
+          activePackage.x,
+          activePackage.y,
+          activePackage.getWidth(),
+          activePackage.getHight(),
           'shape=swimlane;startSize=20;'
         )
     }
@@ -500,15 +506,16 @@ export default class MxGraphCreator {
 
       //Add Classes
       let element = this.diagram?.class_declarations[index];
+      element.x = element.x === 0 ? x : element.x ;
+      element.y = element.y === 0 ? y : element.y ;
       activeVertexes[element.alias] = this.graph.insertVertex(
         element.package !== '' ? activePackages[element.package] : this.parentContainer,
         element.id,
         element,
-        x,
-        y,
+        element.x,
+        element.y,
         element.getWidth(),
-        element.getHeight(),
-        'bottom'
+        element.getHeight()
       );
       x = x + 400;
     }
@@ -551,40 +558,28 @@ export default class MxGraphCreator {
           activeVertexes[connection.destinationElement],
           this.getEdgeStyle(connection.connector)
         );
+
+        if(connection.geometry != null){
+          activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'].geometry = connection.geometry;
+        }
+        
       }
 
         var e21 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], connection.id + 'L', connection.multiplicity_left, -0.9, 0, 0, 0,
                 'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);        
         this.graph.updateCellSize(e21);
         connection.multiplicity_left.vertex = e21;
-      
-        //e21.geometry.offset = new mxPoint(e21.geometry.width, e21.geometry.height);
+        e21.isConnectable = () => false;
+
 
         var e12 = this.graph.insertVertex(activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'], null, connection.multiplicity_right, 0.9, 0, 0, 0,
                 'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
-        console.log(connection);
-        connection.multiplicity_right.vertex = e12;
-        
         this.graph.updateCellSize(e12);
-        //e21.geometry.offset = new mxPoint(-e12.geometry.width, -e12.geometry.height);
-
-
-     
+        connection.multiplicity_right.vertex = e12;
+        e12.isConnectable = () => false;
+            
     }
-    /*
-    var layout = new mxHierarchicalLayout(this.graph, mxConstants.DIRECTION_NORTH, true);
-    
-    var packages = Object.keys(activePackages);
-    for (let index = 0; index < packages.length; index++) {
-      let packageName = packages[index];
-      layout.execute(activePackages[packageName]);
-    }
-    if(packages.length === 0){
-      layout.execute(this.parentContainer);
-    }
-    */
     this.graph.getModel().parentForCellChanged = function(cell,parent,index){
-      console.log('parent Changed');
       
       if(parent != null){
         parent.insert(cell,index);
@@ -593,16 +588,13 @@ export default class MxGraphCreator {
           let newPackage = parent.value as Package;
           let changedClass = cell.value as Class;
           if(newPackage != null && changedClass != null && newPackage instanceof Package && changedClass instanceof Class){
-
             newPackage.AddClassReference(changedClass);
           }
         }
         else if(cell.value != null && cell.value instanceof Class){
           let changedClass = cell.value as Class;
           if(changedClass != null){
-            console.log('remove from Package');
-
-            let packageOfClass = DiagramCreator.diagram.package_declarations.find(e => e.getName() === changedClass.package)
+            let packageOfClass = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === changedClass.package)
             packageOfClass?.RemoveClassReference(changedClass);
             
           }
@@ -651,28 +643,6 @@ export default class MxGraphCreator {
       return "endArrow=classic;endFill=1;";
     }
     return "endArrow=dash;endFill=0;";
-  }
-
-
-  private CreateArrowWithNumber(num: string, isStart: boolean): string{
-
-    mxMarker.addMarker("myconnector" + num + (isStart ? 'start' : 'end'), function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
-    {
-
-      return function()
-      {
-        if (isStart) {
-          canvas.text(pe.x + 5,pe.y - 25,10,10,num);
-        }
-        else{
-          canvas.text(pe.x - 25,pe.y - 25,10,10,num);
-        }
-
-      };
-    });
-
-    return "myconnector" + num + (isStart ? 'start' : 'end') + ";";
-
   }
 
 }

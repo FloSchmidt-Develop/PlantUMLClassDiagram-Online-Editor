@@ -11,7 +11,9 @@ export default interface Class extends ITyped, IName, ID{
     declarations: IDeclaration[];
     package: string,
     type: string,
-    alias: string
+    alias: string,
+    x: number;
+    y: number;
 
     AddMethods(method:IMethod ): void;
     DeleteMethod(method: IMethod): void;
@@ -20,6 +22,8 @@ export default interface Class extends ITyped, IName, ID{
 
     getWidth(): number;
     getHeight(): number;
+    setWidth(width: number);
+    setHight(hight: number);
 
     setType(type: string);
 }

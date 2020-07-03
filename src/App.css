@@ -22,12 +22,12 @@
 .graph-container{
   position:absolute;
   width: 70vw;
-  height: 90vh;
+  height: 85vh;
   background:url('./images/grid.gif');
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
-  top:100px;
+  top:130px;
   left:110px;
   border: 2px solid black;
 }
@@ -35,8 +35,8 @@
 .edit-container{
   position: absolute;
   width: 20vw;
-  height: 90vh;
-  top: 100px;
+  height: 85vh;
+  top: 130px;
   right: 0px;
   overflow-y: auto;
   overflow-x: auto;
@@ -50,7 +50,7 @@
   overflow : hidden;
   padding : 2px;
   left : 0px;
-  top : 100px;
+  top : 130px;
   width : 100px;
   bottom : 0px;
   margin-left: 2px;
@@ -67,12 +67,12 @@
 }
 
 .upload-section{
-  margin-top: 15px;
+  margin-top: 0px;
 }
 
 .my-button-style{
   font-size: larger;
-  padding: 0vw 1vh;
+  padding: 0vw 0vh;
 }
 
 .custom-button{
@@ -87,7 +87,7 @@
 #zoomButtons{
   position: absolute;
   left: 70vw;
-  top: 110px;
+  top: 140px;
 }
 
 #zoomButtons button{
@@ -96,8 +96,8 @@
 
 #editButtons{
   position: absolute;
-  left: 110px;
-  top: 70px;
+  left: 50vw;
+  top: 100px;
 }
 
 class-type-icon{

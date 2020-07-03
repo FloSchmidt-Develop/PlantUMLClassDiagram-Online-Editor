@@ -14,20 +14,18 @@ import InterfaceImg from "../../../images/ToolbarInterface.png";
 import AbstractImg from "../../../images/ToolbarAbstract.png";
 import ObjectImg from "../../../images/ToolbarObject.png";
 import PackageImg from "../../../images/ToolbarPackage.png";
+import DiagramCreator from "../../../helper/diagramCreator";
 
 
 
 
 export default class Toolbar{
 
-    private static diagram: IDiagram;
 
-    public static getCreateToolbarContainer(graph: any, diagramToAddClasses: IDiagram){
-        Toolbar.diagram = diagramToAddClasses;
+    public getCreateToolbarContainer(graph: any){
 
-        var tbContainer = document.getElementById('toolbar');
-        if(tbContainer === null){
-            tbContainer = document.createElement('div');
+
+            let tbContainer = document.createElement('div');
             tbContainer.className = 'toolbar';
             tbContainer.id = 'toolbar';
             document.body.appendChild(tbContainer);
@@ -41,24 +39,24 @@ export default class Toolbar{
             var obj = new Class('new Object', 'object');
             var pkg = new Package('new Package');
     
-            Toolbar.addVertex(graph,toolbar,pkg, PackageImg, 250, 100, 'shape=swimlane;startSize=20;');
-            Toolbar.addVertex(graph,toolbar,cls, ClassImg, 250, 100, '');
-            Toolbar.addVertex(graph,toolbar,itf, InterfaceImg, 270, 100, '');
-            Toolbar.addVertex(graph,toolbar,obj, ObjectImg, 250, 80, '');
-            Toolbar.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, '');
-        }
+            this.addVertex(graph,toolbar,pkg, PackageImg, 250, 100, 'shape=swimlane;startSize=20;');
+            this.addVertex(graph,toolbar,cls, ClassImg, 250, 100, '');
+            this.addVertex(graph,toolbar,itf, InterfaceImg, 270, 100, '');
+            this.addVertex(graph,toolbar,obj, ObjectImg, 250, 80, '');
+            this.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, '');
+
     }
 
-    private static addVertex(graph, toolbar,type: IClass | IPackage, icon, w, h, style){
+    private addVertex(graph, toolbar,type: IClass | IPackage, icon, w, h, style){
 
         var vertex = new mxCell(type, new mxGeometry(0, 0, w, h), style);
         
 		vertex.setVertex(true);
 				
-		Toolbar.addToolbarItem(graph, toolbar, vertex, icon);
+        this.addToolbarItem(graph, toolbar, vertex, icon);
     }
 
-    private static addToolbarItem(graph, toolbar, prototype, image)
+    private addToolbarItem(graph, toolbar, prototype, image)
     {
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
@@ -72,28 +70,29 @@ export default class Toolbar{
 
             if(vertex.value.type === 'class'){
                 vertex.value = new Class('Class Name','class');
-                Toolbar.diagram.addClass(vertex.value);
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             if(vertex.value.type === 'interface'){
                 vertex.value = new Class('Interface Name','interface');
-                Toolbar.diagram.addClass(vertex.value);
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             if(vertex.value.type === 'abstractclass'){
                 vertex.value = new Class('Class Name','abstractclass');
-                Toolbar.diagram.addClass(vertex.value);
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             if(vertex.value.type === 'object'){
                 vertex.value = new Class('Object Name','object');
-                Toolbar.diagram.addClass(vertex.value);
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             else if(vertex.value instanceof Package){
-                Toolbar.diagram.addPackage(vertex.value.name);
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(vertex.value);
             }
             
             
             
             vertex.geometry.x = pt.x;
             vertex.geometry.y = pt.y;
+            console.log('added');
             
             graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
         }

@@ -219,11 +219,11 @@ export default class MethodInputCreator {
 
   private UpdateClass(sender,elementToChange){
     this.graph.getModel().beginUpdate();
-            ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-            this.graph.getModel().endUpdate();
+    ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+    this.graph.getModel().endUpdate();
 
-            let tempSelectedCell = sender.cells[0];
-            this.graph.getSelectionModel().clear();
-            this.graph.getSelectionModel().addCell(tempSelectedCell);
+    let tempSelectedCell = sender.cells[0];
+    this.graph.getSelectionModel().clear();
+    this.graph.getSelectionModel().addCell(tempSelectedCell);
   }
 }

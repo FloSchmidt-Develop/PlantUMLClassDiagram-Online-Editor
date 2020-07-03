@@ -6,12 +6,15 @@ import Package from './package';
 import ID from './id';
 
 export default class Diagram extends ID implements IDiagram{
+    public scale: number = 1;
+    public name: string;
     public class_declarations: IClass[] = [];
     public connection_declarations : IConnection[] = [];
     public package_declarations : IPackage [] = [];
 
-    constructor() {
+    constructor(name: string) {
         super();
+        this.name = name;
     }
 
     public addClass(newClass : IClass) :void{
@@ -22,14 +25,13 @@ export default class Diagram extends ID implements IDiagram{
         this.connection_declarations.push(newConnection);
     }
 
-    public addPackage(packageName: string): IPackage | null{
-        if(packageName === '')
+    public addPackage(newPackage: IPackage): IPackage | null{
+        if(newPackage.getName() === '')
             return null;
-        let newPackage = this.package_declarations.find(e => e.getName() === packageName)
-        if(newPackage != null){
-            return newPackage
+        let existingPackage = this.package_declarations.find(e => e.getName() === newPackage.getName())
+        if(existingPackage != null){
+            return existingPackage;
         }
-        newPackage = new Package(packageName)
         this.package_declarations.push(newPackage);
         return newPackage;
     }

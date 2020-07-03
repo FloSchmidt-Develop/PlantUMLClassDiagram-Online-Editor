@@ -11,6 +11,7 @@ export default interface Connection extends ITyped, ID{
     destinationElement: string;
     sourceElement: string;
     stereoType: string;
+    geometry: any;
 
     setConnector(connector: string);
     setStereoType(stereoType: string);
