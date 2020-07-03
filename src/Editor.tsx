@@ -17,7 +17,9 @@ import {
   mxXmlCanvas2D,
   mxImageExport,
   mxRubberband,
-  mxUndoManager
+  mxUndoManager,
+  mxConnectionHandler,
+  mxConstants
 } from "mxgraph-js";
 import Class from "./classes/parserRep/class";
 import Connection from "./classes/parserRep/connection";
@@ -34,6 +36,7 @@ const Editor = (props) => {
   const [change, setChange] = useState(false);
   const divGraph = React.useRef<HTMLDivElement>(null);
   const editPanel = React.useRef<HTMLDivElement>(null);
+  const undoManager = new mxUndoManager();
 
   const diagramCreator = new DiagramCreator();
 
@@ -100,77 +103,41 @@ const Editor = (props) => {
   //this is called evertime one of the states is changed
   useEffect(() => {
       
-      console.log(graph);
-      
-      
     if (typeof graph !== "undefined") {
       if (!mxClient.isBrowserSupported()) {
         mxUtils.error("Browser is not supported!", 200, false);
       } 
       else {
 
-        //mxConnectionHandler.prototype.waypointsEnabled = true;
-        graph.setConnectableEdges(true);
-        new mxRubberband(graph);
-        graph.setConnectable(true);
-        graph.setHtmlLabels(true);
-        console.log('---drop enaled Loaded---');
-        graph.dropEnabled = true;
-        let toolbar = new Toolbar();
-        toolbar.getCreateToolbarContainer(graph);
-        mxEvent.disableContextMenu(divGraph.current);
-        
+       setUpEditor(graph);
 
+      
 
         if (typeof diagram !== "undefined") {
-          console.log('start');
-          console.log(diagram);
-          
-          
           var mxGraphCreator = new MxGraphCreator(graph, diagram, editPanel);
 
           graph.getModel().beginUpdate();
-
-          graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
-
           mxGraphCreator.start();
-
           graph.getModel().endUpdate();
         }
         graph.getModel().endUpdate();
-
-        console.log(graph.getModel());
-        
-
-        var keyHandler = new mxKeyHandler(graph);
-        keyHandler.bindKey(46, function(evt)
-        {
-
-            console.log('delete');
-            graph.getModel().beginUpdate();
-            graph.getSelectionModel().removeCells();
-            graph.getModel().endUpdate();
-        });
-
-        
       }
     }
     else{
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null, 'New Diagram');
+
+      setUpEditor(graph);
       
-      let toolbar = new Toolbar();
-      toolbar.getCreateToolbarContainer(graph);
-      graph.dropEnabled = true;
+        
+      
       setGraph(graph);
       setDiagram(diag);
     }
+
+
     graph?.model.addListener(mxEvent.CHANGE, function(sender, evt)
     {
-      console.log('Change');
-      console.log(evt);
-      
-      
       for (let index = 0; index < evt.properties?.changes?.length; index++) {
         let changedCell = evt.properties?.changes[index]?.cell;
         let geometry = evt.properties?.changes[index]?.geometry
@@ -197,6 +164,131 @@ const Editor = (props) => {
     });
   });
 
+  const zoomIn = () => {
+    graph.zoomIn();
+    DiagramCreator.diagram[DiagramCreator.activeIndex].scale = graph.view.scale;
+  }
+  const zoomOut = () => {
+    graph.zoomOut();
+    DiagramCreator.diagram[DiagramCreator.activeIndex].scale = graph.view.scale;
+  }
+  const undo = () => {
+    undoManager.undo();
+  }
+  const redo = () => {
+    undoManager.redo();
+  }
+  const remove = () => {
+    graph.removeCells();
+  }
+
+  const setUpEditor = (graph: any): void => {
+
+
+
+    var vertexStyle  = graph.getStylesheet().getDefaultVertexStyle();
+      vertexStyle[mxConstants.STYLE_WHITE_SPACE] = 'wrap';
+      vertexStyle[mxConstants.STYLE_OVERFLOW] = 'width';
+
+      var edgeStyle  = graph.getStylesheet().getDefaultEdgeStyle();
+      edgeStyle[mxConstants.STYLE_EDGE] = 'orthogonalEdgeStyle';
+
+      mxConnectionHandler.prototype.waypointsEnabled = true;
+      graph.setConnectableEdges(true);
+      graph.setAllowDanglingEdges(false);
+      new mxRubberband(graph);
+      graph.setConnectable(true);
+      graph.setHtmlLabels(true);
+      graph.isDropEnabled  = () => true;
+      graph.isEscapeEnabled  = () => true;
+      graph.isExtendParentsOnMove = () => true;
+      graph.isExtendParentsOnAdd = () => true;
+
+      graph.isValidDropTarget = (cell,cells,evt) => {
+        if(cell.value instanceof Class){
+          return false;
+        }
+        return true;
+      }
+      graph.zoomTo( DiagramCreator.diagram[DiagramCreator.activeIndex].scale); 
+
+      graph.isValidTarget  = (cell) => {
+        if(cell.value instanceof Package)
+          return false;
+        return true;
+        
+      }
+      graph.isValidSource = (cell) => {
+        if(cell.value instanceof Connection || cell.value instanceof Package)
+          return false;
+        return true;
+      }
+      graph.isValidConnection = (source,target) => {
+        if(source.value instanceof Connection && target.value instanceof Connection)
+          return false;
+        return true;
+      }
+
+      graph.isCellDeletable = function(cell){
+        if(cell.value != null){
+
+          if(cell.value instanceof Class){
+            graph.model.beginUpdate();
+            cell.setVisible(false);
+            graph.getModel().endUpdate();
+            diagram?.removeClass(cell.value);
+          }
+          else if(cell.value instanceof Connection){
+            graph.model.beginUpdate();
+            cell.setVisible(false);
+            graph.getModel().endUpdate();
+            diagram?.removeConnection(cell.value);
+            graph.getModel().remove((cell.value as Connection).multiplicity_left.vertex);
+            graph.getModel().remove((cell.value as Connection).multiplicity_right.vertex);
+          }
+          else if(cell.value instanceof Package){
+            cell.setVisible(false);
+
+            diagram?.removePackage(cell.value);
+            
+            let children = cell.children;
+            for (let index = 0; index < children?.length; index++) {
+              graph.getModel().remove(children[index]);
+              if(children[index].value instanceof Class)
+                diagram?.removeClass(children[index].value);
+            }              
+          }
+          else{
+            console.log('delete other');
+            
+            console.log(cell);
+            
+          }
+
+          
+        }
+
+        return true;
+      }
+      
+      var keyHandler = new mxKeyHandler(graph);
+      keyHandler.bindKey(46, function(evt)
+      {
+         graph.removeCells();
+      });
+
+      var listener = function(sender, evt)
+      {
+        undoManager.undoableEditHappened(evt.getProperty('edit'));
+      };
+
+      graph.getModel().addListener(mxEvent.UNDO, listener);
+      graph.getView().addListener(mxEvent.UNDO, listener);
+
+      let toolbar = new Toolbar();
+      toolbar.getCreateToolbarContainer(graph);
+  }
+
   return (
     <Fragment>
       <form onSubmit={onSubmit}>
@@ -220,8 +312,15 @@ const Editor = (props) => {
           <p>nothing Selected</p>
         </div>
       </div>
-
-
+      <div id='zoomButtons'>
+        <button type='button' id='zoomIn' onClick={zoomIn} >+</button>
+        <button type='button' id='zoomOut' onClick={zoomOut} >-</button>
+      </div>
+      <div id='editButtons'>
+        <button type='button' id='undo' disabled={false} onClick={undo} >undo</button>
+        <button type='button' id='redo' disabled={false} onClick={redo} >redo</button>
+        <button type='button' id='delete' onClick={remove} >Delete</button>
+      </div>
     </Fragment>
   );
 };

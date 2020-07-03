@@ -5,6 +5,7 @@ import ID from './id';
 
 
 export default interface Diagram extends ID {
+    scale: number;
     name: string;
     class_declarations: IClass[];
     connection_declarations: IConnection[];

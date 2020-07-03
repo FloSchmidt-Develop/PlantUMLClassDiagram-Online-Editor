@@ -24,9 +24,8 @@ export default class Toolbar{
 
     public getCreateToolbarContainer(graph: any){
 
-        var tbContainer = document.getElementById('toolbar');
-        if(tbContainer === null){
-            tbContainer = document.createElement('div');
+
+            let tbContainer = document.createElement('div');
             tbContainer.className = 'toolbar';
             tbContainer.id = 'toolbar';
             document.body.appendChild(tbContainer);
@@ -45,7 +44,7 @@ export default class Toolbar{
             this.addVertex(graph,toolbar,itf, InterfaceImg, 270, 100, '');
             this.addVertex(graph,toolbar,obj, ObjectImg, 250, 80, '');
             this.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, '');
-        }
+
     }
 
     private addVertex(graph, toolbar,type: IClass | IPackage, icon, w, h, style){

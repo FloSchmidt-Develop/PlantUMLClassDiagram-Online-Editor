@@ -6,6 +6,7 @@ import Package from './package';
 import ID from './id';
 
 export default class Diagram extends ID implements IDiagram{
+    public scale: number = 1;
     public name: string;
     public class_declarations: IClass[] = [];
     public connection_declarations : IConnection[] = [];
