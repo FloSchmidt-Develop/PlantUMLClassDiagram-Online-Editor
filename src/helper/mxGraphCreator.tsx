@@ -494,8 +494,8 @@ export default class MxGraphCreator {
           activePackage,
           activePackage.x,
           activePackage.y,
-          activePackage.getWidth(),
-          activePackage.getHight(),
+          0,
+          0,
           'shape=swimlane;startSize=20;'
         )
     }
@@ -514,6 +514,7 @@ export default class MxGraphCreator {
 
       //Add Classes
       let element = this.diagram?.class_declarations[index];
+      console.log(element);
       element.x = element.x === 0 ? x : element.x ;
       element.y = element.y === 0 ? y : element.y ;
       activeVertexes[element.alias] = this.graph.insertVertex(
@@ -525,6 +526,8 @@ export default class MxGraphCreator {
         element.getWidth(),
         element.getHeight()
       );
+      console.log(activeVertexes[element.alias]);
+      
       x = x + 400;
     }
 

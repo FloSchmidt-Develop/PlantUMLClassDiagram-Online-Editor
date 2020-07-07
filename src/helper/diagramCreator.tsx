@@ -79,6 +79,21 @@ export default class DiagramCreator{
             }
             cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
             cls.package = jasonClass.package ? jasonClass.package : '';
+
+            if(jasonClass.hight != null)
+                cls.hight = parseInt(jasonClass.hight);
+            if(jasonClass.width != null)
+                cls.width = parseInt(jasonClass.width);
+            if(jasonClass.x != null)
+                cls.x = parseInt(jasonClass.x);
+            if(jasonClass.y != null)
+                cls.y = parseInt(jasonClass.y);
+            
+            console.log('-----Class-------');
+            console.log(cls);
+            
+            
+            
             
             let newPackage = new Package(cls.package);
             let resPackage = diagram.addPackage(newPackage);

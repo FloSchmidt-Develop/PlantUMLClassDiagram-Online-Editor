@@ -22,7 +22,7 @@ package_name:
 
 class_declaration:
     class_type WHITESPACE? class_description WHITESPACE? ('{'
-    (attribute | method | declaration |NEWLINE)*
+    (attribute | method | declaration | styling |NEWLINE)*
     '}' )?
     ;
 	
@@ -48,6 +48,24 @@ class_dataType:
 
 hide_declaration:
     'hide' ident;
+
+styling: 
+	'\'' styling_expression+ '\'' 
+	;
+
+styling_expression:
+	styling_name=styling_params DOTDOT styling_val=styling_value ';'
+	;
+	
+styling_params:
+	'width'
+	| 'hight'
+	| 'x'
+	| 'y'
+	;
+
+styling_value:
+	(FLOAT | INTEGER);
 
 attribute:
     visibility?
@@ -126,7 +144,7 @@ connection_symbol:
 	CONNECTOR
 	;
 
-multiplicity: ('*' | '0..1' | '0..*' | '1..*' | WORD );
+multiplicity: ('*' | '0..1' | '0..*' | '1..*' | '1' );
 
 visibility:
     '{abstract}'?
@@ -282,11 +300,13 @@ NEWPAGE : 'newpage' -> channel(HIDDEN)
 NEWLINE  :   '\n\n' | '\n' ;
 
 ARRAY : NONDIGIT ( DIGIT | NONDIGIT )* '.'? '[]';
-WORD  : (NONDIGIT | DIGIT) ( DIGIT | NONDIGIT )*;
 INTEGER: DIGIT (DIGIT)*;
+FLOAT: DIGIT+ '.' DIGIT+;
+WORD  : (NONDIGIT | DIGIT) ( DIGIT | NONDIGIT )*;
 ANYARRAY : '*[]';
 ANY   : '*';
 DOTDOT  : ':';
+
 
 WHITESPACE  : (' ' | '\t' | '\r' | '\n')+ -> skip ;
 QUOTATION : '"';

@@ -72,6 +72,30 @@ PlantUMLVisitor.prototype.visitHide_declaration = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#styling.
+PlantUMLVisitor.prototype.visitStyling = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#styling_expression.
+PlantUMLVisitor.prototype.visitStyling_expression = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#styling_params.
+PlantUMLVisitor.prototype.visitStyling_params = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#styling_value.
+PlantUMLVisitor.prototype.visitStyling_value = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by PlantUMLParser#attribute.
 PlantUMLVisitor.prototype.visitAttribute = function(ctx) {
   return this.visitChildren(ctx);

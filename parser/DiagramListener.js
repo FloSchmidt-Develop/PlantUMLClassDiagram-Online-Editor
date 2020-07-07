@@ -71,8 +71,11 @@ PlantUMLListener.prototype.enterClass_name = function(ctx) {
 
 PlantUMLListener.prototype.enterClass_dataType = function(ctx) {
     actual_class.alias = ctx.getText();
-    
 };
+
+PlantUMLListener.prototype.enterStyling_expression = function(ctx){
+    actual_class[ctx.styling_name.getText()] = ctx.styling_val.getText();
+}
 
 // Enter a parse tree produced by PlantUMLParser#declaration.
 PlantUMLListener.prototype.enterDeclaration = function(ctx) {

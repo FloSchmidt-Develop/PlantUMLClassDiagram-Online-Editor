@@ -1,7 +1,7 @@
-import Itype from '../../interfaces/typed'
+import IType from '../../interfaces/typed'
 
 
-export default class Multiplicity implements Itype{
+export default class Multiplicity implements IType{
     public readonly type: string;
     public readonly isLeft: boolean;
     public value: string;

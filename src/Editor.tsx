@@ -45,26 +45,18 @@ const Editor = (props) => {
     setFilename(e.target.files[0].name);
   };
 
+  function replacer(key,value)
+{
+    if (key=="vertex") return undefined;
+    else return value;
+}
+
   const exportDiagram = async () => {
-    var xmlDoc = mxUtils.createXmlDocument();
-    var root = xmlDoc.createElement('output');
-    xmlDoc.appendChild(root);
-
-    var xmlCanvas = new mxXmlCanvas2D(root);
-    var imgExport = new mxImageExport();
-    imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
-
-    var bounds = graph.getGraphBounds();
-    var w = Math.ceil(bounds.x + bounds.width);
-    var h = Math.ceil(bounds.y + bounds.height);
-
-    var xml = mxUtils.getXml(root);
-    let requestData = 'http://localhost:8000?format=png&w='
-     + w + '&h=' + h + '&xmldata=' + encodeURIComponent(xml);
-
+   var jsonObj = JSON.stringify(DiagramCreator.diagram[DiagramCreator.activeIndex],replacer);
+    var obj = JSON.parse(jsonObj);
     
+    const res = await axios.post("/export",obj);
 
-    const res = await axios.get(requestData);
     };
 
   const onSubmit = async (e: any) => {

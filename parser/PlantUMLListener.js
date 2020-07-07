@@ -101,6 +101,42 @@ PlantUMLListener.prototype.exitHide_declaration = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#styling.
+PlantUMLListener.prototype.enterStyling = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#styling.
+PlantUMLListener.prototype.exitStyling = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#styling_expression.
+PlantUMLListener.prototype.enterStyling_expression = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#styling_expression.
+PlantUMLListener.prototype.exitStyling_expression = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#styling_params.
+PlantUMLListener.prototype.enterStyling_params = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#styling_params.
+PlantUMLListener.prototype.exitStyling_params = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#styling_value.
+PlantUMLListener.prototype.enterStyling_value = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#styling_value.
+PlantUMLListener.prototype.exitStyling_value = function(ctx) {
+};
+
+
 // Enter a parse tree produced by PlantUMLParser#attribute.
 PlantUMLListener.prototype.enterAttribute = function(ctx) {
 };

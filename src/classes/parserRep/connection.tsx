@@ -12,7 +12,7 @@ export default class Connection extends ID implements IConnection{
     public sourceElement: string;
     public stereoType: string;
     public readonly type = 'Connection';
-  geometry: any;
+    geometry: any;
 
     constructor(connector: string,
         multiplicity_left: string,
@@ -27,7 +27,7 @@ export default class Connection extends ID implements IConnection{
             this.multiplicity_right = new Multiplicity(multiplicity_right,false)
             this.destinationElement = destinationElement;
             this.sourceElement = sourceElement;
-            this.stereoType = stereoType;
+            this.stereoType = stereoType ? stereoType : '';
         
     }
     public setStartMultiplicity(multiplicity: string) {
