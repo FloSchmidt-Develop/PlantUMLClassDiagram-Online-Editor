@@ -7,6 +7,7 @@ const express = require('./node_modules/express');
 const fileUpload = require('./node_modules/express-fileupload');
 const cors = require('./node_modules/cors');
 const fs = require('fs');
+const path = require('path');
 var response = {};
 //const bodyParser = require('body-parser');
 
@@ -46,9 +47,14 @@ app.post('/upload', (req, res) => {
 app.post('/export', (req, res) => {
     console.log('export');
     //console.log(req.body);
-    createPUMLFile(req.body);
+    var result = createPUMLFile(req.body);
 
-    res.download('temp.puml');
+    res.setHeader('Content-disposition', 'attachment; filename=theDocument.puml');
+    res.setHeader('Content-type', 'text/plain');
+    res.charset = 'UTF-8';
+    res.write(result);
+    res.end();
+
 })
 
 
@@ -64,16 +70,23 @@ function createPUMLFile(requestData ){
     result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData. connection_declarations);
     result += addPackages(requestData.package_declarations, requestData.connection_declarations);
     result += '@enduml';
+    
+    //----For testing delete in final solution
     fs.writeFile('temp.puml',result, function (err){
         if(err) throw err;
     })
+    //--------------------------------------
+
+    return result;
+
 }
 
 function addPackages(packages, connections){
     var result = '';
     for (let index = 0; index < packages.length; index++) {
         const pack = packages[index];
-        result += 'package "' + pack.name + '" {\n \n'
+        result += 'package "' + pack.name + '" {\n'
+        result += getStylingOfClass(pack) + '\n';
         classes = pack.classReferences;
         result += createClasses(classes, connections);
         result += '} \n \n'
@@ -108,6 +121,7 @@ function createConnections(connections){
     var result = '';
     for (let index = 0; index < connections.length; index++) {
         const connection = connections[index];
+        result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
         result += 
             (response.class_declarations.find(e => e.id === connection.destinationElement) ? 
             (response.class_declarations.find(e => e.id === connection.destinationElement).name)
@@ -123,6 +137,21 @@ function createConnections(connections){
         result += '\n';
     } 
     result += '\n';
+    return result;
+}
+
+function getConnectionPoints(points){
+    var result = '';
+    if(points != null ){
+        for (let index = 0; index < points.length; index++) {
+            var point = points[index];
+            if(index < points.length - 1)  
+                result += '{"x": ' + point.x + ', "y": ' + point.y + '},';
+            else
+                result += '{"x": ' + point.x + ', "y": ' + point.y + '}';
+            
+        }
+    } 
     return result;
 }
 

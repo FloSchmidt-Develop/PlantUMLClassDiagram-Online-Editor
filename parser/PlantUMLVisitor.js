@@ -168,6 +168,24 @@ PlantUMLVisitor.prototype.visitConnection = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#connection_points.
+PlantUMLVisitor.prototype.visitConnection_points = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#point_array.
+PlantUMLVisitor.prototype.visitPoint_array = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#points.
+PlantUMLVisitor.prototype.visitPoints = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by PlantUMLParser#connection_symbol.
 PlantUMLVisitor.prototype.visitConnection_symbol = function(ctx) {
   return this.visitChildren(ctx);

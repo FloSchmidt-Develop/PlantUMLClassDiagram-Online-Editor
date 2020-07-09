@@ -15,7 +15,7 @@ import {
   mxEvent,
   mxKeyHandler,
   mxXmlCanvas2D,
-  mxImageExport,
+  mxClipboard,
   mxRubberband,
   mxUndoManager,
   mxConnectionHandler,
@@ -25,6 +25,7 @@ import Class from "./classes/parserRep/class";
 import Connection from "./classes/parserRep/connection";
 import ClassUpdateController from "./classes/controller/classUpdateController";
 import Package from "./classes/parserRep/package";
+import Point from "./classes/parserRep/point";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -56,8 +57,19 @@ const Editor = (props) => {
     var obj = JSON.parse(jsonObj);
     
     const res = await axios.post("/export",obj);
+    downloadTxtFile(res.data)
+    
 
-    };
+  };
+
+  const downloadTxtFile = (content) => {
+    const element = document.createElement("a");
+    const file = new Blob([content], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "myFile.puml";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  }
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -143,13 +155,23 @@ const Editor = (props) => {
         }
         if(changedCell != null && geometry != null && changedCell.value instanceof Connection){
           let changedConnection = changedCell.value as Connection;
-          changedConnection.geometry = geometry;
+          let pts: Point[] = [];
+          for (let index = 0; index < geometry.points.length; index++) {
+            const pt = geometry.points[index];
+            console.log(pt);
+            pts.push(new Point(pt.x,pt.y));
+            
+          }
+          console.log(pts);
+          changedConnection.points = pts;
         }
         if(changedCell != null && geometry != null && changedCell.value instanceof Package){
           let changedPackage = changedCell.value as Package;
           changedPackage.x = geometry.x;
           changedPackage.y = geometry.y;
-          changedPackage.setHight(geometry.hight);
+          console.log(geometry);
+          
+          changedPackage.setHight(geometry.height);
           changedPackage.setWidth(geometry.width);
         }
       }
@@ -173,6 +195,12 @@ const Editor = (props) => {
   const remove = () => {
     graph.removeCells();
   }
+  const copy = () =>{
+    mxClipboard.copy(graph);
+  }
+  const paste = () =>{
+    mxClipboard.paste(graph);
+  }
 
   const setUpEditor = (graph: any): void => {
 
@@ -194,6 +222,56 @@ const Editor = (props) => {
       graph.isEscapeEnabled  = () => true;
       graph.isExtendParentsOnMove = () => true;
       graph.isExtendParentsOnAdd = () => true;
+
+      mxClipboard.copy = function(graph, cells)
+      {
+        cells = cells || graph.getSelectionCells();
+        var result = graph.getExportableCells(cells);
+
+        mxClipboard.parents = new Object();
+
+        for (var i = 0; i < result.length; i++)
+        {
+          mxClipboard.parents[i] = graph.model.getParent(cells[i]);
+        }
+
+        mxClipboard.insertCount = 1;
+        mxClipboard.setCells(graph.cloneCells(result));
+
+        return result;
+      };
+
+      mxClipboard.paste = function(graph)
+      {
+        if (!mxClipboard.isEmpty())
+        {
+          var cells = graph.getImportableCells(mxClipboard.getCells());
+          var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+          var parent = graph.getDefaultParent();
+
+          graph.model.beginUpdate();
+          try
+          {
+            for (var i = 0; i < cells.length; i++)
+            {
+              var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
+                  mxClipboard.parents[i] : parent;
+              cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+              console.log(cells[i]);
+              
+              //DiagramCreator.diagram[DiagramCreator.activeIndex].
+            }
+          }
+          finally
+          {
+            graph.model.endUpdate();
+          }
+
+          // Increments the counter and selects the inserted cells
+          mxClipboard.insertCount++;
+          graph.setSelectionCells(cells);
+        }
+      };
 
       graph.isValidDropTarget = (cell,cells,evt) => {
         if(cell.value instanceof Class){
@@ -304,6 +382,8 @@ const Editor = (props) => {
       <div id='editButtons'>
         <button type='button' id='undo' disabled={false} onClick={undo} >undo</button>
         <button type='button' id='redo' disabled={false} onClick={redo} >redo</button>
+        <button type='button' id='copy' disabled={false} onClick={copy} >copy</button>
+        <button type='button' id='paste' disabled={false} onClick={paste} >paste</button>
         <button type='button' id='delete' onClick={remove} >Delete</button>
       </div>
     </Fragment>

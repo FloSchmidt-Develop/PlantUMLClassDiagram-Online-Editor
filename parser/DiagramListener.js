@@ -23,13 +23,17 @@ PlantUMLListener.prototype.enterClass_diagram = function(ctx) {
     this.Res.diagram.class_declaration = new Array();
     this.Res.diagram.connection_declaration = new Array();
     this.Res.diagram.object_declaration = new Array();
+    this.Res.diagram.package_declarations = new Array();
 };
 
 PlantUMLListener.prototype.enterPackage_section = function(ctx) {
     actual_package = {};
 };
 
+
 PlantUMLListener.prototype.exitPackage_section = function(ctx) {
+    let clone = JSON.parse(JSON.stringify(actual_package));
+    this.Res.diagram.package_declarations.push(clone);
     actual_package = null;
 };
 
@@ -74,7 +78,12 @@ PlantUMLListener.prototype.enterClass_dataType = function(ctx) {
 };
 
 PlantUMLListener.prototype.enterStyling_expression = function(ctx){
-    actual_class[ctx.styling_name.getText()] = ctx.styling_val.getText();
+    if(actual_class != null)
+        actual_class[ctx.styling_name.getText()] = ctx.styling_val.getText();
+    else{
+        console.log('---Package----');
+        actual_package[ctx.styling_name.getText()] = ctx.styling_val.getText();
+    }
 }
 
 // Enter a parse tree produced by PlantUMLParser#declaration.
@@ -166,6 +175,17 @@ PlantUMLListener.prototype.enterMethode_data_type = function(ctx) {
 // Enter a parse tree produced by PlantUMLParser#connection.
 PlantUMLListener.prototype.enterConnection = function(ctx) {
     actual_connection = {};
+};
+
+PlantUMLListener.prototype.enterPoint_array = function(ctx) {
+    let points = ctx.getText();
+    console.log('Points');
+    
+    console.log(points);
+    
+    if(actual_connection != null){
+        actual_connection.points = JSON.parse(points);
+    }
 };
 
 // Exit a parse tree produced by PlantUMLParser#connection.

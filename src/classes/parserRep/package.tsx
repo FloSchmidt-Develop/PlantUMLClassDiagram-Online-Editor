@@ -11,10 +11,16 @@ export default class Package extends ID implements IPackage{
 
 
     setWidth(width: number) {
+        console.log('setWidth');
+        console.log(width);
+        
+        
         if(width != null)
             this.width = width;
     }
     setHight(hight: number) {
+        console.log('setHight');
+        console.log(hight);
         if(hight != null)
             this.hight = hight;
     }

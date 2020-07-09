@@ -2,6 +2,7 @@ import IConnector from './connector'
 import ITyped from './typed';
 import ID from './id';
 import IMultiplicity from './multiplicity'
+import Point from '../classes/parserRep/point';
 
 export default interface Connection extends ITyped, ID{
 
@@ -11,7 +12,7 @@ export default interface Connection extends ITyped, ID{
     destinationElement: string;
     sourceElement: string;
     stereoType: string;
-    geometry: any;
+    points: Point[];
 
     setConnector(connector: string);
     setStereoType(stereoType: string);

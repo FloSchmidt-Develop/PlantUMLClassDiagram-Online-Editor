@@ -2,6 +2,7 @@ import IConnection from '../../interfaces/connection';
 import IConnector from '../../interfaces/connector';
 import Connector from './connector';
 import Multiplicity from './multiplicity';
+import Point from './point'
 import ID from './id';
 
 export default class Connection extends ID implements IConnection{
@@ -12,7 +13,7 @@ export default class Connection extends ID implements IConnection{
     public sourceElement: string;
     public stereoType: string;
     public readonly type = 'Connection';
-    geometry: any;
+    public points: Point[] = [];
 
     constructor(connector: string,
         multiplicity_left: string,

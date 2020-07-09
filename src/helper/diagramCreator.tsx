@@ -11,6 +11,7 @@ import Connection from '../classes/parserRep/connection';
 import Declaration from '../classes/parserRep/declaration';
 import { EROFS } from 'constants';
 import Package from '../classes/parserRep/package';
+import Point from '../classes/parserRep/point';
 
 export default class DiagramCreator{
 
@@ -35,6 +36,24 @@ export default class DiagramCreator{
             
             let jsonDiagram = serverResponse.Res.diagram;
             //check if the server result contains classes
+            if(jsonDiagram.package_declarations != null){
+                for (let index = 0; index < jsonDiagram.package_declarations.length; index++) {
+                    const pack = jsonDiagram.package_declarations[index];
+                    let pak = new Package(pack.name);
+                    if(pack.hight != null)
+                        pak.setHight(parseInt(pack.hight));
+                    if(pack.width != null)
+                        pak.setWidth(parseInt(pack.width));
+                    if(pack.x != null)
+                        pak.x = parseInt(pack.x);
+                    if(pack.y != null)
+                        pak.y = parseInt(pack.y);
+                    DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pak)
+                    
+                }
+
+            }
+
             if(jsonDiagram.class_declaration !== null){        
                this.addClasses(jsonDiagram.class_declaration, DiagramCreator.diagram[DiagramCreator.activeIndex]);    
 
@@ -61,6 +80,19 @@ export default class DiagramCreator{
                 jsonConnection.left, jsonConnection.right, 
                 jsonConnection.stereotype);
 
+            if(jsonConnection.points != null && jsonConnection.points != null){
+                for (let index = 0; index < jsonConnection.points.length; index++) {
+                    const pt = jsonConnection.points[index];
+                    
+                    con.points.push(new Point(pt.x,pt.y));
+                    
+                }
+            }
+
+
+           console.log(con);
+           
+            
             diagram.addConnection(con);
             
         }

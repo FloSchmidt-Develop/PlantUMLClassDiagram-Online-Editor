@@ -11,10 +11,12 @@ class_diagram
     ;
 
 package_section:
-	PACKAGE WHITESPACE? QUOTATION package_name QUOTATION WHITESPACE? ('{'
-	(class_declaration | connection | NEWLINE)*
+	PACKAGE WHITESPACE? QUOTATION package_name QUOTATION WHITESPACE? ('{'    
+	(class_declaration | connection | styling |NEWLINE)*
 	'}')?
 	;
+
+
 	
 package_name:
 	WORD (DOTDOT WHITESPACE? WORD)?
@@ -133,12 +135,26 @@ connection_right:
     ;
 
 connection:
+    (connection_points
+    NEWLINE)?
     left=connection_left
     connection_symbol
     right=connection_right
     ( WHITESPACE?':' WHITESPACE? stereotype)?
     NEWLINE?
     ;
+
+connection_points:
+	'\'{"points": ' point_array '}\'' 
+	;
+
+point_array:
+    '[' pts=points* ']'
+    ;
+
+points:
+	'{"x": ' x=INTEGER ', "y": ' y=INTEGER '}' ','?
+	;
 	
 connection_symbol:
 	CONNECTOR

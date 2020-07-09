@@ -86,6 +86,7 @@ export default class Toolbar{
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             else if(vertex.value instanceof Package){
+                vertex.value = new Package('PackageName');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(vertex.value);
             }
             

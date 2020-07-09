@@ -43,6 +43,7 @@ import Package from "../classes/parserRep/package";
 import DiagramCreator from "./diagramCreator";
 import ClassUpdateController from "../classes/controller/classUpdateController";
 import Multiplicity from "../classes/parserRep/multiplicity";
+import Point from "../classes/parserRep/point";
 
 export default class MxGraphCreator {
   graph: any;
@@ -429,7 +430,7 @@ export default class MxGraphCreator {
           graph.getModel().beginUpdate();
     
           graph.model.setValue(cell, connection);
-          connection.geometry = cell.geometry;
+          connection.points = cell.geometry.points?.reduce((acc,curr) => acc.push(new Point(curr.x,curr.y)),[]);
           
           graph.model.setStyle(cell, "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;");
 
@@ -482,11 +483,16 @@ export default class MxGraphCreator {
     for (let index = 0; index < packageCount; index++) {
       let activePackage = this.diagram?.package_declarations[index];
 
+      console.log('--Graph Creator Package--');    
+      console.log(activePackage);
+
         if (activePackage.x === 0)
           activePackage.x = x;
         if (activePackage.y === 0)
           activePackage.y = y;
-      
+
+         
+          
       
         activePackages[activePackage.getName()] = this.graph.insertVertex(
           this.parentContainer,
@@ -494,8 +500,8 @@ export default class MxGraphCreator {
           activePackage,
           activePackage.x,
           activePackage.y,
-          0,
-          0,
+          activePackage.getWidth(),
+          activePackage.getHight(),
           'shape=swimlane;startSize=20;'
         )
     }
@@ -570,8 +576,15 @@ export default class MxGraphCreator {
           this.getEdgeStyle(connection.connector)
         );
 
-        if(connection.geometry != null){
-          activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'].geometry = connection.geometry;
+        if(connection.points != null){
+          let points: any[] = [];
+          for (let index = 0; index < connection.points.length; index++) {
+            const point = connection.points[index];
+            points.push(new mxPoint(point.x,point.y));
+            
+          }
+          activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')']
+          .geometry.points = points;
         }
         
       }

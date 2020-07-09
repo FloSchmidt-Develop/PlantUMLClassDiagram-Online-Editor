@@ -1,113 +1,28 @@
 @startuml
  
-interface "MemoryInterface" as MemoryInterface{ 
-	'width:297;hight:119;x:1380;y:40;'
-	+read(address: integer): data
-	+write(address: integer, data: data): 
+package "PackageName" {
+	'width:870;hight:500;x:290;y:410;'
+
+class "Class1" as Class1{ 
+	'width:250;hight:100;x:0;y:20;'
 }
  
 
-interface "CacheInterface" as CacheInterface{ 
-	'width:384;hight:119;x:170;y:40;'
-	+readFromNextLevel(function: read, address: integer): data
-	+writeToNextLevel(function: write, address: integer, data: data): 
+class "sdlfkhsDJFGHLSKDHFLKF" as sdlfkhsDJFGHLSKDHFLKF{ 
+	'width:340;hight:100;x:330;y:90;'
 }
  
-MemoryInterface <|-- CacheInterface
+'{"points": []}'
+Class1 <-- Class2
 
-package "HardwarePart" {
- 
-class "Memory" as Memory{ 
-	'width:250;hight:141;x:1580;y:74;'
-	#size: integer
-	#dataWidth: integer
-	#readLatency: *
-	#writeLatency: *
+class "Class3" as Class3{ 
+	'width:250;hight:100;x:0;y:250;'
 }
  
-MemoryInterface <|.. Memory
-MemoryMap o-- Memory
-
-class "MemoryMap" as MemoryMap{ 
-	'width:260;hight:130;x:1200;y:78;'
-	+numMemoryBanks: integer
-	+memoryBanks: Memory[]
-	+startAddresses: integer[]
-}
- 
-MemoryInterconnect --|> MemoryMap
-
-class "MemoryInterconnect" as MemoryInterconnect{ 
-	'width:334.8;hight:108;x:750;y:90;'
-	#latency: *
-}
- 
-MemoryInterface <|-- MemoryInterconnect
-
-class "PipelineStage" as PipelineStage{ 
-	'width:271.8;hight:127;x:70;y:80;'
-	#latency: *
-	+forward(function: receive, inst: ): 
-	+receive(inst: ): 
-}
- 
-PipelineStage "0..*"<--"0..*" PipelineStage
-
-class "ExecuteStage:PipelineStage" as ExecuteStage:PipelineStage{ 
-	'width:435.6;hight:108;x:1300;y:351;'
-	#process(inst: ): 
-}
- 
-PipelineStage <|-- ExecuteStage
-
-class "FunctionalUnit" as FunctionalUnit{ 
-	'width:284.40000000000003;hight:119;x:1046;y:558;'
-	toProcess: inst.[]
-	latencies: *[]
-}
- 
-ExecuteStage "1..*"*--"0..*" FunctionalUnit
-RegisterFile "0..*"<--"0..1" FunctionalUnit
-RegisterFile "0..*"-->"0..1" FunctionalUnit
-
-class "MemoryAccessUnit" as MemoryAccessUnit{ 
-	'width:318;hight:127;x:1400;y:550;'
-	#latency: *
-	#read(function: read, address: integer): 
-	#write(function: write, address: integer, data: data): 
-}
- 
-MemoryInterface "0..*"<--"0..1" MemoryAccessUnit
-MemoryInterface "0..*"-->"0..1" MemoryAccessUnit
-ExecuteStage *--"0..*" MemoryAccessUnit
-
-class "Buffer" as Buffer{ 
-	'width:250;hight:108;x:454;y:90;'
-	#size: integer
-}
- 
-MemoryInterface <|.. Buffer
-PipelineStage "0..*"*--"0..1" Buffer
-
-class "RegisterFile" as RegisterFile{ 
-	'width:259.2;hight:119;x:850;y:345;'
-	#numRegisters: integer
-	#dataWidth: integer
-}
- 
-MemoryInterface <|.. RegisterFile
-
-class "Cache" as Cache{ 
-	'width:250;hight:152;x:217;y:378;'
-	#size: integer
-	#dataWidth: integer
-	#readLatency: integer
-	#writeLatency: integer
-	#replacementPolicy: *
-}
- 
-CacheInterface <|.. Cache
-MemoryMap o-- Cache
+'{"points": []}'
+Class1 <-- Class3
+'{"points": [{"x": 455, "y": 230}]}'
+Class2 <-- Class3
 
 } 
  

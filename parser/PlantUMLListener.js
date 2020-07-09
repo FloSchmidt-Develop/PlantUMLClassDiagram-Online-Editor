@@ -245,6 +245,33 @@ PlantUMLListener.prototype.exitConnection = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#connection_points.
+PlantUMLListener.prototype.enterConnection_points = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#connection_points.
+PlantUMLListener.prototype.exitConnection_points = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#point_array.
+PlantUMLListener.prototype.enterPoint_array = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#point_array.
+PlantUMLListener.prototype.exitPoint_array = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#points.
+PlantUMLListener.prototype.enterPoints = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#points.
+PlantUMLListener.prototype.exitPoints = function(ctx) {
+};
+
+
 // Enter a parse tree produced by PlantUMLParser#connection_symbol.
 PlantUMLListener.prototype.enterConnection_symbol = function(ctx) {
 };
