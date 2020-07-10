@@ -46,4 +46,16 @@ export default class Connection extends ID implements IConnection{
     public setStereoType(stereoType: string){
         this.stereoType = stereoType;
     }
+
+    public cloneModel(newSourceElement: string, newDestinationElement: string): IConnection{
+        let newConnection = new Connection(
+            this.connector.cloneModel(),
+            this.multiplicity_left.cloneModel(),
+            this.multiplicity_right.cloneModel(),
+            newDestinationElement,
+            newSourceElement,
+            this.stereoType);
+        newConnection.points = this.points;
+        return newConnection;
+    }
 }

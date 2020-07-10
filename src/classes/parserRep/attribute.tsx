@@ -34,4 +34,9 @@ export default class Attribute extends ID implements IName, IAttribute {
     public getWidth(): number{
         return ((this.name.length + this.dataType.length + this.visibility?.length + 2) * 10);
     }
+
+    public cloneModel(): IAttribute{
+        let newAttribute = new Attribute(this.name,this.dataType,this.visibility);
+        return newAttribute;
+    }
 }

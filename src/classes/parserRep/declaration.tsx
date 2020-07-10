@@ -27,4 +27,9 @@ export default class Declaration extends ID implements IDeclaration{
     public getWidth(): number{
         return (this.name.length + this.declaration_value.length) * 10;
     }
+
+    public cloneModel(): IDeclaration{
+        let newDeclaration = new Declaration(this.name,this.declaration_value);
+        return newDeclaration;
+    }
 }

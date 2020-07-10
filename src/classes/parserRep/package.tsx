@@ -8,6 +8,9 @@ export default class Package extends ID implements IPackage{
     x: number = 0;
     private width: number = 50;
     private hight: number = 400;
+    private name: string;
+    public  classReferences: IClass[] = [];
+    public readonly type = 'Package';
 
 
     setWidth(width: number) {
@@ -32,9 +35,7 @@ export default class Package extends ID implements IPackage{
         return this.hight;
       }
 
-    private name: string;
-    public  classReferences: IClass[] = [];
-    public readonly type = 'Package';
+
 
     constructor(packageName: string) {
         super();
@@ -63,6 +64,17 @@ export default class Package extends ID implements IPackage{
     public RemoveClassReference(classToRemove: IClass){
         this.classReferences = this.classReferences.filter(e => e.id !== classToRemove.id);
         classToRemove.package = '';
+    }
+
+    public cloneModel(): IPackage{
+        let newPackage = new Package(this.name); 
+        newPackage.x = this.x
+        newPackage.y = this.y
+        newPackage.setWidth(this.width);
+        newPackage.setHight(this.hight);
+
+        return newPackage;
+
     }
 
 }

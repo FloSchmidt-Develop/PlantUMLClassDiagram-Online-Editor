@@ -30,4 +30,5 @@ export default interface Class extends ITyped, IName, ID{
     setHight(hight: number);
 
     setType(type: string);
+    cloneModel(): Class;
 }

@@ -4,6 +4,8 @@ import ElementUpdateController from '../../classes/controller/elementUpdateContr
 import Class from '../../classes/parserRep/class';
 
 
+
+
 export default class NameInputCreator {
   graph: any;
 
@@ -31,7 +33,10 @@ export default class NameInputCreator {
     input2.onchange = () => {
       var elementToChange = selectedElement;
       if (elementToChange !== null) {
-        elementToChange.setName(input2.value);
+        if(!this.validateName(input2.value))
+          elementToChange.setName(input2.value);
+        else
+          alert('Class Name shouldn´t contain special Characters');
       }
       
 
@@ -58,4 +63,10 @@ export default class NameInputCreator {
 
     
   }
+
+  public validateName(name: string): boolean{
+    var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return format.test(name);
+  }
+
 }

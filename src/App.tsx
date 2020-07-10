@@ -7,6 +7,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import IconButton from '@material-ui/core/IconButton';
+
+import AddCircleOutlineSharpIcon from '@material-ui/icons/AddCircleOutlineSharp';
 
 import "./App.css";
 import Editor from "./Editor";
@@ -76,6 +79,8 @@ function App(){
     let temp = [...diagrams, index];
     setDiagrams(temp);
     setIndex(index + 1);
+    DiagramCreator.activeIndex = index;
+    setValue(index)
     
     //setDiagrams(temp);
   }
@@ -85,9 +90,14 @@ function App(){
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           {diagrams.map( (number) =>   
-            <Tab label={DiagramCreator.diagram[number]?.name != null ? DiagramCreator.diagram[number]?.name : 'new Diagram' } {...a11yProps(number)} />
+            <Tab value={number}
+            label={DiagramCreator.diagram[number]?.name != null 
+              ? DiagramCreator.diagram[number]?.name : 'new Diagram' }
+               {...a11yProps(number)} />
           )};
-          <Button className={classes.button} onClick={addDiagram}>+</Button>
+          <IconButton className={classes.button} onClick={addDiagram}>
+            <AddCircleOutlineSharpIcon/>
+          </IconButton>
         </Tabs>
       </AppBar>
       {diagrams.map((number) => 

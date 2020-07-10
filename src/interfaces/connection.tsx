@@ -18,4 +18,5 @@ export default interface Connection extends ITyped, ID{
     setStereoType(stereoType: string);
     setStartMultiplicity(multiplicity: string);
     setEndMultiplicity(value: string);
+    cloneModel(newSourceElement: string, newDestinationElement: string): Connection;
 }

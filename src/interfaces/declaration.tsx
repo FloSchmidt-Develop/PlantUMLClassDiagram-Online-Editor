@@ -10,4 +10,5 @@ export default interface Declaration extends ID, IName {
   setDeclarationValue(newDeclarationValue: string);
 
   getWidth(): number;
+  cloneModel(): Declaration;
 }

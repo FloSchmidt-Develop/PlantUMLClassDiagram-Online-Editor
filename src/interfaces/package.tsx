@@ -20,4 +20,5 @@ export default interface Package extends ITyped, IName, ID{
     AddClassReference(classToAdd : IClass): void;
     RemoveClassReference(classToRemove: IClass): void;
     setName(name: string): void;
+    cloneModel(): Package;
 }

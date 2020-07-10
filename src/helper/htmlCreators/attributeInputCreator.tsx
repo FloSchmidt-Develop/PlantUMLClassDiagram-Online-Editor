@@ -1,5 +1,6 @@
 import IClass from "../../interfaces/class";
 import ClassUpdateController from '../../classes/controller/classUpdateController';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 
 export default class AttributeInputCreator {
@@ -27,7 +28,7 @@ export default class AttributeInputCreator {
       
       
       let moveUpAttributeButton = document.createElement('button');
-      moveUpAttributeButton.innerText = '/\\';
+      moveUpAttributeButton.innerHTML = '/\\';
       moveUpAttributeButton.style.float = 'right';
       moveUpAttributeButton.style.marginRight = '10px';
 

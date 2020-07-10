@@ -19,7 +19,6 @@ export default class Class extends ID implements IClass {
     public y: number = 0;
     private width = 250;
     private hight = 100;
-    //public diagram: IAddOnlyDiagram;
 
     constructor(name: string, type: string){
         super();
@@ -144,6 +143,19 @@ export default class Class extends ID implements IClass {
         let result =  newHight > this.hight ? newHight : this.hight;
         this.setHight(result);
         return result;
+    }
+
+    public cloneModel(): IClass{
+        let newClass = new Class(this.name, this.type);
+        newClass.attributes = this.attributes.map( e => e.cloneModel() );
+        newClass.methods = this.methods.map( e => e.cloneModel());
+        newClass.declarations = this.declarations.map(e => e.cloneModel());
+        newClass.x = this.x;
+        newClass.y = this.y;
+        newClass.setHight(this.hight);
+        newClass.setWidth(this.width);
+        newClass.package = this.package;
+        return newClass;
     }
 
 }

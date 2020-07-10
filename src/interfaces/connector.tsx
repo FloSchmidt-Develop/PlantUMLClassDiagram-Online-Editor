@@ -19,6 +19,7 @@ export default interface Connector extends ID{
     setLineStyle_direct(line: Lines)
 
     resetConnections(connector: string)
+    cloneModel(): string;
 
 }
 

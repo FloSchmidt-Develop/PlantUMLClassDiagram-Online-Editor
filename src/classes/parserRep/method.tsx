@@ -48,4 +48,15 @@ export default class Method extends ID implements IMethod{
     public getWidth(): number{        
         return ((this.name.length + this.dataType.length + this.visibility?.length +  2 + this.getAttributeListAsString().length) * 10 )* 0.60;
     }
+
+    public cloneModel(): IMethod{
+        let newMethode = new Method(this.name,this.visibility);
+        newMethode.setDataType(this.dataType);
+        for (let index = 0; index < this.attributeList.length; index++) {
+            const oldAttribute = this.attributeList[index];
+            let newAttribute = oldAttribute.cloneModel();
+            newMethode.attributeList.push(newAttribute);
+        }
+        return newMethode;
+    }
 }

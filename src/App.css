@@ -20,58 +20,46 @@
 }
 
 .graph-container{
-  position:absolute;
-  width: 70vw;
   height: 85vh;
   background:url('./images/grid.gif');
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
-  top:130px;
-  left:110px;
-  border: 2px solid black;
+  border: 0.1px solid black;
 }
 
 .edit-container{
-  position: absolute;
-  width: 20vw;
   height: 85vh;
-  top: 130px;
-  right: 0px;
   overflow-y: auto;
   overflow-x: auto;
   white-space: nowrap;
-  margin-right: 1vh;
   border: 2px solid black;
 }
 
 .toolbar{
-  position : absolute;
-  overflow : hidden;
-  padding : 2px;
-  left : 0px;
-  top : 130px;
-  width : 100px;
-  bottom : 0px;
-  margin-left: 2px;
+ height: 85vh;
 }
+
 .toolbar img{
-  width: 100px;
-  height: 40px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .exportButton{
-  margin-left: 2vw;
-  top: 1vh;
   font-size: larger;
 }
 
 .upload-section{
-  margin-top: 0px;
+  position: absolute;
+  top: 80px;
+  left: 110px;
+  display: flex;
 }
 
 .my-button-style{
   font-size: larger;
+  margin-left: 100px;
   padding: 0vw 0vh;
 }
 
@@ -81,23 +69,22 @@
   padding: 0vw 1vh;
   bottom: 3vh;
   left: 3vw;
-  background-color: lightgray;
 }
 
 #zoomButtons{
   position: absolute;
-  left: 70vw;
+  left: 77vw;
   top: 140px;
 }
 
 #zoomButtons button{
-  width: 30px;
+  width: auto;
 }
 
 #editButtons{
   position: absolute;
   left: 50vw;
-  top: 100px;
+  top: 80px;
 }
 
 class-type-icon{

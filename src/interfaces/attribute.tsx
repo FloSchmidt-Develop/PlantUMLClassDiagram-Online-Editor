@@ -10,4 +10,5 @@ export default interface Attribute extends IName, ID{
     setDataType(newDataType: string): void;
 
     getWidth(): number;
+    cloneModel(): Attribute;
 }

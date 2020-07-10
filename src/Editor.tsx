@@ -1,5 +1,20 @@
 import React, { Fragment, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/styles';
+import ExportPreviewDialog from './ExportPreview';
+
+import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import DeleteForeverSharpIcon from '@material-ui/icons/DeleteForeverSharp';
+import ZoomInSharpIcon from '@material-ui/icons/ZoomInSharp';
+import ZoomOutSharpIcon from '@material-ui/icons/ZoomOutSharp';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 
 import "./App.css";
 import axios from "axios";
@@ -21,15 +36,29 @@ import {
   mxConnectionHandler,
   mxConstants
 } from "mxgraph-js";
+
 import Class from "./classes/parserRep/class";
 import Connection from "./classes/parserRep/connection";
 import ClassUpdateController from "./classes/controller/classUpdateController";
 import Package from "./classes/parserRep/package";
 import Point from "./classes/parserRep/point";
+import { Typography } from "@material-ui/core";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
+const styles = theme => ({
+  grid: {
+    marginTop: '50px',
+  },
+  input: {
+    display: 'none',
+  },
+  edit: {
+  }
+});
+
 const Editor = (props) => {
+  const { classes } = props;
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("");
   const [diagram, setDiagram] = useState<IDiagram>();
@@ -156,7 +185,7 @@ const Editor = (props) => {
         if(changedCell != null && geometry != null && changedCell.value instanceof Connection){
           let changedConnection = changedCell.value as Connection;
           let pts: Point[] = [];
-          for (let index = 0; index < geometry.points.length; index++) {
+          for (let index = 0; index < geometry?.points?.length; index++) {
             const pt = geometry.points[index];
             console.log(pt);
             pts.push(new Point(pt.x,pt.y));
@@ -252,12 +281,60 @@ const Editor = (props) => {
           graph.model.beginUpdate();
           try
           {
+            console.log('Paste');
+            
+            console.log(cells);
+            
             for (var i = 0; i < cells.length; i++)
             {
               var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
                   mxClipboard.parents[i] : parent;
-              cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
-              console.log(cells[i]);
+              var tempObj = cells[i].value;
+             
+              //paste class
+              if(tempObj instanceof Class){
+                let newCls = (tempObj as Class).cloneModel();
+                newCls.setName(newCls.getName() + 'Copy');
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
+                console.log('--Class Added---');
+                cells[i].value = newCls;
+                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+              }
+              //import package
+              else if(tempObj instanceof Package){
+                let newPackage = (tempObj as Package).cloneModel();
+                newPackage.setName('copy')
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(newPackage);
+                let children = cells[i].children;
+                if(children != null)
+                for (let index = 0; index < children.length; index++) {
+                  const child = children[index];
+                  if(child.value instanceof Class){
+                    let newCls = (child.value as Class).cloneModel();
+                    DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
+                    cells[i].value = newCls;
+                    newPackage.AddClassReference(newCls);
+                  }
+                  
+                }
+                cells[i].value = newPackage;
+                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+              }
+              if(tempObj instanceof Connection){
+                console.log('Connection Added');
+                console.log(cells[i]);
+                let newConn = (tempObj as Connection)
+                console.log(newConn);
+                //cells[i].value = newConn;
+                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+                
+                /*
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
+                console.log('--Class Added---');
+                cells[i].value = newCls;
+                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+                */
+              }
               
               //DiagramCreator.diagram[DiagramCreator.activeIndex].
             }
@@ -356,38 +433,58 @@ const Editor = (props) => {
     <Fragment>
       <form onSubmit={onSubmit}>
         <div className="upload-section">
-          <input
-            className="my-button-style"
-            type="file"
-            id="customFile"
+          <input 
+            accept=".puml" 
+            className={classes.input} 
+            id="raised-button-file" 
+            multiple 
+            type="file" 
             onChange={onChange}
-          />
-          <label className="custom-file-label" htmlFor="customFile">
-            {filename}
-          </label>
-          <input className="my-button-style" type="submit" value="Upload" />
-          <input className="exportButton" type="button" onClick={exportDiagram} value='Export' />
+            /> 
+            <label htmlFor="raised-button-file"> 
+            <Button startIcon={<FolderOpenIcon/>} variant="contained" color="primary" component="span" className={classes.button}> 
+              Open File 
+            </Button> 
+          </label> 
+          <Button  variant="contained" color="primary" startIcon={<CloudUploadIcon/>} className="my-button-style" type="submit">Upload</Button>
+          <ExportPreviewDialog />
         </div>
       </form>
-      <div className="graph-container" ref={divGraph} id="divGraph"></div>
-      <div className="edit-container">
-        <div ref={editPanel} id="editPanel">
-          <p>nothing Selected</p>
-        </div>
-      </div>
+      <Grid container className={classes.grid} spacing={2}>
+        <Grid xs={1} item>
+          <Paper id="toolBar">Hallo</Paper>
+        </Grid>
+        <Grid xs={9} item>
+          <Paper className="graph-container" ref={divGraph} id="divGraph"></Paper>
+        </Grid>
+        <Grid xs={2} item className={classes.edit}>
+          <Paper className="edit-container">
+            <div ref={editPanel} id="editPanel">
+              <p>nothing Selected</p>
+            </div>
+          </Paper>
+        </Grid>
+      </Grid>
+
+
       <div id='zoomButtons'>
-        <button type='button' id='zoomIn' onClick={zoomIn} >+</button>
-        <button type='button' id='zoomOut' onClick={zoomOut} >-</button>
+        <IconButton onClick={zoomIn} >
+          <ZoomInSharpIcon/>
+        </IconButton>
+        <IconButton onClick={zoomOut} >
+          <ZoomOutSharpIcon/>
+        </IconButton>
       </div>
       <div id='editButtons'>
-        <button type='button' id='undo' disabled={false} onClick={undo} >undo</button>
-        <button type='button' id='redo' disabled={false} onClick={redo} >redo</button>
-        <button type='button' id='copy' disabled={false} onClick={copy} >copy</button>
-        <button type='button' id='paste' disabled={false} onClick={paste} >paste</button>
-        <button type='button' id='delete' onClick={remove} >Delete</button>
+        <Button variant="contained" color="primary" startIcon={<UndoIcon/>} onClick={undo} >undo</Button>
+        <Button variant="contained" color="primary" startIcon={<RedoIcon/>} onClick={redo} >redo</Button>
+        <Button variant="contained" color="primary" startIcon={<FileCopyIcon/>} onClick={copy} >copy</Button>
+        <Button variant="contained" color="primary" startIcon={<FileCopyIcon/>}  onClick={paste} >paste</Button>
+        <Button variant="contained" color="secondary" startIcon={<DeleteForeverSharpIcon/>} onClick={remove} >Delete</Button>
+        
       </div>
     </Fragment>
   );
 };
 
-export default Editor;
+export default withStyles(styles)(Editor);

@@ -24,12 +24,15 @@ export default class Toolbar{
 
 
     public getCreateToolbarContainer(graph: any){
-
-
+            let tb = document.getElementById('toolBar');
+            while (tb?.firstChild) {
+                if(tb.lastChild != null)
+                    tb.removeChild(tb.lastChild);
+              }
             let tbContainer = document.createElement('div');
             tbContainer.className = 'toolbar';
             tbContainer.id = 'toolbar';
-            document.body.appendChild(tbContainer);
+           tb?.appendChild(tbContainer);
 
             var toolbar = new mxToolbar(tbContainer);
             toolbar.enabled = false;
@@ -45,6 +48,7 @@ export default class Toolbar{
             this.addVertex(graph,toolbar,itf, InterfaceImg, 270, 100, '');
             this.addVertex(graph,toolbar,obj, ObjectImg, 250, 80, '');
             this.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, '');
+            //toolbar.addLine();
 
     }
 
@@ -68,21 +72,22 @@ export default class Toolbar{
             
             var pt = graph.getPointForEvent(evt);
             var vertex = graph.getModel().cloneCell(prototype);
+            
 
             if(vertex.value.type === 'class'){
-                vertex.value = new Class('Class Name','class');
+                vertex.value = new Class('NewClass','class');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             if(vertex.value.type === 'interface'){
-                vertex.value = new Class('Interface Name','interface');
+                vertex.value = new Class('NewInterface','interface');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             if(vertex.value.type === 'abstractclass'){
-                vertex.value = new Class('Class Name','abstractclass');
+                vertex.value = new Class('newAbstractClass','abstractclass');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             if(vertex.value.type === 'object'){
-                vertex.value = new MyObject('new Object', 'object');
+                vertex.value = new MyObject('newObject', 'object');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
             }
             else if(vertex.value instanceof Package){
@@ -94,7 +99,7 @@ export default class Toolbar{
             
             vertex.geometry.x = pt.x;
             vertex.geometry.y = pt.y;
-            console.log('added');
+            
             
             graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
         }

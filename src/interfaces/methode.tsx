@@ -3,7 +3,7 @@ import IName from './named';
 import ID from './id';
 
 
-export default interface Methode extends IName, ID{
+export default interface Method extends IName, ID{
     dataType: string,
     attributeList?: IAttribute[],
     visibility: string,
@@ -15,4 +15,5 @@ export default interface Methode extends IName, ID{
     setVisibility(newVisibility: string);
     setDataType(newDatatype: string);
     DeleteAttribute(attribute: IAttribute);
+    cloneModel(): Method;
 }

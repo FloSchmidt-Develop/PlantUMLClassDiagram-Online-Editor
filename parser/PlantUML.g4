@@ -278,16 +278,16 @@ CONNECTOR:
     | '<-o'
 	| '*-' DIRECTION? '-'
     | '-' DIRECTION? '-*'
-    | '*-' DIRECTION '-*'
+    | '*-' DIRECTION? '-*'
 	| '<|-' DIRECTION? '-'
 	| '-' DIRECTION? '-|>'
     | '<|-' DIRECTION? '-|>'
     | 'o-' DIRECTION? '-'
     | '-' DIRECTION? '-o'
     | 'o-' DIRECTION? '-o'
-    | '<-' DIRECTION '-'
-    | '-' DIRECTION '->'
-    | '<-' DIRECTION '->'
+    | '<-' DIRECTION? '-'
+    | '-' DIRECTION? '->'
+    | '<-' DIRECTION? '->'
     ;
 	
 DIRECTION:

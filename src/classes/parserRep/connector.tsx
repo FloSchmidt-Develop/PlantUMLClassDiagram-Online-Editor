@@ -78,6 +78,55 @@ export default class Connector extends ID implements IConnector{
         this.setLineStyle(connector);
     }
 
+    private getStartConnector(): string{
+        if(this.startArrowSymbol === Arrows.diamond){
+            return 'o';
+        }
+        else if(this.startArrowSymbol === Arrows.big){
+            return '|>';
+        }
+        else if(this.startArrowSymbol === Arrows.diamondFilled){
+            return '*';
+        }
+        else if(this.startArrowSymbol === Arrows.normal){
+            return '>';
+        }
+        else{
+            return ''
+        }
+    }
+
+    private getLineStyle(): string{
+        if(this.lineStyle = Lines.dotted){
+            return '..';
+        }
+        else{
+            return '--';
+        }
+    }
+
+    private getEndConnector(): string{
+        if(this.endArrowSymbol === Arrows.diamond){
+            return 'o';
+        }
+        else if(this.endArrowSymbol === Arrows.big){
+            return '<|';
+        }
+        else if(this.endArrowSymbol === Arrows.diamondFilled){
+            return '*';
+        }
+        else if(this.endArrowSymbol === Arrows.normal){
+            return '<';
+        }
+        else{
+            return ''
+        }
+    }
+
+    public cloneModel(): string{
+        return this.getEndConnector() + this.getLineStyle() + this.getStartConnector();
+    }
+
 
 
 }
