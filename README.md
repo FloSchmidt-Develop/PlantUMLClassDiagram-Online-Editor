@@ -33,3 +33,9 @@ Both have to run to test the Application:
 
 in the directory ./parser/demoFiles are PlantUML files that should work and cause no errors
 
+## Open Issues
+* [ ]  Copy of Connections
+* [ ]  Implementation of MVC Pattern
+* [ ]  Edge to Edge Connection
+* [ ]  Full Undo Redo Support
+
