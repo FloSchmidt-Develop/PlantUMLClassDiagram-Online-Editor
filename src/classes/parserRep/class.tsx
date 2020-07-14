@@ -5,9 +5,11 @@ import IDeclaration from '../../interfaces/declaration'
 import ID from './id';
 import Attribute from './attribute';
 import Method from './method';
+import Observer from '../../interfaces/observer'
+import ObserverSubject from './subject'
 
 
-export default class Class extends ID implements IClass {
+export default class Class extends ObserverSubject<string> implements IClass  {
     public attributes: IAttribute[] = [];
     public methods: IMethod[] = [];
     public declarations: IDeclaration[] = [];
@@ -24,12 +26,15 @@ export default class Class extends ID implements IClass {
         super();
         this.name = name;
         this.type = type;
-        this.alias = this.id;
+        this.alias = this.name;
         //this.diagram = diagram;
     }
 
     public setName(newName: string){
-        this.name = newName;
+        let temp = newName;
+        this.alias = this.name;
+        this.NotifyObservers(this.name,temp);
+        this.name = temp;
     }
 
     public getName(): string{

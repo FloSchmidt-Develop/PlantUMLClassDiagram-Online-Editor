@@ -56,14 +56,14 @@ styling:
 	;
 
 styling_expression:
-	styling_name=styling_params DOTDOT styling_val=styling_value ';'
+	styling_name=styling_params styling_val=styling_value ';'
 	;
 	
 styling_params:
-	'width'
-	| 'hight'
-	| 'x'
-	| 'y'
+	'width:'
+	| 'hight:'
+	| 'x:'
+	| 'y:'
 	;
 
 styling_value:
@@ -127,11 +127,11 @@ declaration_argument:
     ;
 
 connection_left:
-    instance=connection_name WHITESPACE? ('"' mult=multiplicity? '"')?
+    instance=connection_name WHITESPACE? (mult=multiplicity)?
     ;
 
 connection_right:
-    ('"' mult=multiplicity? '"')? WHITESPACE? instance=connection_name
+    (mult=multiplicity)? WHITESPACE? instance=connection_name
     ;
 
 connection:
@@ -160,7 +160,7 @@ connection_symbol:
 	CONNECTOR
 	;
 
-multiplicity: ('*' | '0..1' | '0..*' | '1..*' | '1' );
+multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"1"' );
 
 visibility:
     '{abstract}'?
@@ -194,7 +194,7 @@ template_argument_list:
     ;
 
 ident:
-    '"'? WORD* '"'? ('as' attribute_type)?
+    '"'? WORD+ '"'? ('as' attribute_type)?
     ;
 
 methode_data_type:

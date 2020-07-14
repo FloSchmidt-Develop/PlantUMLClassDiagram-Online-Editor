@@ -204,7 +204,7 @@ export default class MxGraphCreator {
     }
     else{
       let attributeHeader = document.createElement('h3');
-      attributeHeader.innerText = 'Noting Selected';
+      attributeHeader.innerText = 'no Element Selected';
       view.appendChild(attributeHeader);
     }
 
@@ -235,7 +235,7 @@ export default class MxGraphCreator {
       if(actual_class !== null 
         && typeof actual_class !== 'undefined' 
         && (actual_class.type === 'interface' || actual_class.type === 'abstractclass'
-          || actual_class.type === 'class' ||actual_class.type === 'object')){
+          || actual_class.type === 'class' || actual_class.type === 'object')){
       if (actual_class !== null) {
         var table = document.createElement("table");
         table.style.fontFamily = 'Consolas'
@@ -424,7 +424,13 @@ export default class MxGraphCreator {
           console.log(cell.source);
           console.log(cell.target);
           
-          let connection = new Connection('<--','','',cell.target.value.alias,cell.source.value.alias,'');
+          let connection = new Connection('<--','','',cell.target.value.getName(),cell.source.value.getName(),'');
+          //ToDo: Check for Connection as Source
+          if(cell.target.value instanceof Class)
+            (cell.target.value as Class).registerObserver(connection);
+          if(cell.source.value instanceof Class)
+            (cell.source.value as Class).registerObserver(connection);
+
           diagram.addConnection(connection);
           
           graph.getModel().beginUpdate();
@@ -567,6 +573,13 @@ export default class MxGraphCreator {
         );
       }
       else{
+
+        let source = this.diagram.class_declarations.find(e => e.getName() === connection.sourceElement) as Class;
+        source?.registerObserver(connection as Connection);
+
+        let target = this.diagram.class_declarations.find(e => e.getName() === connection.destinationElement) as Class;
+        target?.registerObserver(connection as Connection);
+
         activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'] = this.graph.insertEdge(
           this.parentContainer,
           connection.id,

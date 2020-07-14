@@ -233,8 +233,6 @@ const Editor = (props) => {
 
   const setUpEditor = (graph: any): void => {
 
-
-
     var vertexStyle  = graph.getStylesheet().getDefaultVertexStyle();
       vertexStyle[mxConstants.STYLE_OVERFLOW] = 'width';
 
@@ -460,7 +458,7 @@ const Editor = (props) => {
         <Grid xs={2} item className={classes.edit}>
           <Paper className="edit-container">
             <div ref={editPanel} id="editPanel">
-              <p>nothing Selected</p>
+              <h3>no Element Selected</h3>
             </div>
           </Paper>
         </Grid>

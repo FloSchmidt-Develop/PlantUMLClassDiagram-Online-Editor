@@ -2,6 +2,8 @@ import IName from "../../interfaces/named";
 import ClassUpdateController from '../../classes/controller/classUpdateController';
 import ElementUpdateController from '../../classes/controller/elementUpdateController';
 import Class from '../../classes/parserRep/class';
+import Diagram from "../../classes/parserRep/diagram";
+import DiagramCreator from "../diagramCreator";
 
 
 
@@ -33,10 +35,18 @@ export default class NameInputCreator {
     input2.onchange = () => {
       var elementToChange = selectedElement;
       if (elementToChange !== null) {
-        if(!this.validateName(input2.value))
-          elementToChange.setName(input2.value);
-        else
+        if(this.validateName(input2.value)){
           alert('Class Name shouldn´t contain special Characters');
+          return;
+        }
+        if(DiagramCreator.diagram[DiagramCreator.activeIndex]
+          .class_declarations.find(e => e.getName() === input2.value)){
+          alert('Class Name: ' + input2.value + ' should be unique');
+          return;
+        }
+        //Check for unique name
+        elementToChange.setName(input2.value);
+        
       }
       
 

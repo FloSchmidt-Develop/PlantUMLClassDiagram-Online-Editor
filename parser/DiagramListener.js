@@ -79,10 +79,10 @@ PlantUMLListener.prototype.enterClass_dataType = function(ctx) {
 
 PlantUMLListener.prototype.enterStyling_expression = function(ctx){
     if(actual_class != null)
-        actual_class[ctx.styling_name.getText()] = ctx.styling_val.getText();
+        actual_class[ctx.styling_name.getText().replace(':','')] = ctx.styling_val.getText();
     else{
         console.log('---Package----');
-        actual_package[ctx.styling_name.getText()] = ctx.styling_val.getText();
+        actual_package[ctx.styling_name.getText().replace(':','')] = ctx.styling_val.getText();
     }
 }
 

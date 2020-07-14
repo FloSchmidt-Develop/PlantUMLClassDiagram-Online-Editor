@@ -12,9 +12,8 @@ export default class Object extends Class{
             console.log(name.split(':')[1]);
             this.dataType = name.split(':')[1];
         }
-        console.log(name.split(':')[1]);
-        
-        this.dataType = '';
+        else
+            this.dataType = '';
         
     }
 

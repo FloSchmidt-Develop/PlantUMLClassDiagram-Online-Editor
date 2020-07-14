@@ -64,6 +64,8 @@ app.listen(4000, () => console.log('Server Started'));
 
 function createPUMLFile(requestData ){
     response = requestData;
+    console.log(requestData);
+    
     var result = '';
     result += '@startuml';
     result += '\n \n';
@@ -98,13 +100,13 @@ function createClasses(classes, connections){
     var result = '';
     for (let index = 0; index < classes.length; index++) {
         const cls = classes[index];
-        result += cls.type + ' "' + (cls.type === 'object' ? cls.name + ': ' + cls.dataType : cls.name) + '" as ' + cls.name + '{ \n';
+        result += cls.type + ' "' + (cls.type === 'object' ? cls.name + ': ' + cls.dataType : cls.name) + '" as ' + cls.alias + '{ \n';
         result += getStylingOfClass(cls);
         result += getAttributesOfClass(cls);
         result += getMethodsOfClass(cls);
         result += getDeclarationsOfObject(cls);
         result += '}\n \n';
-        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.alias);
+        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.name);
 
         result += createConnections(connectionsOfClass);
     }
@@ -122,21 +124,18 @@ function createConnections(connections){
     for (let index = 0; index < connections.length; index++) {
         const connection = connections[index];
         result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
-        result += 
-            (response.class_declarations.find(e => e.id === connection.destinationElement) ? 
-            (response.class_declarations.find(e => e.id === connection.destinationElement).name)
-             : connection.destinationElement); 
+        result += connection.destinationElement
         result += ' '
-        + (connection.multiplicity_left.value !== '' ? ('"' + connection.multiplicity_left.value + '"' ) : '')
+        + (connection.multiplicity_left.value !== '' ? (connection.multiplicity_left.value) : '')
         + getConnection(connection.connector) 
-        + (connection.multiplicity_right.value !== '' ? ('"' + connection.multiplicity_right.value + '"') : '') 
-        + ' ' + (response.class_declarations.find(e => e.id === connection.sourceElement) ? 
-        (response.class_declarations.find(e => e.id === connection.sourceElement).name)
-         : connection.sourceElement); 
+        + (connection.multiplicity_right.value !== '' ? (connection.multiplicity_right.value) : '') 
+        + ' ' + connection.sourceElement;
         + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
         result += '\n';
     } 
     result += '\n';
+    console.log(result);
+    
     return result;
 }
 
