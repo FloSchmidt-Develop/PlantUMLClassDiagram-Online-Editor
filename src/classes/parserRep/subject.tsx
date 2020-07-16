@@ -5,9 +5,6 @@ export default abstract class ObserverSubject<T> extends ID{
 
     private observers: Observer<T>[];
 
-    /**
-     *
-     */
     constructor() {
         super();
         this.observers = [];

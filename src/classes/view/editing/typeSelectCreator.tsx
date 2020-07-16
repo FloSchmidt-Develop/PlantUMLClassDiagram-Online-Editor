@@ -1,5 +1,5 @@
-import IClass from "../../interfaces/class";
-import ClassUpdateController from '../../classes/controller/classUpdateController';
+import IClass from "../../../interfaces/class";
+import ClassUpdateController from '../../controller/classUpdateController';
 
 export default class {
   graph: any;

@@ -7,6 +7,8 @@ import Attribute from './attribute';
 import Method from './method';
 import Observer from '../../interfaces/observer'
 import ObserverSubject from './subject'
+import Declaration from './declaration';
+
 
 
 export default class Class extends ObserverSubject<string> implements IClass  {
@@ -32,7 +34,7 @@ export default class Class extends ObserverSubject<string> implements IClass  {
 
     public setName(newName: string){
         let temp = newName;
-        this.alias = this.name;
+        this.alias = newName;
         this.NotifyObservers(this.name,temp);
         this.name = temp;
     }
@@ -60,6 +62,14 @@ export default class Class extends ObserverSubject<string> implements IClass  {
     public DeleteAttribute(attribute: IAttribute){
         this.attributes = this.attributes.filter(e => e.id != attribute.id);
         this.hight -= 11;
+    }
+
+    public AddDeclaration(declaration: IDeclaration){
+        this.declarations.push(declaration);
+    }
+
+    public DeleteDeclaration(declaration: IDeclaration){
+        this.declarations = this.declarations.filter(e => e.id != declaration.id);
     }
 
     public ChangeAttributePosition(attribute: IAttribute, up: boolean){
@@ -90,6 +100,19 @@ export default class Class extends ObserverSubject<string> implements IClass  {
          this.methods.splice(new_index, 0, this.methods.splice(old_index, 1)[0]);
     }
 
+    public ChangeDeclarationPosition(declaration: IDeclaration, up: boolean){
+        let old_index = this.declarations.indexOf(declaration);
+        let new_index = up ? old_index - 1 : old_index + 1;
+
+        if (new_index >= this.declarations.length) {
+            var k = new_index - this.declarations.length + 1;
+            while (k--) {
+                 this.declarations.push(new Declaration('name',''));
+            }
+            }
+         this.declarations.splice(new_index, 0, this.declarations.splice(old_index, 1)[0]);
+    }
+
     public setWidth(width: number){
         if(width != null)
             this.width = width;
@@ -106,7 +129,7 @@ export default class Class extends ObserverSubject<string> implements IClass  {
         let max = this.width; // min width
 
         //charakters in name + (image_width + margin) * 2
-        let lengthName = (((this.name.length) * 14) + 120) * 0.9;
+        let lengthName = (((this.name.length) * 14) + 120) * 0.7;
         if(lengthName > max){   
             max = lengthName;
         }

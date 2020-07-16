@@ -1,5 +1,5 @@
-import IClass from "../../interfaces/class";
-import ClassUpdateController from '../../classes/controller/classUpdateController';
+import IClass from "../../../interfaces/class";
+import ClassUpdateController from '../../controller/classUpdateController';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 
@@ -31,6 +31,7 @@ export default class AttributeInputCreator {
       moveUpAttributeButton.innerHTML = '/\\';
       moveUpAttributeButton.style.float = 'right';
       moveUpAttributeButton.style.marginRight = '10px';
+      moveUpAttributeButton.disabled = index === 0 ? true : false;
 
       moveUpAttributeButton.onclick = () => {
         elementToChange.ChangeAttributePosition(attribute,true);  
@@ -132,6 +133,7 @@ export default class AttributeInputCreator {
       moveDownAttributeButton.innerText = '\\/';
       moveDownAttributeButton.style.float = 'right';
       moveDownAttributeButton.style.marginRight = '10px';
+      moveDownAttributeButton.disabled = index >= elementToChange.declarations.length - 1 ? true : false;
 
       moveDownAttributeButton.onclick = () => {
         elementToChange.ChangeAttributePosition(attribute,false);  

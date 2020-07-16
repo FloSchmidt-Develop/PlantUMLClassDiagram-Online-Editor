@@ -1,6 +1,6 @@
-import IClass from "../../interfaces/class";
-import ClassUpdateController from '../../classes/controller/classUpdateController';
-import Attribute from "../../classes/parserRep/attribute";
+import IClass from "../../../interfaces/class";
+import ClassUpdateController from '../../controller/classUpdateController';
+import Attribute from "../../parserRep/attribute";
 
 
 export default class MethodInputCreator {
@@ -27,6 +27,7 @@ export default class MethodInputCreator {
       moveUpMethodButton.innerText = '/\\';
       moveUpMethodButton.style.float = 'right';
       moveUpMethodButton.style.marginRight = '10px';
+      moveUpMethodButton.disabled = index === 0 ? true : false;
 
       moveUpMethodButton.onclick = () => {
         elementToChange.ChangeMethodPosition(method,true);  
@@ -216,6 +217,7 @@ export default class MethodInputCreator {
        moveDownMethodButton.innerText = '\\/';
        moveDownMethodButton.style.float = 'right';
        moveDownMethodButton.style.marginRight = '10px';
+       moveDownMethodButton.disabled = index >= elementToChange.declarations.length - 1 ? true : false;
  
        moveDownMethodButton.onclick = () => {
          elementToChange.ChangeMethodPosition(method,false);  

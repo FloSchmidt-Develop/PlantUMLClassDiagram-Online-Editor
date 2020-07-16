@@ -1,6 +1,6 @@
-import IConnection from "../../interfaces/connection";
-import IConnector, { Lines, Arrows } from "../../interfaces/connector";
-import Connection from "../../classes/parserRep/connection";
+import IConnection from "../../../interfaces/connection";
+import IConnector, { Lines, Arrows } from "../../../interfaces/connector";
+import Connection from "../../parserRep/connection";
 
 export default class ConnectionInputCreator{
   graph: any;

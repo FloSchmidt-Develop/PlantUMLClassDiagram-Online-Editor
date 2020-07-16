@@ -5,8 +5,9 @@ import Multiplicity from './multiplicity';
 import Point from './point'
 import ID from './id';
 import Observer from '../../interfaces/observer';
+import ObserverSubject from './subject';
 
-export default class Connection extends ID implements IConnection, Observer<string>{
+export default class Connection extends ObserverSubject<string> implements IConnection, Observer<string>{
     public connector: IConnector;
     public multiplicity_left: Multiplicity;
     public multiplicity_right: Multiplicity;
@@ -32,12 +33,17 @@ export default class Connection extends ID implements IConnection, Observer<stri
             this.stereoType = stereoType ? stereoType : '';
         
     }
+
     refresh(oldValue: string, newValue: string) {
         if(this.destinationElement === oldValue){
             this.destinationElement = newValue;
+            this.NotifyObservers('(' + oldValue + ',' + this.sourceElement + ')',
+            '(' + newValue + ',' + this.sourceElement + ')' );
         }
         if(this.sourceElement === oldValue){
             this.sourceElement = newValue;
+            this.NotifyObservers('(' + this.destinationElement + ',' + oldValue + ')',
+            '(' + this.destinationElement + ',' + newValue + ')' );
         }
     }
     

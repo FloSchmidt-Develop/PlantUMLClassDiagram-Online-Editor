@@ -60,10 +60,7 @@ styling_expression:
 	;
 	
 styling_params:
-	'width:'
-	| 'hight:'
-	| 'x:'
-	| 'y:'
+	WORD ':'
 	;
 
 styling_value:
@@ -102,7 +99,7 @@ method:
     ;
 
  mathode_name:
-    WORD*
+    WORD+
     ;
 
 declaration:
@@ -113,6 +110,7 @@ declaration:
     '='
 	WHITESPACE?
     declaration_argument
+    NEWLINE?
     ;
 
 declaration_name:
@@ -120,7 +118,7 @@ declaration_name:
     ;
 
 declaration_argument:
-    WORD+ 
+    WORD* 
 	| INTEGER+
 	| ('[' WORD (',' WORD)* ']')
 	| ('[' INTEGER+ (',' INTEGER)* ']')

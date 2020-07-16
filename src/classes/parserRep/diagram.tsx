@@ -18,11 +18,17 @@ export default class Diagram extends ID implements IDiagram{
     }
 
     public addClass(newClass : IClass) :void{
-        this.class_declarations.push(newClass);
+        if(this.class_declarations.find(e => e.id === newClass.id) == null)
+            this.class_declarations.push(newClass);
     }
 
     public addConnection(newConnection : IConnection): void{
-        this.connection_declarations.push(newConnection);
+        
+        if(this.connection_declarations.find(e => e.id === newConnection.id) == null){
+            console.log('------connection added-------');
+            this.connection_declarations.push(newConnection);
+        }
+            
     }
 
     public addPackage(newPackage: IPackage): IPackage | null{
@@ -47,15 +53,14 @@ export default class Diagram extends ID implements IDiagram{
         for (let index = 0; index < connectionsToRemove.length; index++) {
             this.removeConnection(connectionsToRemove[index]);
         }
-        let packageOfClass = this.package_declarations.find(e => e.getName() === classToRemove.getName());
+        let packageOfClass = this.package_declarations.find(e => e.getName() === classToRemove.package);
         packageOfClass?.RemoveClassReference(classToRemove);
     }
 
     public removeConnection(connectionToRemove: IConnection){
         this.connection_declarations = this.connection_declarations.filter(
             e => e.id !== connectionToRemove.id);
-        console.log('Connection Removed');
-        console.log(connectionToRemove);
+
     }
 
     public removePackage(packageToRemove: IPackage){

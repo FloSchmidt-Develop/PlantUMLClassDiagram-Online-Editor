@@ -80,27 +80,27 @@ export default class Toolbar{
 
             if(vertex.value.type === 'class'){
                 vertex.value = new Class('NewClass' + Toolbar.classCounter,'class');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.classCounter++;
             }
             if(vertex.value.type === 'interface'){
                 vertex.value = new Class('NewInterface' + Toolbar.interfaceCounter,'interface');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.interfaceCounter++;
             }
             if(vertex.value.type === 'abstractclass'){
                 vertex.value = new Class('newAbstractClass' + Toolbar.classCounter,'abstractclass');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.classCounter++;
             }
             if(vertex.value.type === 'object'){
                 vertex.value = new MyObject('newObject' + Toolbar.objectCounter, 'object');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.objectCounter++;
             }
             else if(vertex.value instanceof Package){
                 vertex.value = new Package('PackageName' + Toolbar.packageCounter);
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(vertex.value);
                 Toolbar.packageCounter++;
             }
             

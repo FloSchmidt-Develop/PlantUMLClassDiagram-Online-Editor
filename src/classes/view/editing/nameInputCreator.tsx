@@ -1,9 +1,10 @@
-import IName from "../../interfaces/named";
-import ClassUpdateController from '../../classes/controller/classUpdateController';
-import ElementUpdateController from '../../classes/controller/elementUpdateController';
-import Class from '../../classes/parserRep/class';
-import Diagram from "../../classes/parserRep/diagram";
-import DiagramCreator from "../diagramCreator";
+import IName from "../../../interfaces/named";
+import ClassUpdateController from '../../controller/classUpdateController';
+import ElementUpdateController from '../../controller/elementUpdateController';
+import Class from '../../parserRep/class';
+import Diagram from "../../parserRep/diagram";
+import DiagramCreator from "../../../helper/diagramCreator";
+import Package from "../../parserRep/package";
 
 
 
@@ -36,12 +37,17 @@ export default class NameInputCreator {
       var elementToChange = selectedElement;
       if (elementToChange !== null) {
         if(this.validateName(input2.value)){
-          alert('Class Name shouldn´t contain special Characters');
+          alert('Name shouldn´t contain special Characters');
           return;
         }
-        if(DiagramCreator.diagram[DiagramCreator.activeIndex]
+        if(selectedElement instanceof Class && DiagramCreator.diagram[DiagramCreator.activeIndex]
           .class_declarations.find(e => e.getName() === input2.value)){
           alert('Class Name: ' + input2.value + ' should be unique');
+          return;
+        }
+        if(selectedElement instanceof Package && DiagramCreator.diagram[DiagramCreator.activeIndex]
+          .package_declarations.find(e => e.getName() === input2.value)){
+          alert('Package Name: ' + input2.value + ' should be unique');
           return;
         }
         //Check for unique name

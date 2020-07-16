@@ -1,8 +1,8 @@
-import IClass from "../../interfaces/class";
-import MyObject  from '../../classes/parserRep/object';
-import ClassUpdateController from '../../classes/controller/classUpdateController';
-import DiagramCreator from "../diagramCreator";
-import Declaration from "../../classes/parserRep/declaration";
+import IClass from "../../../interfaces/class";
+import MyObject  from '../../parserRep/object';
+import ClassUpdateController from '../../controller/classUpdateController';
+import DiagramCreator from "../../../helper/diagramCreator";
+import Declaration from "../../parserRep/declaration";
 
 export default class {
   graph: any;

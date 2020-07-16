@@ -8,8 +8,8 @@ export default class Declaration extends ID implements IDeclaration{
 
     constructor(name: string, value: string){
         super();
-        this.name = name;
-        this.declaration_value = value;
+        this.name = name ? name : '';
+        this.declaration_value = value ? value : '';
     }
 
     public setName(newName : string){
@@ -25,6 +25,8 @@ export default class Declaration extends ID implements IDeclaration{
     }
 
     public getWidth(): number{
+        console.log(this.name);
+        console.log(this.declaration_value);
         return (this.name.length + this.declaration_value.length) * 10;
     }
 

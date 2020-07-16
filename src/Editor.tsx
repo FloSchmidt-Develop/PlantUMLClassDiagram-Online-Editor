@@ -34,7 +34,13 @@ import {
   mxRubberband,
   mxUndoManager,
   mxConnectionHandler,
-  mxConstants
+  mxConstants,
+  mxEdgeStyle,
+  mxGraphHandler,
+  mxEdgeHandler,
+  mxUndoableEdit,
+  mxCodec,
+  mxEventObject
 } from "mxgraph-js";
 
 import Class from "./classes/parserRep/class";
@@ -53,9 +59,25 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
-  edit: {
+  filename: {
+    margin: '0px 20px',
+    paddingTop: '5px',
   }
 });
+
+function CustomChange(this: any, model: any)
+{
+  this.model = model;
+  this.previous = model;
+  
+};
+
+CustomChange.prototype.execute = function()
+{
+  var tmp = this.model;
+  this.model = this.previous;
+  this.previous = tmp;
+};
 
 const Editor = (props) => {
   const { classes } = props;
@@ -71,34 +93,12 @@ const Editor = (props) => {
   const diagramCreator = new DiagramCreator();
 
   const onChange = (e: any) => {
-    setFile(e.target.files[0]);
-    setFilename(e.target.files[0].name);
-  };
-
-  function replacer(key,value)
-{
-    if (key=="vertex") return undefined;
-    else return value;
-}
-
-  const exportDiagram = async () => {
-   var jsonObj = JSON.stringify(DiagramCreator.diagram[DiagramCreator.activeIndex],replacer);
-    var obj = JSON.parse(jsonObj);
-    
-    const res = await axios.post("/export",obj);
-    downloadTxtFile(res.data)
-    
+    if(e.target.files[0] != null){
+      setFile(e.target.files[0]);
+      setFilename(e.target.files[0].name);
+    }
 
   };
-
-  const downloadTxtFile = (content) => {
-    const element = document.createElement("a");
-    const file = new Blob([content], {type: 'text/plain'});
-    element.href = URL.createObjectURL(file);
-    element.download = "myFile.puml";
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-  }
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -115,21 +115,14 @@ const Editor = (props) => {
       
       diagramCreator.createDiagram(res.data,filename);
 
-      if (typeof graph === "undefined") {
-        setGraph(new mxGraph(divGraph.current));
-      }
 
       setDiagram(DiagramCreator.diagram[DiagramCreator.activeIndex]);
       setChange(change ? false : true);
       
     } catch (err) {
-      /*
-      if (err.response ? err.response.status === 500) {
-        setMessage('There was a problem with the server');
-      } else {
-        setMessage(err.response.data.msg);
-      }
-      */
+      
+        alert('server ist not available: '+ err);
+      
     }
   };
 
@@ -137,12 +130,13 @@ const Editor = (props) => {
   useEffect(() => {
       
     if (typeof graph !== "undefined") {
+      console.log('graph is undefined');
+      
       if (!mxClient.isBrowserSupported()) {
         mxUtils.error("Browser is not supported!", 200, false);
       } 
       else {
-
-       setUpEditor(graph);
+          setUpEditor(graph);
 
       
 
@@ -157,54 +151,17 @@ const Editor = (props) => {
       }
     }
     else{
+      console.log('graph isn´t undefined');
+      
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null, 'New Diagram');
-
+      var rubberband = new mxRubberband(graph);
       setUpEditor(graph);
-      
-        
       
       setGraph(graph);
       setDiagram(diag);
     }
 
-
-    graph?.model.addListener(mxEvent.CHANGE, function(sender, evt)
-    {
-      for (let index = 0; index < evt.properties?.changes?.length; index++) {
-        let changedCell = evt.properties?.changes[index]?.cell;
-        let geometry = evt.properties?.changes[index]?.geometry
-        if(changedCell != null && geometry != null && changedCell.value instanceof Class){
-          let changedClass = changedCell.value as Class;
-          changedClass.x = geometry.x;
-          changedClass.y = geometry.y;
-          changedClass.setHight(geometry.hight);
-          changedClass.setWidth(geometry.width);
-          //ClassUpdateController.updateClassValues(graph,changedCell,changedClass)
-        }
-        if(changedCell != null && geometry != null && changedCell.value instanceof Connection){
-          let changedConnection = changedCell.value as Connection;
-          let pts: Point[] = [];
-          for (let index = 0; index < geometry?.points?.length; index++) {
-            const pt = geometry.points[index];
-            console.log(pt);
-            pts.push(new Point(pt.x,pt.y));
-            
-          }
-          console.log(pts);
-          changedConnection.points = pts;
-        }
-        if(changedCell != null && geometry != null && changedCell.value instanceof Package){
-          let changedPackage = changedCell.value as Package;
-          changedPackage.x = geometry.x;
-          changedPackage.y = geometry.y;
-          console.log(geometry);
-          
-          changedPackage.setHight(geometry.height);
-          changedPackage.setWidth(geometry.width);
-        }
-      }
-    });
   });
 
   const zoomIn = () => {
@@ -236,22 +193,35 @@ const Editor = (props) => {
     var vertexStyle  = graph.getStylesheet().getDefaultVertexStyle();
       vertexStyle[mxConstants.STYLE_OVERFLOW] = 'width';
 
-      var edgeStyle  = graph.getStylesheet().getDefaultEdgeStyle();
-      edgeStyle[mxConstants.STYLE_EDGE] = 'orthogonalEdgeStyle';
+      var style = graph.getStylesheet().getDefaultEdgeStyle();
+      style[mxConstants.STYLE_ROUNDED] = true;
+      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+      graph.alternateEdgeStyle = 'elbow=vertical';
 
       mxConnectionHandler.prototype.waypointsEnabled = true;
+
+
+      mxGraphHandler.prototype.guidesEnabled = true;
+      mxEdgeHandler.prototype.snapToTerminals = true;
+
       graph.setConnectableEdges(true);
       graph.setAllowDanglingEdges(false);
-      new mxRubberband(graph);
+      //new mxRubberband(graph);
       graph.setConnectable(true);
       graph.setHtmlLabels(true);
+      graph.setCellsResizable(true);
+      graph.setResizeContainer(false);
       graph.isDropEnabled  = () => true;
       graph.isEscapeEnabled  = () => true;
       graph.isExtendParentsOnMove = () => true;
       graph.isExtendParentsOnAdd = () => true;
+      graph.allowNegativeCoordinates = false;
+      graph.cloneInvalidEdges = false;
+      graph.zoomTo( DiagramCreator.diagram[DiagramCreator.activeIndex].scale); 
 
       mxClipboard.copy = function(graph, cells)
       {
+        
         cells = cells || graph.getSelectionCells();
         var result = graph.getExportableCells(cells);
 
@@ -264,7 +234,7 @@ const Editor = (props) => {
 
         mxClipboard.insertCount = 1;
         mxClipboard.setCells(graph.cloneCells(result));
-
+        
         return result;
       };
 
@@ -272,6 +242,9 @@ const Editor = (props) => {
       {
         if (!mxClipboard.isEmpty())
         {
+
+          console.log(mxClipboard.getCells());
+          
           var cells = graph.getImportableCells(mxClipboard.getCells());
           var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
           var parent = graph.getDefaultParent();
@@ -294,14 +267,13 @@ const Editor = (props) => {
                 let newCls = (tempObj as Class).cloneModel();
                 newCls.setName(newCls.getName() + 'Copy');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
-                console.log('--Class Added---');
                 cells[i].value = newCls;
                 cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
               }
               //import package
               else if(tempObj instanceof Package){
                 let newPackage = (tempObj as Package).cloneModel();
-                newPackage.setName('copy')
+                newPackage.setName('Copy')
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(newPackage);
                 let children = cells[i].children;
                 if(children != null)
@@ -318,24 +290,8 @@ const Editor = (props) => {
                 cells[i].value = newPackage;
                 cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
               }
-              if(tempObj instanceof Connection){
-                console.log('Connection Added');
-                console.log(cells[i]);
-                let newConn = (tempObj as Connection)
-                console.log(newConn);
-                //cells[i].value = newConn;
-                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
-                
-                /*
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
-                console.log('--Class Added---');
-                cells[i].value = newCls;
-                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
-                */
-              }
-              
-              //DiagramCreator.diagram[DiagramCreator.activeIndex].
             }
+            
           }
           finally
           {
@@ -354,7 +310,6 @@ const Editor = (props) => {
         }
         return true;
       }
-      graph.zoomTo( DiagramCreator.diagram[DiagramCreator.activeIndex].scale); 
 
       graph.isValidTarget  = (cell) => {
         if(cell.value instanceof Package)
@@ -378,27 +333,27 @@ const Editor = (props) => {
 
           if(cell.value instanceof Class){
             graph.model.beginUpdate();
-            cell.setVisible(false);
+            cell.remove();
             graph.getModel().endUpdate();
             diagram?.removeClass(cell.value);
           }
           else if(cell.value instanceof Connection){
             graph.model.beginUpdate();
-            cell.setVisible(false);
+            cell.remove();
             graph.getModel().endUpdate();
             diagram?.removeConnection(cell.value);
             graph.getModel().remove((cell.value as Connection).multiplicity_left.vertex);
             graph.getModel().remove((cell.value as Connection).multiplicity_right.vertex);
           }
           else if(cell.value instanceof Package){
-            cell.setVisible(false);
+            cell.remove();
 
             diagram?.removePackage(cell.value);
             
             let children = cell.children;
             for (let index = 0; index < children?.length; index++) {
               graph.getModel().remove(children[index]);
-              if(children[index].value instanceof Class)
+              if(children[index]?.value instanceof Class)
                 diagram?.removeClass(children[index].value);
             }              
           }
@@ -409,19 +364,180 @@ const Editor = (props) => {
         return true;
       }
       
-      var keyHandler = new mxKeyHandler(graph);
-      keyHandler.bindKey(46, function(evt)
-      {
-         graph.removeCells();
-      });
+
 
       var listener = function(sender, evt)
-      {
+      {        
         undoManager.undoableEditHappened(evt.getProperty('edit'));
       };
 
+
       graph.getModel().addListener(mxEvent.UNDO, listener);
       graph.getView().addListener(mxEvent.UNDO, listener);
+
+      //Delete/Add Classes Packages Connections On Add/Remove/Undo/Redo/Copy
+      graph.model.addListener(mxEvent.CHANGE, function(sender, evt)
+      {
+        var changes = evt.getProperty('edit').changes;
+        
+        for (var i = 0; i < changes.length; i++)
+        {
+          var change = changes[i];
+          
+          if (change.constructor.name === 'mxChildChange')
+          {
+            let child = change.child.value;
+            if(child != null && child instanceof Class){
+              let cls = child as Class;
+  
+              if(change.parent === null ){
+                  //#1: 2,4; #4: 1
+                  DiagramCreator.diagram[DiagramCreator.activeIndex].removeClass(cls);
+              }
+  
+              else if(typeof change.parent.value === 'undefined'){
+                
+                if(change.previous === null){
+                  //#1: 1 ; #4: 2
+                  DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(cls);
+                }
+                else if(change.previous.value instanceof Package){
+                  let temp = change.previous.value as Package;
+                  //#2: 2
+                  temp.RemoveClassReference(cls);
+                }
+              }
+  
+              else if(change.parent.value instanceof Package){
+                let pakg = change.parent.value as Package;
+                //#1: 3
+                if(change.previous === null){
+                  DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(cls);
+                  pakg.AddClassReference(cls);
+                }
+                else if(typeof change.previous.value === 'undefined'){
+                  pakg.AddClassReference(cls);
+                }
+                else if(change.previous.value instanceof Package){
+                  let prev = change.previous.value as Package;
+                  prev.RemoveClassReference(cls);
+                  pakg.AddClassReference(cls)
+                }
+              }
+             
+            }
+
+            //Add Remove support for Packages 
+            else if(child != null && child instanceof Package){
+              let pkg = child as Package;
+              if(change.parent === null){
+                DiagramCreator.diagram[DiagramCreator.activeIndex].removePackage(pkg);
+              }
+              else if(typeof change.parent.value === 'undefined'){
+                
+                if(change.previous === null){
+                  //#1: 1 ; #4: 2
+                  DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pkg);
+                }
+              }
+            }
+
+            //Add Remove Support for Connections
+            else if(child != null && child instanceof Connection){
+              console.log('connection change');
+              console.log(change);
+              
+              
+              let con = child as Connection;
+              if(change.parent === null){
+
+                DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(con);
+              }
+              else if(typeof change.parent.value === 'undefined'){
+                if(change.previous === null){
+
+                  DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(con);
+                }
+              }
+            }
+          }
+          /*
+          if(change.constructor.name === 'mxTerminalChange'){
+            let child = change.cell;
+            if(child != null && child.value instanceof Connection){
+      
+              
+              let con = child.value as Connection;
+              let changeSource = false;
+              
+              if(change.previous != null && change.previous.value instanceof Class){
+                let previous = change.previous.value as Class;
+                
+                
+                previous.removeObserver(con);
+                if(con.sourceElement == previous.alias){
+                  changeSource = true;
+                }
+                else{
+                  changeSource = false;
+                }
+              }
+              if(change.terminal != null && change.terminal.value instanceof Class){
+                let terminal = change.terminal.value as Class;
+
+                terminal.registerObserver(con);
+                if(changeSource){
+                  con.sourceElement = terminal.alias;
+                }
+                else{
+                  con.destinationElement = terminal.alias;
+                }
+              }
+
+            }
+          }
+          */
+        }
+      });
+
+      //Handel moving of Classes Packages Connections
+      graph?.model.addListener(mxEvent.CHANGE, function(sender, evt)
+      {
+        for (let index = 0; index < evt.properties?.changes?.length; index++) {
+          let changedCell = evt.properties?.changes[index]?.cell;
+          let geometry = evt.properties?.changes[index]?.geometry
+          if(changedCell != null && geometry != null && changedCell.value instanceof Class){
+            let changedClass = changedCell.value as Class;
+            changedClass.x = geometry.x;
+            changedClass.y = geometry.y;
+            changedClass.setHight(geometry.hight);
+            changedClass.setWidth(geometry.width);
+            //ClassUpdateController.updateClassValues(graph,changedCell,changedClass)
+          }
+          if(changedCell != null && geometry != null && changedCell.value instanceof Connection){
+            let changedConnection = changedCell.value as Connection;
+            let pts: Point[] = [];
+            for (let index = 0; index < geometry?.points?.length; index++) {
+              const pt = geometry.points[index];
+              pts.push(new Point(pt.x,pt.y));
+              
+            }
+            changedConnection.points = pts;
+          }
+          if(changedCell != null && geometry != null && changedCell.value instanceof Package){
+            let changedPackage = changedCell.value as Package;
+            changedPackage.x = geometry.x;
+            changedPackage.y = geometry.y;
+            
+            changedPackage.setHight(geometry.height);
+            changedPackage.setWidth(geometry.width);
+          }
+        }
+      });
+
+      
+
+      
 
       let toolbar = new Toolbar();
       toolbar.getCreateToolbarContainer(graph);
@@ -444,7 +560,12 @@ const Editor = (props) => {
               Open File 
             </Button> 
           </label> 
-          <Button  variant="contained" color="primary" startIcon={<CloudUploadIcon/>} className="my-button-style" type="submit">Upload</Button>
+          <Typography className={classes.filename}>
+            {filename === '' ? 'no File selected' : filename}
+          </Typography>
+          <Button  variant="contained" disabled={filename === '' ? true : false} 
+          color="primary" startIcon={<CloudUploadIcon/>} 
+          className="my-button-style" type="submit">Upload</Button>
           <ExportPreviewDialog />
         </div>
       </form>

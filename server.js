@@ -72,12 +72,6 @@ function createPUMLFile(requestData ){
     result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData. connection_declarations);
     result += addPackages(requestData.package_declarations, requestData.connection_declarations);
     result += '@enduml';
-    
-    //----For testing delete in final solution
-    fs.writeFile('temp.puml',result, function (err){
-        if(err) throw err;
-    })
-    //--------------------------------------
 
     return result;
 
