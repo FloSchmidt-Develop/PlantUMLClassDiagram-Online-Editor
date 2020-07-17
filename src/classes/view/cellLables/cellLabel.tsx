@@ -13,6 +13,7 @@ export default class CellLabel{
 
         if(actual_class !== null && typeof actual_class !== 'undefined' 
         && (actual_class.type === 'interface' || actual_class.type === 'abstractclass'
+        || actual_class.type === 'abstract'
         || actual_class.type === 'class' || actual_class.type === 'object'))
         {
 

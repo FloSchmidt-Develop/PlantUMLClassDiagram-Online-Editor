@@ -52,7 +52,6 @@ export default class {
     
 
     input.onchange = () => {
-        console.log('Change');
         let obj = (elementToChange as MyObject);
         obj.dataType = input.value;
         let cls = DiagramCreator.diagram.map(e => e.class_declarations.filter(cls => cls.getName() === obj.dataType)).flat(1);
@@ -61,9 +60,13 @@ export default class {
             let atrs = cls[0].attributes;
             for (let index = 0; index < atrs.length; index++) {
                 const atr = atrs[index];
-                obj.declarations.push(new Declaration(atr.getName(),''));
+                if(!obj.declarations.find(e => e.getName() === atr.getName()))
+                  obj.declarations.push(new Declaration(atr.getName(),''));
                 
             }
+        }
+        else{
+          alert('Class with name: ' + input.value + ' can not be found!!!');
         }
 
       //Update Cell

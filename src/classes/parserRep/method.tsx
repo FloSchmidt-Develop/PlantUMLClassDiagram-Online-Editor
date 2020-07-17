@@ -1,17 +1,20 @@
 import IMethod from '../../interfaces/methode';
 import IAttribute from '../../interfaces/attribute';
 import ID from './id';
+import { Modifiers, Visibility } from '../../interfaces/class';
 
 export default class Method extends ID implements IMethod{
     private name: string;
     dataType: string = '';
     attributeList: IAttribute[] = [];
-    visibility: string;
+    modifiers: Modifiers;
+    visibility: Visibility;
 
-    constructor(name :string, visibility : string ){
+    constructor(name :string, visibility : Visibility, modifiers: Modifiers ){
         super();
         this.name = name;
-        this.visibility = (visibility === 'undefined') ? '' : visibility;
+        this.visibility = visibility;
+        this.modifiers = modifiers;
     }
 
     getAttributeListAsString(): string {
@@ -37,7 +40,11 @@ export default class Method extends ID implements IMethod{
         return this.name;
     }
 
-    public setVisibility(newVisibility: string){
+    public setModifier(newModifier: Modifiers){
+        this.modifiers = newModifier;
+    }
+
+    public setVisibility(newVisibility: Visibility){
         this.visibility = newVisibility;
     }
     
@@ -46,11 +53,11 @@ export default class Method extends ID implements IMethod{
     }
 
     public getWidth(): number{        
-        return ((this.name.length + this.dataType.length + this.visibility?.length +  2 + this.getAttributeListAsString().length) * 10 )* 0.60;
+        return ((this.name.length + this.dataType.length  +  1 + this.getAttributeListAsString().length) * 10 )* 0.60;
     }
 
     public cloneModel(): IMethod{
-        let newMethode = new Method(this.name,this.visibility);
+        let newMethode = new Method(this.name,this.visibility,this.modifiers);
         newMethode.setDataType(this.dataType);
         for (let index = 0; index < this.attributeList.length; index++) {
             const oldAttribute = this.attributeList[index];

@@ -9,8 +9,8 @@ toProcess: inst.[]
 latencies: *[]
 }
 
-class "ArrayList" as ArrayList {
-+read(address: integer): integer
+abstract "ArrayList" as ArrayList {
++{abstract}read(address: integer): integer
 }
 
 object "loadUnit: MemoryAccessUnit" as loadUnit {
@@ -23,13 +23,13 @@ strArray = [h,w,h,f]
 }
 
 interface CacheInterface {
-+readFromNextLevel(function: MemoryInterconnect.read, address: integer): data
++ {static} readFromNextLevel(function: MemoryInterconnect.read, address: integer): data
 +writeToNextLevel(function: MemoryInterconnect.write, address: integer, data: data)
 }
 
-ExecuteStage "1"*--"0..*" MemoryAccessUnit
-MemoryInterface <|-left- MemoryInterconnect
-RegisterFile "0..*"<--"0..1" FunctionalUnit : "write():data"
+ArrayList "1"*--"0..*" CacheInterface
+MemoryInterface <|-left- MemoryInterface
+loadUnit "0..*"<--"0..1" ArrayList : "write():data"
 
 }
 

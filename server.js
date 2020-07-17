@@ -198,9 +198,38 @@ function getAttributesOfClass(cls){
     for (let index = 0; index < attrs.length; index++) {
         const attr = attrs[index];
         result += '\t';
-        result += attr.visibility + attr.name + ': ' + attr.dataType + '\n';
+        result += getVisibility(attr.visibility) + getModifier(attr.modifiers) + attr.name + ': ' + attr.dataType + '\n';
     }
     return result;
+}
+
+
+function getVisibility(visibility){
+    switch(visibility){
+        case 0:
+            return '-';
+        case 1:
+            return '#';
+        case 2:
+            return '~';
+        case 3:
+            return '+';
+        default:
+            return ''
+    }
+}
+
+function getModifier(modifier){
+    switch(modifier){
+        case 0:
+            return '{static}';
+        case 1:
+            return '{abstract}';
+        case 2:
+            return '';
+        default:
+            return '';
+    }
 }
 
 function getMethodsOfClass(cls){
@@ -209,7 +238,7 @@ function getMethodsOfClass(cls){
     for (let index = 0; index < mets.length; index++) {
         const met = mets[index];
         result += '\t';
-        result += met.visibility + met.name + '(' + getFunctionArguments(met) + '): ' + met.dataType + '\n';
+        result += getVisibility(met.visibility) + getModifier(met.modifiers) + met.name + '(' + getFunctionArguments(met) + '): ' + met.dataType + '\n';
     }
 
     return result;

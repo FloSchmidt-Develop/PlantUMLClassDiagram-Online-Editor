@@ -1,6 +1,6 @@
 import Diagram from '../classes/parserRep/diagram';
 import IDiagram from '../interfaces/diagram';
-import IClass from '../interfaces/class';
+import IClass, { Visibility, Modifiers } from '../interfaces/class';
 import IConnection from '../interfaces/connection';
 
 import Class from '../classes/parserRep/class';
@@ -101,25 +101,35 @@ export default class DiagramCreator{
     private addClasses( jsonClasses : any , diagram : IDiagram  ) : void{
 
         for (let index = 0; index < jsonClasses.length; index++) {
-            var jasonClass = jsonClasses[index];
+            var jsonClass = jsonClasses[index];
             
             let cls;
-            if(jasonClass.type !== 'object') 
-                cls = new Class(jasonClass.name, jasonClass.type);
-            else{
-                cls = new MyObject(jasonClass.name, jasonClass.type);
-            }
-            cls.alias = jasonClass.alias ? jasonClass.alias : jasonClass.name;
-            cls.package = jasonClass.package ? jasonClass.package : '';
+            if(jsonClass.type !== 'object'){
 
-            if(jasonClass.hight != null)
-                cls.hight = parseInt(jasonClass.hight);
-            if(jasonClass.width != null)
-                cls.width = parseInt(jasonClass.width);
-            if(jasonClass.x != null)
-                cls.x = parseInt(jasonClass.x);
-            if(jasonClass.y != null)
-                cls.y = parseInt(jasonClass.y);
+                if(jsonClass.type === 'class' 
+                || jsonClass.type === 'interface' 
+                || jsonClass.type == 'abstract' )
+                    cls = new Class(jsonClass.name, jsonClass.type);
+                else if(jsonClass.type === 'abstractclass')
+                    cls = new Class(jsonClass.name, 'abstract');
+                //else
+                    //TODO Log Parser Result error
+            } 
+
+            else{
+                cls = new MyObject(jsonClass.name, jsonClass.type);
+            }
+            cls.alias = jsonClass.alias ? jsonClass.alias : jsonClass.name;
+            cls.package = jsonClass.package ? jsonClass.package : '';
+
+            if(jsonClass.hight != null)
+                cls.hight = parseInt(jsonClass.hight);
+            if(jsonClass.width != null)
+                cls.width = parseInt(jsonClass.width);
+            if(jsonClass.x != null)
+                cls.x = parseInt(jsonClass.x);
+            if(jsonClass.y != null)
+                cls.y = parseInt(jsonClass.y);
             
             console.log('-----Class-------');
             console.log(cls);
@@ -156,10 +166,38 @@ export default class DiagramCreator{
     private addAttributes(jsonAttributes: any, tempClass : IClass): void{
         for (let index = 0; index < jsonAttributes.length; index++) {
             let jsonAttribute = jsonAttributes[index];
+            let visibility = this.getVisibilityFromSymbol(jsonAttribute.visibility);
+            let modifiers = this.getModifiersFromString(jsonAttribute.modifiers)
 
-            let attr = new Attribute(jsonAttribute.name, jsonAttribute.dataType, jsonAttribute.visibility);
+            let attr = new Attribute(jsonAttribute.name, jsonAttribute.dataType, visibility, modifiers);
             tempClass.AddAttribute(attr);
             
+        }
+    }
+
+    private getVisibilityFromSymbol(symbol: string): Visibility{
+        switch(symbol){
+            case '-':
+                return Visibility.private;
+            case '#':
+                return Visibility.protected;
+            case '~':
+                return Visibility.package;
+            case '+':
+                return Visibility.public;
+            default:
+                return Visibility.undefined;
+        }
+    }
+
+    getModifiersFromString(modifiers: string): Modifiers{
+        switch(modifiers){
+            case '{abstract}':
+                return Modifiers.abstract;
+            case '{static}':
+                return Modifiers.static;
+            default:
+                return Modifiers.none
         }
     }
 
@@ -184,14 +222,21 @@ export default class DiagramCreator{
         for (let index = 0; index < jsonMethods.length; index++) {
             let jsonMethod = jsonMethods[index];
 
-            let meth = new Method(jsonMethod.name, jsonMethod.visibility);
+            let visibility = this.getVisibilityFromSymbol(jsonMethod.visibility);
+            let modifiers = this.getModifiersFromString(jsonMethod.modifiers);
+
+            let meth = new Method(jsonMethod.name, visibility, modifiers);
             meth.dataType = jsonMethod.dataType ? jsonMethod.dataType : '';
 
 
             if(jsonMethod.attributeList !== null){
                 for (let index = 0; index < jsonMethod.attributeList.length; index++) {
                     const attr = jsonMethod.attributeList[index];
-                    meth.attributeList.push(new Attribute(attr.name, attr.dataType, attr.visibility));
+
+                    let visibility = this.getVisibilityFromSymbol(attr.visibility);
+                    let modifiers = this.getModifiersFromString(attr.modifiers);
+
+                    meth.attributeList.push(new Attribute(attr.name, attr.dataType, visibility, modifiers));
                     
                 }
             }

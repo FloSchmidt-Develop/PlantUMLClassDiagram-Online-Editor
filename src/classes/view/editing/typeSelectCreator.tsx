@@ -38,7 +38,7 @@ export default class {
     option_interface.appendChild(interface_text);
 
     let option_abstract = document.createElement("option");
-    option_abstract.value = "abstractclass";
+    option_abstract.value = "abstract";
     let abstract_text = document.createTextNode("Abstract");
     option_abstract.appendChild(abstract_text);
 
@@ -57,7 +57,7 @@ export default class {
         ? 0
         : elementToChange.type === "interface"
         ? 1
-        : elementToChange.type === "abstractclass"
+        : elementToChange.type === "abstract"
         ? 2
         : elementToChange.type === "object"
         ? 3

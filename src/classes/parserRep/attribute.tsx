@@ -1,18 +1,21 @@
 import IAttribute from '../../interfaces/attribute'
 import IName from '../../interfaces/named'
 import ID from './id';
+import { Visibility, Modifiers } from '../../interfaces/class';
 
 
 export default class Attribute extends ID implements IName, IAttribute {
     private name: string;
     public dataType: string;
-    public visibility: string;
+    public visibility: Visibility;
+    public modifiers: Modifiers;
 
-    constructor(name: string, dataType: string, visibility: string){
+    constructor(name: string, dataType: string, visibility: Visibility, modifiers: Modifiers){
         super();
         this.name = name;
         this.dataType = dataType;        
-        this.visibility = (typeof visibility === 'undefined') ? '' : visibility;
+        this.visibility = visibility
+        this.modifiers = modifiers;
     }
 
     public setName(newName : string){
@@ -23,7 +26,11 @@ export default class Attribute extends ID implements IName, IAttribute {
         return this.name;
     }
 
-    public setVisibility(newVisibility: string){
+    public setModifier(newModifier: Modifiers){
+        this.modifiers = newModifier;
+    }
+
+    public setVisibility(newVisibility: Visibility){
         this.visibility = newVisibility;
     }
     
@@ -32,11 +39,11 @@ export default class Attribute extends ID implements IName, IAttribute {
     }
 
     public getWidth(): number{
-        return ((this.name.length + this.dataType.length + this.visibility?.length + 2) * 10);
+        return ((this.name.length + this.dataType.length + 1 + 2) * 10);
     }
 
     public cloneModel(): IAttribute{
-        let newAttribute = new Attribute(this.name,this.dataType,this.visibility);
+        let newAttribute = new Attribute(this.name,this.dataType,this.visibility,this.modifiers);
         return newAttribute;
     }
 }

@@ -20,6 +20,7 @@ export default class EditingView{
             //Class, Interface, Object, abstract-------------------------------
             if((senderCell.value as Class).type === 'class'
             || (senderCell.value as Class).type === 'abstractclass'
+            || (senderCell.value as Class).type === 'abstract'
             || (senderCell.value as Class).type === 'interface')
             {
               

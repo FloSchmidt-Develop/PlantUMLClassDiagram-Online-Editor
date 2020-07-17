@@ -49,6 +49,8 @@ import ClassUpdateController from "./classes/controller/classUpdateController";
 import Package from "./classes/parserRep/package";
 import Point from "./classes/parserRep/point";
 import { Typography } from "@material-ui/core";
+import NameChanger from "./classes/controller/nameChanger";
+import Named from "./interfaces/named";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -368,6 +370,8 @@ const Editor = (props) => {
 
       var listener = function(sender, evt)
       {        
+        console.log(evt);
+        
         undoManager.undoableEditHappened(evt.getProperty('edit'));
       };
 
@@ -462,6 +466,20 @@ const Editor = (props) => {
             }
           }
           /*
+          if (change.constructor.name === 'NameChanger')
+          {
+            console.log('name Changed');
+            console.log(change);
+            if(change.namedObject.getName() === change.name)
+              (change.namedObject as Named).setName(change.previous);
+            else
+            (change.namedObject as Named).setName(change.name);
+            
+            
+          }
+          */
+
+          /*
           if(change.constructor.name === 'mxTerminalChange'){
             let child = change.cell;
             if(child != null && child.value instanceof Connection){
@@ -535,9 +553,10 @@ const Editor = (props) => {
         }
       });
 
-      
-
-      
+      graph.model.addListener(mxEvent.UNDO, function(sender,evt){
+        console.log(evt);
+        
+      });
 
       let toolbar = new Toolbar();
       toolbar.getCreateToolbarContainer(graph);

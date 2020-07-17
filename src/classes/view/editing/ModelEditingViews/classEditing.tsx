@@ -1,4 +1,4 @@
-import IClass from '../../../../interfaces/class';
+import IClass, { Visibility, Modifiers } from '../../../../interfaces/class';
 import Attribute from "../../../parserRep/attribute";
 import Method from "../../../parserRep/method";
 
@@ -39,7 +39,7 @@ export default class ClassEditingView{
           newAttributeButton.innerText = '+ Attribute';
           newAttributeButton.onclick = () =>{
             if (selectedClass != null){
-              selectedClass.attributes.push(new Attribute('name','dataType',''));
+              selectedClass.attributes.push(new Attribute('name','dataType',Visibility.public,Modifiers.none));
               
               graph.getModel().beginUpdate();
               ClassUpdateController.updateClassValues(graph,sender.cells[0], selectedClass);
@@ -67,7 +67,7 @@ export default class ClassEditingView{
           newMethodButton.onclick = () =>{
             let classToaddMethod = (selectedClass);
             if (classToaddMethod != null){
-              classToaddMethod.methods.push(new Method('name',''));
+              classToaddMethod.methods.push(new Method('name',Visibility.public,Modifiers.none));
 
               graph.getModel().beginUpdate();
               ClassUpdateController.updateClassValues(graph,sender.cells[0], selectedClass);

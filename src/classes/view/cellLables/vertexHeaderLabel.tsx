@@ -22,7 +22,7 @@ export default class VertexHeaderLabel{
           var header_text = document.createElement("p");
   
           header_icon.src = actualClass.type === 'class' 
-            ? ClassIcon : actualClass.type === 'abstractclass' 
+            ? ClassIcon : (actualClass.type === 'abstractclass' || actualClass.type === 'abstract')
             ? AbstractClassIcon : actualClass.type === 'interface' 
             ? InterfaceIcon : actualClass.type === 'object'
             ? ObjectIcon : ClassIcon;

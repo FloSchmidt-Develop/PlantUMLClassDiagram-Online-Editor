@@ -36,3 +36,18 @@ export default interface Class extends ITyped, IName, ID{
     setType(type: string);
     cloneModel(): Class;
 }
+
+export enum Modifiers{
+    static,
+    abstract,
+    none,
+}
+
+export enum Visibility{
+    private,
+    protected,
+    package,
+    public,
+    undefined,
+}
+

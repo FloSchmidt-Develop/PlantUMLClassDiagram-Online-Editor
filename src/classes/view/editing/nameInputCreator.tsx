@@ -5,6 +5,7 @@ import Class from '../../parserRep/class';
 import Diagram from "../../parserRep/diagram";
 import DiagramCreator from "../../../helper/diagramCreator";
 import Package from "../../parserRep/package";
+import NameChanger from "../../controller/nameChanger";
 
 
 
@@ -51,7 +52,8 @@ export default class NameInputCreator {
           return;
         }
         //Check for unique name
-        elementToChange.setName(input2.value);
+        //elementToChange.setName(input2.value);
+        this.graph.model.execute(new NameChanger(elementToChange,input2.value));
         
       }
       

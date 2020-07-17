@@ -161,10 +161,10 @@ connection_symbol:
 multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"1"' );
 
 visibility:
-    '{abstract}'?
     ('+'     
     |'-'    
-    |'#')    
+    |'#'
+    | '~')    
     ;
 
 function_argument:

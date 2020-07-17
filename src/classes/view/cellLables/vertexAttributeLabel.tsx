@@ -1,4 +1,9 @@
-import Class from "../../../interfaces/class";
+import Class, { Visibility, Modifiers } from "../../../interfaces/class";
+
+import PrivateAttribute from '../../../images/PrivateAttribute.png'
+import ProtectedAttribute from '../../../images/ProtectedAttribute.png'
+import PackageAttribute from '../../../images/PackageAttribute.png'
+import PublicAttribute from '../../../images/PublicAttribute.png'
 
 import { mxUtils} from "mxgraph-js";
 
@@ -7,6 +12,7 @@ export default class VertexAttributeLabel{
     public static CreateAttributeLabel(actualClass: Class): HTMLTableRowElement {
         var tr = document.createElement("tr");
         var attribute_container_div = document.createElement("div");
+
 
         attribute_container_div.style.textAlign = "left";
         attribute_container_div.style.fontSize = "10px";
@@ -19,15 +25,33 @@ export default class VertexAttributeLabel{
         var attribute_div = document.createElement("div");
         attribute_div.style.display = 'flex';
 
-        var content_string =
-            attribute.visibility +
-            " " +
-            attribute.getName() +
-            ": " +
-            attribute.dataType;
+        let visibility_icon = document.createElement("img");
+
+        visibility_icon.src = attribute.visibility === Visibility.private
+            ? PrivateAttribute : attribute.visibility === Visibility.protected
+            ? ProtectedAttribute : attribute.visibility === Visibility.package
+            ? PackageAttribute : attribute.visibility === Visibility.public
+            ? PublicAttribute : PrivateAttribute;
+
+            visibility_icon.style.width = '7px';
+            visibility_icon.style.height = '7px';
+            visibility_icon.style.marginLeft = '0px';
+            visibility_icon.style.marginRight= '2px';
+            visibility_icon.style.marginTop = '2px';
+
+        let name = document.createElement("div");
+        let dataType = document.createElement("div");
+
 
         //attribute_div.appendChild(icon);
-        mxUtils.write(attribute_div, content_string);
+        name.innerText = attribute.getName() + ": ";
+        dataType.innerText = attribute.dataType;
+        attribute_div.appendChild(visibility_icon);
+        attribute_div.appendChild(name);
+        attribute_div.appendChild(dataType);
+
+        name.style.textDecoration = attribute.modifiers === Modifiers.static ? 'underline' : 'none';
+        name.style.fontStyle = attribute.modifiers === Modifiers.abstract ? 'italic' : 'none';
         
 
         //attribute_container_div.appendChild(icon);

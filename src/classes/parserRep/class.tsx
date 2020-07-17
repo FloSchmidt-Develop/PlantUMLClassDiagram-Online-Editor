@@ -1,4 +1,4 @@
-import IClass from '../../interfaces/class'
+import IClass, { Visibility, Modifiers } from '../../interfaces/class'
 import IAttribute from '../../interfaces/attribute'
 import IMethod from '../../interfaces/methode'
 import IDeclaration from '../../interfaces/declaration'
@@ -29,7 +29,6 @@ export default class Class extends ObserverSubject<string> implements IClass  {
         this.name = name;
         this.type = type;
         this.alias = this.name;
-        //this.diagram = diagram;
     }
 
     public setName(newName: string){
@@ -80,7 +79,7 @@ export default class Class extends ObserverSubject<string> implements IClass  {
         if (new_index >= this.attributes.length) {
             var k = new_index - this.attributes.length + 1;
             while (k--) {
-                 this.attributes.push(new Attribute('','',''));
+                 this.attributes.push(new Attribute('','',Visibility.undefined,Modifiers.none));
             }
             }
          this.attributes.splice(new_index, 0, this.attributes.splice(old_index, 1)[0]);
@@ -94,7 +93,7 @@ export default class Class extends ObserverSubject<string> implements IClass  {
         if (new_index >= this.methods.length) {
             var k = new_index - this.methods.length + 1;
             while (k--) {
-                 this.methods.push(new Method('',''));
+                 this.methods.push(new Method('',Visibility.undefined,Modifiers.none));
             }
             }
          this.methods.splice(new_index, 0, this.methods.splice(old_index, 1)[0]);

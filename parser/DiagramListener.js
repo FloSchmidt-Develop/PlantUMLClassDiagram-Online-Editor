@@ -130,6 +130,11 @@ PlantUMLListener.prototype.enterVisibility = function(ctx) {
     actual_attribute.visibility = ctx.getText();
 };
 
+// Enter a parse tree produced by PlantUMLParser#modifiers.
+PlantUMLListener.prototype.enterModifiers = function(ctx) {
+    actual_attribute.modifiers = ctx.getText();
+};
+
 PlantUMLListener.prototype.enterMethod = function(ctx) {
     actual_attribute = null;
     actual_attribute = {};
