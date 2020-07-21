@@ -74,26 +74,26 @@ export default class DiagramCreator{
         for (let index = 0; index < jsonConnections.length; index++) {
             const jsonConnection = jsonConnections[index];
 
-            let con = new Connection(jsonConnection.connector,
-                jsonConnection.multiplicity_left,
-                jsonConnection.multiplicity_right,
-                jsonConnection.left, jsonConnection.right, 
-                jsonConnection.stereotype);
+            if(!jsonConnection.connector.includes('hidden')){
+                
+                let con = new Connection(jsonConnection.connector,
+                    jsonConnection.multiplicity_left.replace(/"/g,''),
+                    jsonConnection.multiplicity_right.replace(/"/g,''),
+                    jsonConnection.left, jsonConnection.right, 
+                    jsonConnection.stereotype);
 
-            if(jsonConnection.points != null && jsonConnection.points != null){
-                for (let index = 0; index < jsonConnection.points.length; index++) {
-                    const pt = jsonConnection.points[index];
-                    
-                    con.points.push(new Point(pt.x,pt.y));
-                    
+                if(jsonConnection.points != null && jsonConnection.points != null){
+                    for (let index = 0; index < jsonConnection.points.length; index++) {
+                        const pt = jsonConnection.points[index];
+                        
+                        con.points.push(new Point(pt.x,pt.y));
+                        
+                    }
                 }
+                
+                diagram.addConnection(con);
             }
 
-
-           console.log(con);
-           
-            
-            diagram.addConnection(con);
             
         }
     }
@@ -131,8 +131,6 @@ export default class DiagramCreator{
             if(jsonClass.y != null)
                 cls.y = parseInt(jsonClass.y);
             
-            console.log('-----Class-------');
-            console.log(cls);
             
             
             

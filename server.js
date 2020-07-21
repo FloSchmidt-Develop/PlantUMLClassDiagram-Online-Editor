@@ -40,6 +40,8 @@ app.post('/upload', (req, res) => {
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
     
     console.log(listener.Res.diagram);
+    console.log(tree);
+    
 
     res.json(listener);
 })
@@ -120,9 +122,9 @@ function createConnections(connections){
         result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
         result += connection.destinationElement
         result += ' '
-        + (connection.multiplicity_left.value !== '' ? (connection.multiplicity_left.value) : '')
+        + (connection.multiplicity_left.value !== '' ? ('"' + (connection.multiplicity_left.value) + '"'): '')
         + getConnection(connection.connector) 
-        + (connection.multiplicity_right.value !== '' ? (connection.multiplicity_right.value) : '') 
+        + (connection.multiplicity_right.value !== '' ? ( '"' + connection.multiplicity_right.value + '"') : '') 
         + ' ' + connection.sourceElement;
         + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
         result += '\n';

@@ -124,6 +124,8 @@ declaration_argument:
 	| ('[' INTEGER+ (',' INTEGER)* ']')
     ;
 
+multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"INTEGER"' );
+
 connection_left:
     instance=connection_name WHITESPACE? (mult=multiplicity)?
     ;
@@ -157,8 +159,6 @@ points:
 connection_symbol:
 	CONNECTOR
 	;
-
-multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"1"' );
 
 visibility:
     ('+'     
@@ -222,7 +222,7 @@ modifiers:
     ;
 
 stereotype:
-    QUOTATION ident ('(' args+=ident ')')? DOTDOT? WORD QUOTATION
+    QUOTATION ( ident ('(' args+=ident ')')? '/'? )*  (DOTDOT WORD)? QUOTATION
     ;
 
 type_declaration:

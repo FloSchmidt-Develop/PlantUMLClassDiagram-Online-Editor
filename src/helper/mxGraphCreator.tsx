@@ -1,6 +1,6 @@
 import IDiagram from "../interfaces/diagram";
 import IClass from "../interfaces/class";
-import IConnector, {Arrows, Lines} from '../interfaces/connector'
+import IConnector, {Arrows, Lines, LayoutProperty} from '../interfaces/connector'
 
 import Class from "../classes/parserRep/class";
 import MyObject from '../classes/parserRep/object';
@@ -23,7 +23,7 @@ import {
   mxEdgeStyle,
   mxHierarchicalLayout,
   mxRubberband,
-  mxCodec
+  mxCircleLayout
 } from "mxgraph-js";
 import Declaration from "../classes/parserRep/declaration";
 import Package from "../classes/parserRep/package";
@@ -143,17 +143,62 @@ export default class MxGraphCreator {
         )
     }
 
+
+    /*/-----------------------
+    var edgeCount = this.diagram?.connection_declarations.length
+    ? this.diagram?.connection_declarations.length
+    : 0;
+
+  for (let index = 0; index < edgeCount; index++) {
+    let connection = this.diagram?.connection_declarations[index];
+
+    if(connection.connector.layoutProperty !== LayoutProperty.none){
+     
+      let tempSource = this.diagram.class_declarations.find( e => e.getName() === connection.sourceElement);
+      let tempDestination = this.diagram.class_declarations.find( e => e.getName() === connection.destinationElement);
+      
+     if(tempDestination instanceof Class && tempSource instanceof Class )
+       {
+        console.log('----applay styling-----');
+        
+         if(connection.connector.layoutProperty === LayoutProperty.left)
+         {
+
+          tempDestination.x = tempSource.x + 400;
+          tempSource.y = tempDestination.y;
+         }
+         else if(connection.connector.layoutProperty === LayoutProperty.right)
+         {
+          tempDestination.x = tempSource.x + 400;
+           tempDestination.y = tempSource.y;
+         }
+         else if(connection.connector.layoutProperty === LayoutProperty.down)
+         {
+          tempSource.y = tempDestination.y + 400;
+          tempSource.x = tempDestination.x;
+         }
+         else if(connection.connector.layoutProperty === LayoutProperty.up)
+         {
+            tempSource.y = tempDestination.y + 400;
+           tempSource.x = tempDestination.x;
+         }
+       }
+     }
+    }
+    *///------------------------
+
     var count = this.diagram?.class_declarations.length
       ? this.diagram?.class_declarations.length
       : 0;
 
     for (let index = 0; index < count; index++) {
 
-      //HINT: Set Default start position --- find better solution here
       if (index % 4 == 0) {
         y = y + 150;
         x = 200;
       }
+
+      //HINT: Set Default start position --- find better solution here
 
       //Add Classes
       let element = this.diagram?.class_declarations[index];
@@ -251,6 +296,7 @@ export default class MxGraphCreator {
             
     }
 
+    
  
     /*
     this.graph.getModel().parentForCellChanged = function(cell,parent,index){

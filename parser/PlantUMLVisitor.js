@@ -150,6 +150,12 @@ PlantUMLVisitor.prototype.visitDeclaration_argument = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#multiplicity.
+PlantUMLVisitor.prototype.visitMultiplicity = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by PlantUMLParser#connection_left.
 PlantUMLVisitor.prototype.visitConnection_left = function(ctx) {
   return this.visitChildren(ctx);
@@ -188,12 +194,6 @@ PlantUMLVisitor.prototype.visitPoints = function(ctx) {
 
 // Visit a parse tree produced by PlantUMLParser#connection_symbol.
 PlantUMLVisitor.prototype.visitConnection_symbol = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by PlantUMLParser#multiplicity.
-PlantUMLVisitor.prototype.visitMultiplicity = function(ctx) {
   return this.visitChildren(ctx);
 };
 

@@ -1,4 +1,4 @@
-import IConnector, {Arrows, Lines }from '../../interfaces/connector';
+import IConnector, {Arrows, Lines, LayoutProperty }from '../../interfaces/connector';
 import ID from './id';
 
 
@@ -6,12 +6,32 @@ export default class Connector extends ID implements IConnector{
     startArrowSymbol: Arrows = Arrows.none;
     endArrowSymbol: Arrows = Arrows.none;
     lineStyle: Lines = Lines.normal;
+    readonly layoutProperty: LayoutProperty;
 
     constructor(connector: string){
         super();
         this.setStartConnector(connector);
         this.setEndConnector(connector);
         this.setLineStyle(connector);
+        this.setLayoutProperty(connector);
+        this.layoutProperty = this.setLayoutProperty(connector);
+
+    }
+
+    private setLayoutProperty(connector: string) : LayoutProperty{
+        if(connector.includes('left') || connector.includes('l')){
+            return LayoutProperty.left;
+        }
+        else if(connector.includes('right') || connector.includes('r')){
+            return LayoutProperty.right;
+        }
+        else if(connector.includes('up') || connector.includes('u')){
+            return LayoutProperty.up;
+        }
+        else if(connector.includes('down') || connector.includes('d')){
+            return LayoutProperty.down;
+        }
+        return LayoutProperty.none;
 
     }
 

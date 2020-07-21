@@ -4,6 +4,7 @@ export default interface Connector extends ID{
     startArrowSymbol: Arrows;
     endArrowSymbol: Arrows;
     lineStyle: Lines;
+    readonly layoutProperty: LayoutProperty;
 
 
     setStartConnector(connector: string)
@@ -34,4 +35,12 @@ export enum Arrows{
 export enum Lines{
     normal,
     dotted
+}
+
+export enum LayoutProperty{
+    up,
+    down,
+    left,
+    right,
+    none,
 }

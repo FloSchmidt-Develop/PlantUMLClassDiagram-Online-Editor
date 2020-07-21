@@ -218,6 +218,15 @@ PlantUMLListener.prototype.exitDeclaration_argument = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#multiplicity.
+PlantUMLListener.prototype.enterMultiplicity = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#multiplicity.
+PlantUMLListener.prototype.exitMultiplicity = function(ctx) {
+};
+
+
 // Enter a parse tree produced by PlantUMLParser#connection_left.
 PlantUMLListener.prototype.enterConnection_left = function(ctx) {
 };
@@ -278,15 +287,6 @@ PlantUMLListener.prototype.enterConnection_symbol = function(ctx) {
 
 // Exit a parse tree produced by PlantUMLParser#connection_symbol.
 PlantUMLListener.prototype.exitConnection_symbol = function(ctx) {
-};
-
-
-// Enter a parse tree produced by PlantUMLParser#multiplicity.
-PlantUMLListener.prototype.enterMultiplicity = function(ctx) {
-};
-
-// Exit a parse tree produced by PlantUMLParser#multiplicity.
-PlantUMLListener.prototype.exitMultiplicity = function(ctx) {
 };
 
 

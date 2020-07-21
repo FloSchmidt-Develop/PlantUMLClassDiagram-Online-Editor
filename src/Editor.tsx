@@ -51,6 +51,7 @@ import Point from "./classes/parserRep/point";
 import { Typography } from "@material-ui/core";
 import NameChanger from "./classes/controller/nameChanger";
 import Named from "./interfaces/named";
+import Multiplicity from "./classes/parserRep/multiplicity";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -307,20 +308,22 @@ const Editor = (props) => {
       };
 
       graph.isValidDropTarget = (cell,cells,evt) => {
-        if(cell.value instanceof Class){
+        if(cell.value instanceof Class || cell.value instanceof Multiplicity){
           return false;
         }
         return true;
       }
 
       graph.isValidTarget  = (cell) => {
-        if(cell.value instanceof Package)
+        if(cell.value instanceof Package || cell.value instanceof Multiplicity)
           return false;
         return true;
         
       }
       graph.isValidSource = (cell) => {
-        if(cell.value instanceof Connection || cell.value instanceof Package)
+        if(cell.value instanceof Connection 
+          || cell.value instanceof Package
+          || cell.value instanceof Multiplicity)
           return false;
         return true;
       }
