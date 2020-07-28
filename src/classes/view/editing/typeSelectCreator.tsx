@@ -1,5 +1,7 @@
 import IClass from "../../../interfaces/class";
 import ClassUpdateController from '../../controller/classUpdateController';
+import Clonable from "../../../interfaces/cloneable";
+import Class from "../../../interfaces/class";
 
 export default class {
   graph: any;
@@ -64,17 +66,22 @@ export default class {
         : 0;
 
     select.onchange = () => {
-
+      var newElement: Class;
       if (elementToChange !== null) {
-        elementToChange.setType(
+
+        newElement = (elementToChange as Class).cloneModel();
+        newElement.setType(
           (document.getElementById("type-select") as HTMLSelectElement).value
         );
+
+        //Update Cell
+        this.graph.getModel().beginUpdate();
+        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement);
+        this.graph.getModel().endUpdate();
       }
 
-      //Update Cell
-      this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-      this.graph.getModel().endUpdate();
+
+     
     };
 
     td2.appendChild(select);

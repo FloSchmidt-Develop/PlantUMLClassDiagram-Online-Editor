@@ -8,34 +8,9 @@ import Connection from "../classes/parserRep/connection";
 
 
 import {
-  mxGraph,
-  mxMarker,
-  mxKeyHandler,
-  mxChildChange,
-  mxClient,
-  mxUtils,
-  mxEvent,
   mxPoint,
-  mxDragSource,
-  mxGraphHandler,
-  mxEdgeHandler,
-  mxConstants,
-  mxEdgeStyle,
-  mxHierarchicalLayout,
-  mxRubberband,
-  mxCircleLayout
 } from "mxgraph-js";
-import Declaration from "../classes/parserRep/declaration";
-import Package from "../classes/parserRep/package";
-import DiagramCreator from "./diagramCreator";
-import ClassUpdateController from "../classes/controller/classUpdateController";
-import Multiplicity from "../classes/parserRep/multiplicity";
-import Point from "../classes/parserRep/point";
-import PackageEditingView from "../classes/view/editing/ModelEditingViews/packageEditing";
-import EditingView from "../classes/view/editing/editingView";
-import VertexCellLabel from "../classes/view/cellLables/vertexCellLable";
-import CellLabel from "../classes/view/cellLables/cellLabel";
-import UserCreatedNewEdge from "../classes/controller/userCreatedNewEdge";
+
 
 export default class MxGraphCreator {
   graph: any;
@@ -48,60 +23,6 @@ export default class MxGraphCreator {
     this.editPanel = editPanel;
     this.parentContainer = graph.getDefaultParent();
     this.diagram = diagram;
-    
-
-
-
-
-
-      
-
-    //Function to show the Element in the editing Panel
-    this.graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
-		{
-      console.log(DiagramCreator.diagram)
-      EditingView.CreateEditingView(sender,graph,editPanel);
-           
-    });
-    
-    new mxKeyHandler(this.graph);
-
-    // Overrides method to disallow edge label editing
-    this.graph.isCellEditable = function(cell)
-    {
-      return false;
-    };
-    
-
-
-    this.graph.getLabel = function (cell) {
-
-      //Cell with known value
-      if(cell.value instanceof Class 
-      || cell.value instanceof Connection 
-      || cell.value instanceof Package 
-      || cell.value instanceof Multiplicity)
-      {
-        console.log('this is a connection');
-        
-        return CellLabel.CreateCellLabel(cell);
-      }
-
-      //Cell with not known value this is a Edge created by the User
-      else
-      {  
-        if(cell.edge && cell.target != null && cell.source != null)
-        {
-          console.log('maybe create new');
-          console.log(cell);
-          
-          return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
-        }
-        else{
-          return cell.value;   
-        }
-      }
-    }
   }
 
   public start(): void {
@@ -142,50 +63,6 @@ export default class MxGraphCreator {
           'shape=swimlane;startSize=20;'
         )
     }
-
-
-    /*/-----------------------
-    var edgeCount = this.diagram?.connection_declarations.length
-    ? this.diagram?.connection_declarations.length
-    : 0;
-
-  for (let index = 0; index < edgeCount; index++) {
-    let connection = this.diagram?.connection_declarations[index];
-
-    if(connection.connector.layoutProperty !== LayoutProperty.none){
-     
-      let tempSource = this.diagram.class_declarations.find( e => e.getName() === connection.sourceElement);
-      let tempDestination = this.diagram.class_declarations.find( e => e.getName() === connection.destinationElement);
-      
-     if(tempDestination instanceof Class && tempSource instanceof Class )
-       {
-        console.log('----applay styling-----');
-        
-         if(connection.connector.layoutProperty === LayoutProperty.left)
-         {
-
-          tempDestination.x = tempSource.x + 400;
-          tempSource.y = tempDestination.y;
-         }
-         else if(connection.connector.layoutProperty === LayoutProperty.right)
-         {
-          tempDestination.x = tempSource.x + 400;
-           tempDestination.y = tempSource.y;
-         }
-         else if(connection.connector.layoutProperty === LayoutProperty.down)
-         {
-          tempSource.y = tempDestination.y + 400;
-          tempSource.x = tempDestination.x;
-         }
-         else if(connection.connector.layoutProperty === LayoutProperty.up)
-         {
-            tempSource.y = tempDestination.y + 400;
-           tempSource.x = tempDestination.x;
-         }
-       }
-     }
-    }
-    *///------------------------
 
     var count = this.diagram?.class_declarations.length
       ? this.diagram?.class_declarations.length
@@ -295,47 +172,6 @@ export default class MxGraphCreator {
         e12.isConnectable = () => false;
             
     }
-
-    
- 
-    /*
-    this.graph.getModel().parentForCellChanged = function(cell,parent,index){
-      console.log('cell changede');
-      console.log(cell);
-      console.log(parent);
-      console.log(index);
-      
-      
-      
-      if(parent != null){
-        //parent.insert(cell,index);
-
-        if(parent.value != null && cell.value != null){
-          let newPackage = parent.value as Package;
-          let changedClass = cell.value as Class;
-          if(newPackage != null && changedClass != null && newPackage instanceof Package && changedClass instanceof Class){
-            newPackage.AddClassReference(changedClass);
-          }
-        }
-        else if(cell.value != null && cell.value instanceof Class){
-          let changedClass = cell.value as Class;
-          if(changedClass != null){
-            let packageOfClass = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === changedClass.package)
-            packageOfClass?.RemoveClassReference(changedClass);
-            
-          }
-        } 
-
-      }
-      else{
-        let a = cell.graph;
-        console.log(a);
-        
-      }
-
-
-    }
-            */
   }
 
 

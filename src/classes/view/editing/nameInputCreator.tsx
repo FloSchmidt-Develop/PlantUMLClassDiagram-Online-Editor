@@ -6,6 +6,7 @@ import Diagram from "../../parserRep/diagram";
 import DiagramCreator from "../../../helper/diagramCreator";
 import Package from "../../parserRep/package";
 import NameChanger from "../../controller/nameChanger";
+import Clonable from "../../../interfaces/cloneable";
 
 
 
@@ -36,6 +37,7 @@ export default class NameInputCreator {
 
     input2.onchange = () => {
       var elementToChange = selectedElement;
+      var newElement: IName;
       if (elementToChange !== null) {
         if(this.validateName(input2.value)){
           alert('Name shouldn´t contain special Characters');
@@ -52,24 +54,28 @@ export default class NameInputCreator {
           return;
         }
         //Check for unique name
-        //elementToChange.setName(input2.value);
-        this.graph.model.execute(new NameChanger(elementToChange,input2.value));
+        newElement = (elementToChange as IName).cloneModel();
+        newElement.setName(input2.value);
+
+        //this.graph.model.execute(new NameChanger(elementToChange,input2.value));
+
+        //Update Cell
+        this.graph.getModel().beginUpdate();
+
+        //Update Cell size if selected element is Class
+        if(newElement instanceof Class){
+          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement as Class);
+        }
+        //otherwise Only update Element
+        else{
+          ElementUpdateController.updateElement(this.graph,sender.cells[0],elementToChange);
+        }
+        this.graph.getModel().endUpdate();
         
       }
       
 
-      //Update Cell
-      this.graph.getModel().beginUpdate();
 
-      //Update Cell size if selected element is Class
-      if(elementToChange instanceof Class){
-        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange as Class);
-      }
-      //otherwise Only update Element
-      else{
-        ElementUpdateController.updateElement(this.graph,sender.cells[0],elementToChange);
-      }
-      this.graph.getModel().endUpdate();
 
 
     };

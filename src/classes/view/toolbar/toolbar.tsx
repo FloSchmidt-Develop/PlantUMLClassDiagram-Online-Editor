@@ -43,7 +43,7 @@ export default class Toolbar{
 
             var cls = new Class('new Class','class');
             var itf = new Class('new Interface','interface');
-            var abs = new Class('new Class', 'abstractclass');
+            var abs = new Class('new Class', 'abstract');
             var obj = new MyObject('new Object', 'object');
             var pkg = new Package('new Package');
     
@@ -88,8 +88,8 @@ export default class Toolbar{
                 //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.interfaceCounter++;
             }
-            if(vertex.value.type === 'abstractclass'){
-                vertex.value = new Class('newAbstractClass' + Toolbar.classCounter,'abstractclass');
+            if(vertex.value.type === 'abstract'){
+                vertex.value = new Class('newAbstractClass' + Toolbar.classCounter,'abstract');
                 //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.classCounter++;
             }

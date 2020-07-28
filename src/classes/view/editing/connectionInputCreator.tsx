@@ -104,27 +104,27 @@ export default class ConnectionInputCreator{
     
         let startArrow_option_normal = document.createElement("option");
         startArrow_option_normal.value = "normal-1";
-        let startArrow_option_normal_text = document.createTextNode("<-");
+        let startArrow_option_normal_text = document.createTextNode("<- unidirectional association ");
         startArrow_option_normal.appendChild(startArrow_option_normal_text);
     
         let startArrow_option_diamond = document.createElement("option");
         startArrow_option_diamond.value = "diamond";
-        let startArrow_option_diamond_text = document.createTextNode("o-");
+        let startArrow_option_diamond_text = document.createTextNode("o- aggregation");
         startArrow_option_diamond.appendChild(startArrow_option_diamond_text);
 
         let startArrow_option_diamond_filled = document.createElement("option");
         startArrow_option_diamond_filled.value = "diamond_filled";
-        let startArrow_option_diamond_filled_text = document.createTextNode("*-");
+        let startArrow_option_diamond_filled_text = document.createTextNode("*- composition");
         startArrow_option_diamond_filled.appendChild(startArrow_option_diamond_filled_text);
 
         let startArrow_option_big = document.createElement("option");
         startArrow_option_big.value = "diamond";
-        let startArrow_option_big_text = document.createTextNode("<|-");
+        let startArrow_option_big_text = document.createTextNode("<|- inheritance");
         startArrow_option_big.appendChild(startArrow_option_big_text);
 
         let startArrow_option_none = document.createElement("option");
         startArrow_option_none.value = "none";
-        let startArrow_option_none_text = document.createTextNode("-");
+        let startArrow_option_none_text = document.createTextNode("- bidirectional association");
         startArrow_option_none.appendChild(startArrow_option_none_text);
     
         select_startArrow.appendChild(startArrow_option_normal);

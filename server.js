@@ -5,10 +5,12 @@ var DiagramListener = require('./parser/DiagramListener').DiagramListener;
 
 const express = require('./node_modules/express');
 const fileUpload = require('./node_modules/express-fileupload');
-const cors = require('./node_modules/cors');
+var plantuml = require('node-plantuml');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 var response = {};
+var requestBody = {};
 //const bodyParser = require('body-parser');
 
 const app = express();
@@ -16,6 +18,7 @@ app.use(express.json());
 
 app.use(fileUpload());
 app.use(cors());
+plantuml.useNailgun(); 
 
 app.post('/upload', (req, res) => {
     if(req.file === null){
@@ -49,7 +52,9 @@ app.post('/upload', (req, res) => {
 app.post('/export', (req, res) => {
     console.log('export');
     //console.log(req.body);
+    requestBody = req.body;
     var result = createPUMLFile(req.body);
+
 
     res.setHeader('Content-disposition', 'attachment; filename=theDocument.puml');
     res.setHeader('Content-type', 'text/plain');
@@ -59,6 +64,21 @@ app.post('/export', (req, res) => {
 
 })
 
+app.post('/png', function(req, res) {
+    res.set('Content-Type', 'image/png');
+   
+    requestBody = req.body;
+    var result = createPUMLFile(req.body);
+    console.log(result);
+    
+
+    var decode = plantuml.decode('/temp.puml');
+    var gen = plantuml.generate({format: 'png'});
+   
+    decode.out.pipe(gen.in);
+    gen.out.pipe(res);
+  });
+
 
 app.listen(4000, () => console.log('Server Started'));
 
@@ -66,7 +86,6 @@ app.listen(4000, () => console.log('Server Started'));
 
 function createPUMLFile(requestData ){
     response = requestData;
-    console.log(requestData);
     
     var result = '';
     result += '@startuml';
@@ -119,13 +138,15 @@ function createConnections(connections){
     var result = '';
     for (let index = 0; index < connections.length; index++) {
         const connection = connections[index];
+        console.log(connection);
+        
         result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
         result += connection.destinationElement
         result += ' '
         + (connection.multiplicity_left.value !== '' ? ('"' + (connection.multiplicity_left.value) + '"'): '')
-        + getConnection(connection.connector) 
+        + getConnection(connection.connector,connection.destinationElement, connection.sourceElement)
         + (connection.multiplicity_right.value !== '' ? ( '"' + connection.multiplicity_right.value + '"') : '') 
-        + ' ' + connection.sourceElement;
+        + ' ' + connection.sourceElement
         + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
         result += '\n';
     } 
@@ -150,8 +171,11 @@ function getConnectionPoints(points){
     return result;
 }
 
-function getConnection(connector){
+function getConnection(connector,destination,sourceElement){
     result = '';
+    let destinationClass = requestBody.class_declarations.find(e => e.name === destination);
+    let sourceClass = requestBody.class_declarations.find(e => e.name === sourceElement);
+
     switch(connector.endArrowSymbol){
         case 0: 
             result += '<';
@@ -171,7 +195,7 @@ function getConnection(connector){
         default:
             break;
     }
-    result += connector.lineStyle === 0 ? '--' : '..';
+    result += connector.lineStyle === 0 ? ('-' + getLayoutInfo(destinationClass,sourceClass) + '-') : ('.' + getLayoutInfo(destinationClass,sourceClass) + '.');
     switch(connector.startArrowSymbol){
         case 0: 
             result += '>';
@@ -190,6 +214,27 @@ function getConnection(connector){
             break;
         default:
             break;
+    }
+    return result;
+}
+
+function getLayoutInfo(destinationClass,sourceClass){
+    result = '';
+    delta = 100;
+    console.log(sourceClass.x);
+    
+    if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
+        result = 'left';
+    }
+    else{
+        result = 'right';
+    }
+
+    if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
+        result = 'up';
+    }
+    else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
+        result = 'down';
     }
     return result;
 }

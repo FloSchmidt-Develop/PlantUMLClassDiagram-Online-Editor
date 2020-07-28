@@ -52,6 +52,9 @@ import { Typography } from "@material-ui/core";
 import NameChanger from "./classes/controller/nameChanger";
 import Named from "./interfaces/named";
 import Multiplicity from "./classes/parserRep/multiplicity";
+import EditingView from "./classes/view/editing/editingView";
+import UserCreatedNewEdge from "./classes/controller/userCreatedNewEdge";
+import CellLabel from "./classes/view/cellLables/cellLabel";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -92,6 +95,10 @@ const Editor = (props) => {
   const divGraph = React.useRef<HTMLDivElement>(null);
   const editPanel = React.useRef<HTMLDivElement>(null);
   const undoManager = new mxUndoManager();
+  var keyHandler;
+  var rubberBand;
+  var isDown : Boolean[] = [];
+  
 
   const diagramCreator = new DiagramCreator();
 
@@ -158,7 +165,6 @@ const Editor = (props) => {
       
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null, 'New Diagram');
-      var rubberband = new mxRubberband(graph);
       setUpEditor(graph);
       
       setGraph(graph);
@@ -202,14 +208,71 @@ const Editor = (props) => {
       graph.alternateEdgeStyle = 'elbow=vertical';
 
       mxConnectionHandler.prototype.waypointsEnabled = true;
+      
+      if(keyHandler == null) 
+        keyHandler = new mxKeyHandler(graph);
+      
+      if(rubberBand == null)
+        rubberBand = new mxRubberband(graph);
+
+
+      keyHandler.getFunction = function(evt)
+      {
+        if (evt != null)
+        {
+
+          return (mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey)) ? this.controlKeys[evt.keyCode] : this.normalKeys[evt.keyCode];
+        }
+      
+        return null;
+      };
+
+      keyHandler.bindKey(46, function(evt)
+      {
+        if (graph.isEnabled())
+        {
+          graph.removeCells();
+        }
+      });
+
+      
+      keyHandler.keyDown = function(evt)
+      {
+        //console.log(isDown);
+        
+        
+        if (graph.isEnabled() && evt.ctrlKey && !isDown[evt.key]){
+          if(evt.code === 'KeyC')
+          {
+            mxClipboard.copy(graph);
+            isDown[evt.key] = true;
+          }
+          else if(evt.code === 'KeyV')
+          {
+            mxClipboard.paste(graph);
+            isDown[evt.key] = true;
+          }
+        }
+          
+        
+
+      };
+
+      mxEvent.addListener(document, 'keyup', function(evt)
+      {
+        //console.log(evt);
+        isDown[evt.key] = false;
+      });
+
+
 
 
       mxGraphHandler.prototype.guidesEnabled = true;
       mxEdgeHandler.prototype.snapToTerminals = true;
+      mxGraphHandler.prototype.cloneEnabled = false;
 
       graph.setConnectableEdges(true);
       graph.setAllowDanglingEdges(false);
-      //new mxRubberband(graph);
       graph.setConnectable(true);
       graph.setHtmlLabels(true);
       graph.setCellsResizable(true);
@@ -218,9 +281,34 @@ const Editor = (props) => {
       graph.isEscapeEnabled  = () => true;
       graph.isExtendParentsOnMove = () => true;
       graph.isExtendParentsOnAdd = () => true;
+      graph.isCellEditable = () => false;
       graph.allowNegativeCoordinates = false;
       graph.cloneInvalidEdges = false;
       graph.zoomTo( DiagramCreator.diagram[DiagramCreator.activeIndex].scale); 
+
+      graph.getLabel = function (cell) {
+
+        //Cell with known value
+        if(cell.value instanceof Class 
+        || cell.value instanceof Connection 
+        || cell.value instanceof Package 
+        || cell.value instanceof Multiplicity)
+        {        
+          return CellLabel.CreateCellLabel(cell);
+        }
+  
+        //Cell with not known value this is a Edge created by the User
+        else
+        {  
+          if(cell.edge && cell.target != null && cell.source != null)
+          {
+            return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
+          }
+          else{
+            return cell.value;   
+          }
+        }
+      }
 
       mxClipboard.copy = function(graph, cells)
       {
@@ -327,13 +415,19 @@ const Editor = (props) => {
           return false;
         return true;
       }
+
       graph.isValidConnection = (source,target) => {
         if(source.value instanceof Connection && target.value instanceof Connection)
           return false;
         return true;
       }
 
+      //Controller Delete Elements
       graph.isCellDeletable = function(cell){
+        console.log('isCellDeletable');
+        console.log(cell);
+        
+        
         if(cell.value != null){
 
           if(cell.value instanceof Class){
@@ -369,15 +463,10 @@ const Editor = (props) => {
         return true;
       }
       
-
-
       var listener = function(sender, evt)
       {        
-        console.log(evt);
-        
         undoManager.undoableEditHappened(evt.getProperty('edit'));
       };
-
 
       graph.getModel().addListener(mxEvent.UNDO, listener);
       graph.getView().addListener(mxEvent.UNDO, listener);
@@ -468,21 +557,21 @@ const Editor = (props) => {
               }
             }
           }
-          /*
-          if (change.constructor.name === 'NameChanger')
-          {
-            console.log('name Changed');
-            console.log(change);
-            if(change.namedObject.getName() === change.name)
-              (change.namedObject as Named).setName(change.previous);
-            else
-            (change.namedObject as Named).setName(change.name);
-            
+          else if(change.constructor.name === 'mxValueChange'){
+            if(change.value instanceof Class && change.previous instanceof Class){
+              console.log('change');
+              DiagramCreator.diagram[DiagramCreator.activeIndex].removeClass(change.previous);
+              DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(change.value);
+            }
+
             
           }
-          */
+          
 
-          /*
+          
+          
+
+
           if(change.constructor.name === 'mxTerminalChange'){
             let child = change.cell;
             if(child != null && child.value instanceof Connection){
@@ -517,16 +606,18 @@ const Editor = (props) => {
 
             }
           }
-          */
+          
         }
       });
 
-      //Handel moving of Classes Packages Connections
+      //Controller -- Handel moving of Classes Packages Connections
       graph?.model.addListener(mxEvent.CHANGE, function(sender, evt)
       {
         for (let index = 0; index < evt.properties?.changes?.length; index++) {
+
           let changedCell = evt.properties?.changes[index]?.cell;
-          let geometry = evt.properties?.changes[index]?.geometry
+          let geometry = evt.properties?.changes[index]?.geometry;
+
           if(changedCell != null && geometry != null && changedCell.value instanceof Class){
             let changedClass = changedCell.value as Class;
             changedClass.x = geometry.x;
@@ -556,10 +647,14 @@ const Editor = (props) => {
         }
       });
 
-      graph.model.addListener(mxEvent.UNDO, function(sender,evt){
-        console.log(evt);
-        
+      graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
+      {
+        console.log(DiagramCreator.diagram)
+        EditingView.CreateEditingView(sender,graph,editPanel);
+             
       });
+
+
 
       let toolbar = new Toolbar();
       toolbar.getCreateToolbarContainer(graph);

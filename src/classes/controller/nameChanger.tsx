@@ -10,7 +10,7 @@ export default class NameChanger{
     constructor(namedObject: Named, name: string) {
         this.namedObject = namedObject;
         this.name = name;
-        this.previous = name;
+        this.previous = namedObject.getName();
         
     }
 

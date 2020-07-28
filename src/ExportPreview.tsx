@@ -58,6 +58,7 @@ const DialogActions = withStyles((theme) => ({
 export default function ExportPreviewDialog() {
   const [open, setOpen] = React.useState(false);
   const [shownText, setShownText] = React.useState('');
+  const [state, setState] = React.useState({source: ''});
 
   function replacer(key,value)
   {
@@ -70,6 +71,22 @@ export default function ExportPreviewDialog() {
     var obj = JSON.parse(jsonObj);
     
     const res = await axios.post("/export",obj);
+    /*
+    axios
+      .post(
+        '/png', obj,
+        { responseType: 'arraybuffer' },
+      )
+      .then(response => {
+        const base64 = btoa(
+          new Uint8Array(response.data).reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            '',
+          ),
+        );
+        setState({ source: "data:;base64," + base64 });
+      });
+      */
     //downloadTxtFile(res.data)
     setShownText(res.data)
     setOpen(true);
@@ -102,6 +119,7 @@ export default function ExportPreviewDialog() {
           <Typography gutterBottom style={{whiteSpace: 'pre-line'}}>
             {shownText}
           </Typography>
+          <img src={state.source} />
         </DialogContent>
         <DialogActions>
           <Button autoFocus variant="contained" color="secondary" onClick={downloadTxtFile}>
