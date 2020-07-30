@@ -5,7 +5,7 @@ import {
     mxUtils
   } from "mxgraph-js";
 import Class from "../../parserRep/class";
-import MyObject from "../../parserRep/object";
+import MyObject from "../../parserRep/myObject";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";

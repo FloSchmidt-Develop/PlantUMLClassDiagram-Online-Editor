@@ -55,6 +55,7 @@ import Multiplicity from "./classes/parserRep/multiplicity";
 import EditingView from "./classes/view/editing/editingView";
 import UserCreatedNewEdge from "./classes/controller/userCreatedNewEdge";
 import CellLabel from "./classes/view/cellLables/cellLabel";
+import MyObject from "./classes/parserRep/myObject";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -302,6 +303,12 @@ const Editor = (props) => {
         {  
           if(cell.edge && cell.target != null && cell.source != null)
           {
+            console.log('user Created new Connection:');
+            console.log(cell);
+            console.log('----------------------------');
+            
+            
+            
             return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
           }
           else{
@@ -423,11 +430,7 @@ const Editor = (props) => {
       }
 
       //Controller Delete Elements
-      graph.isCellDeletable = function(cell){
-        console.log('isCellDeletable');
-        console.log(cell);
-        
-        
+      graph.isCellDeletable = function(cell){        
         if(cell.value != null){
 
           if(cell.value instanceof Class){
@@ -437,17 +440,25 @@ const Editor = (props) => {
             diagram?.removeClass(cell.value);
           }
           else if(cell.value instanceof Connection){
+            console.log('delete Connection:');
+            console.log(cell.value);
+            console.log('----------------------');
+            
+            
+            graph.model.beginUpdate();
+            cell.remove();
+            graph.getModel().remove((cell.value as Connection).multiplicity_left.vertex);
+            graph.getModel().remove((cell.value as Connection).multiplicity_right.vertex);
+            graph.getModel().endUpdate();
+            diagram?.removeConnection(cell.value);
+
+          }
+          else if(cell.value instanceof Package){
             graph.model.beginUpdate();
             cell.remove();
             graph.getModel().endUpdate();
-            diagram?.removeConnection(cell.value);
-            graph.getModel().remove((cell.value as Connection).multiplicity_left.vertex);
-            graph.getModel().remove((cell.value as Connection).multiplicity_right.vertex);
-          }
-          else if(cell.value instanceof Package){
-            cell.remove();
 
-            diagram?.removePackage(cell.value);
+            diagram?.removePackage(cell.value, true);
             
             let children = cell.children;
             for (let index = 0; index < children?.length; index++) {
@@ -525,54 +536,83 @@ const Editor = (props) => {
 
             //Add Remove support for Packages 
             else if(child != null && child instanceof Package){
+
+              
               let pkg = child as Package;
               if(change.parent === null){
-                DiagramCreator.diagram[DiagramCreator.activeIndex].removePackage(pkg);
+                DiagramCreator.diagram[DiagramCreator.activeIndex].removePackage(pkg,true);
+              }
+              else if(change.parent.value instanceof Package ){
+
+                if(change.previous != null && change.previous.value instanceof Package){
+                  console.log('move package from Package to Package');
+                  
+                  (change.previous.value as Package).RemovePackageReferences(pkg);
+                }
+                else if(change.previous == null){
+                  DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pkg);
+                }
+                (change.parent.value as Package).AddPackageReference(pkg);
+                pkg.package = (change.parent.value as Package).getName();
+                console.log(pkg);
+                
+
+
+
               }
               else if(typeof change.parent.value === 'undefined'){
-                
+                console.log(change);
                 if(change.previous === null){
                   //#1: 1 ; #4: 2
                   DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pkg);
+                }
+                else if(change.previous.value instanceof Package){                  
+                  (change.previous.value as Package).RemovePackageReferences(pkg);
                 }
               }
             }
 
             //Add Remove Support for Connections
             else if(child != null && child instanceof Connection){
-              console.log('connection change');
               console.log(change);
-              
               
               let con = child as Connection;
               if(change.parent === null){
-
                 DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(con);
               }
-              else if(typeof change.parent.value === 'undefined'){
+              else if(typeof change.parent.value === 'undefined' || change.parent.value instanceof Package ){
                 if(change.previous === null){
-
                   DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(con);
                 }
               }
+                       
             }
+            
           }
+
           else if(change.constructor.name === 'mxValueChange'){
+            
             if(change.value instanceof Class && change.previous instanceof Class){
-              console.log('change');
               DiagramCreator.diagram[DiagramCreator.activeIndex].removeClass(change.previous);
               DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(change.value);
             }
+            else if(change.value instanceof Connection && change.previous instanceof Connection){
 
-            
+              
+              DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(change.previous);
+              DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(change.value);
+            }
+            else if(change.value == null && change.previous instanceof Connection){
+
+              DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(change.previous);
+            }
+            else if(change.value instanceof Package && change.previous instanceof Package){
+              DiagramCreator.diagram[DiagramCreator.activeIndex].removePackage(change.previous,false);
+              DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(change.value);
+            }
           }
-          
 
-          
-          
-
-
-          if(change.constructor.name === 'mxTerminalChange'){
+          else if(change.constructor.name === 'mxTerminalChange'){
             let child = change.cell;
             if(child != null && child.value instanceof Connection){
       

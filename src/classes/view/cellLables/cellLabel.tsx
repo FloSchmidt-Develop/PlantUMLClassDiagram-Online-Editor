@@ -1,5 +1,5 @@
 import IClass from "../../../interfaces/class";
-import MyObject from "../../parserRep/object";
+import MyObject from "../../parserRep/myObject";
 import VertexCellLabel from "./vertexCellLable";
 import Connection from "../../../interfaces/connection";
 import Package from "../../../interfaces/package";

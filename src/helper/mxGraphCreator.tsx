@@ -3,13 +3,15 @@ import IClass from "../interfaces/class";
 import IConnector, {Arrows, Lines, LayoutProperty} from '../interfaces/connector'
 
 import Class from "../classes/parserRep/class";
-import MyObject from '../classes/parserRep/object';
+import MyObject from '../classes/parserRep/myObject';
 import Connection from "../classes/parserRep/connection";
 
 
 import {
   mxPoint,
 } from "mxgraph-js";
+import IPackage from "../interfaces/package";
+
 
 
 export default class MxGraphCreator {
@@ -37,33 +39,11 @@ export default class MxGraphCreator {
     
 
 
-    //Package
-    var packageCount = this.diagram?.package_declarations.length ?
-      this.diagram?.package_declarations.length :
-      0;
-
-
-    for (let index = 0; index < packageCount; index++) {
-      let activePackage = this.diagram?.package_declarations[index];
-
-        if (activePackage.x === 0)
-          activePackage.x = x;
-        if (activePackage.y === 0)
-          activePackage.y = y;
-        console.log('vertex insert by start');
-        
-        activePackages[activePackage.getName()] = this.graph.insertVertex(
-          this.parentContainer,
-          null,
-          activePackage,
-          activePackage.x,
-          activePackage.y,
-          activePackage.getWidth(),
-          activePackage.getHight(),
-          'shape=swimlane;startSize=20;'
-        )
-    }
-
+    //Packages without package
+    let topLevelPackages = this.diagram?.package_declarations.filter(e => e.package === '');
+    this.addPackages(topLevelPackages, activePackages, x, y)
+    
+    //classes
     var count = this.diagram?.class_declarations.length
       ? this.diagram?.class_declarations.length
       : 0;
@@ -172,6 +152,36 @@ export default class MxGraphCreator {
         e12.isConnectable = () => false;
             
     }
+  }
+
+  private addPackages(packages: IPackage[], activePackages: any, x: number, y: number){
+
+    packages.forEach( e => {
+      let activePackage = e
+
+      if (activePackage.x === 0)
+        activePackage.x = x;
+      if (activePackage.y === 0)
+        activePackage.y = y;
+      
+      console.log(activePackage);
+      
+      activePackages[activePackage.getName()] = this.graph.insertVertex(
+        activePackage.package !== '' ? activePackages[activePackage.package] : this.parentContainer,
+        null,
+        activePackage,
+        activePackage.x,
+        activePackage.y,
+        activePackage.getWidth(),
+        activePackage.getHight(),
+        'shape=swimlane;startSize=20;'
+      )
+
+      if(activePackage.packageReferences.length > 0){
+        this.addPackages(activePackage.packageReferences,activePackages,x,y);
+      }
+    }
+    )
   }
 
 

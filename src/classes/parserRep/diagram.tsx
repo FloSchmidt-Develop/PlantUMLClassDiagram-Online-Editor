@@ -25,7 +25,6 @@ export default class Diagram extends ID implements IDiagram{
     public addConnection(newConnection : IConnection): void{
         
         if(this.connection_declarations.find(e => e.id === newConnection.id) == null){
-            console.log('------connection added-------');
             this.connection_declarations.push(newConnection);
         }
             
@@ -63,11 +62,14 @@ export default class Diagram extends ID implements IDiagram{
 
     }
 
-    public removePackage(packageToRemove: IPackage){
+    public removePackage(packageToRemove: IPackage, removeClasses: boolean){
         this.package_declarations = this.package_declarations.filter(
             e => e.id !== packageToRemove.id
         )
-        packageToRemove.classReferences.forEach( e => this.removeClass(e));
+        if(removeClasses){
+            packageToRemove.classReferences.forEach( e => this.removeClass(e));
+        }
+
 
     }
 

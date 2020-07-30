@@ -34,9 +34,10 @@ export default class AttributeInputCreator {
       moveUpAttributeButton.disabled = index === 0 ? true : false;
 
       moveUpAttributeButton.onclick = () => {
-        elementToChange.ChangeAttributePosition(attribute,true);  
+        let newElement = (elementToChange as IClass).cloneModel();
+        newElement.ChangeAttributePosition(attribute,true);  
         
-        this.UpdateClass(sender,elementToChange);
+        this.UpdateClass(sender,newElement);
     }
 
       row_div.appendChild(moveUpAttributeButton);
@@ -93,14 +94,12 @@ export default class AttributeInputCreator {
         select.onchange = () => {
 
           if (elementToChange !== null) {
-            elementToChange.attributes[index].visibility = 
+            let newElement = (elementToChange as IClass).cloneModel();
+            newElement.attributes[index].visibility = 
               Visibility[(document.getElementById( "visibility-attribute-select" + index) as HTMLSelectElement).value];
+            this.UpdateClass(sender,newElement)
           }
-    
-          //Update Cell
-          this.graph.getModel().beginUpdate();
-          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-          this.graph.getModel().endUpdate();
+
         };
 
         td1.appendChild(select);
@@ -149,16 +148,14 @@ export default class AttributeInputCreator {
         : 0;
 
         select2.onchange = () => {
-
-          if (elementToChange !== null) {
-            elementToChange.attributes[index].modifiers = 
+          let newElement = (elementToChange as IClass).cloneModel();
+          if (newElement !== null) {
+            newElement.attributes[index].modifiers = 
               Modifiers[(document.getElementById("Modifier-attribute-select" + index) as HTMLSelectElement).value];
+
+              this.UpdateClass(sender,newElement)
           }
 
-          //Update Cell
-          this.graph.getModel().beginUpdate();
-          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-          this.graph.getModel().endUpdate();
         };
         td2.appendChild(p2);
         td2.appendChild(select2);
@@ -172,9 +169,10 @@ export default class AttributeInputCreator {
 
 
       deleteAttributeButton.onclick = () => {
-          elementToChange.DeleteAttribute(attribute);  
+          let newElement = (elementToChange as IClass).cloneModel();
+          newElement.DeleteAttribute(attribute);  
           
-          this.UpdateClass(sender,elementToChange);
+          this.UpdateClass(sender,newElement);
       }
 
 
@@ -193,14 +191,14 @@ export default class AttributeInputCreator {
       input_name.value = attribute.getName();
 
       input_name.onchange = () => {
-        if (elementToChange !== null) {
-          elementToChange.attributes[index].setName(input_name.value);
+        let newElement = (elementToChange as IClass).cloneModel();
+        if (newElement !== null) {
+          newElement.attributes[index].setName(input_name.value);
+
+          this.UpdateClass(sender,newElement);
         }
 
-      //Update Cell
-      this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-      this.graph.getModel().endUpdate();
+
 
       };
       row_div.appendChild(input_name);
@@ -218,14 +216,13 @@ export default class AttributeInputCreator {
       input_type.value = attribute.dataType;
 
       input_type.onchange = () => {
-        if (elementToChange !== null) {
-          elementToChange.attributes[index].setDataType(input_type.value);
+        let newElement = (elementToChange as IClass).cloneModel();
+        if (newElement !== null) {
+          newElement.attributes[index].setDataType(input_type.value);
+
+          this.UpdateClass(sender,newElement);
         }
 
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-        this.graph.getModel().endUpdate();
         
       };
       row_div.appendChild(input_type);
@@ -237,9 +234,10 @@ export default class AttributeInputCreator {
       moveDownAttributeButton.disabled = index >= elementToChange.declarations.length - 1 ? true : false;
 
       moveDownAttributeButton.onclick = () => {
-        elementToChange.ChangeAttributePosition(attribute,false);  
+        let newElement = (elementToChange as IClass).cloneModel();
+        newElement.ChangeAttributePosition(attribute,false);  
         
-        this.UpdateClass(sender,elementToChange);
+        this.UpdateClass(sender,newElement);
     }
 
       row_div.appendChild(moveDownAttributeButton);

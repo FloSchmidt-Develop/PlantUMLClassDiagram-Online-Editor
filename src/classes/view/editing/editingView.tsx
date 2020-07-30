@@ -6,6 +6,7 @@ import ConnectionEditingView from "./ModelEditingViews/connectionEditing";
 import Package from "../../../interfaces/package";
 import PackageEditingView from "./ModelEditingViews/packageEditing";
 import Class from "../../parserRep/class";
+import MyObject from "../../parserRep/myObject";
 
 export default class EditingView{
 
@@ -30,7 +31,7 @@ export default class EditingView{
             else if((senderCell.value as Class).type === 'object')
             {
             
-              ObjectEditingView.CreateObjectEditingView(senderCell.value as Class, sender, graph,view);
+              ObjectEditingView.CreateObjectEditingView(senderCell.value as MyObject, sender, graph,view);
   
             }
           }

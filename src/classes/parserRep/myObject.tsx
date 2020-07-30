@@ -1,7 +1,7 @@
 import Class from "./class";
 
-export default class Object extends Class{
-    dataType: string = '';
+export default class MyObject extends Class{
+    public dataType: string = '';
     /**
      *
      */
@@ -9,7 +9,6 @@ export default class Object extends Class{
         
         super(name.split(':')[0],type);
         if(name.split(':')[1] != null){
-            console.log(name.split(':')[1]);
             this.dataType = name.split(':')[1];
         }
         else
@@ -26,5 +25,13 @@ export default class Object extends Class{
         }
         return width;
 
+    }
+
+    public cloneModel(): MyObject{
+        let newObject = super.cloneModel() as MyObject;
+        newObject.dataType = this.dataType;
+        console.log(newObject);
+        
+        return newObject;
     }
 }

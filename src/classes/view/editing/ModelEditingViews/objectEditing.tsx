@@ -9,13 +9,14 @@ import DeclarationInputCreator from '../declarationInputCreator';
 import ClassUpdateController from '../../../controller/classUpdateController';
 import Class from '../../../../interfaces/class';
 import Declaration from '../../../parserRep/declaration';
+import MyObject from '../../../parserRep/myObject';
 
 
 
 
 export default class ObjectEditingView{
 
-    public static CreateObjectEditingView(selectedClass: Class, sender : any, graph: any, view: HTMLDivElement): HTMLDivElement{
+    public static CreateObjectEditingView(selectedClass: MyObject, sender : any, graph: any, view: HTMLDivElement): HTMLDivElement{
 
 
           let table = document.createElement("table");
@@ -31,26 +32,28 @@ export default class ObjectEditingView{
           table.appendChild(name_tr);
           view.appendChild(table);
 
-        //declarations
+        //dataType
         let dataTypeInputCreator = new ObjectDataTypeInputCreator(graph);
-        let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as Class, sender);
+        let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as MyObject, sender);
 
-
+        //declarations
         let declarationInputCreator = new DeclarationInputCreator(graph);
-        let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as Class, sender);
+        let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as MyObject, sender);
         let declarationHeader = document.createElement('h3');
         declarationHeader.innerText = 'Declarations';
 
         let newDeclarationButton = document.createElement('button');
         newDeclarationButton.innerText = 'at new Declaration';
         newDeclarationButton.onclick = () =>{
-            let classToaddMethod = (sender.cells[0].value as Class);
+            let classToaddMethod = (sender.cells[0].value as MyObject);
+            let newObject = classToaddMethod.cloneModel();
 
-            if (classToaddMethod != null){
-            classToaddMethod.declarations.push(new Declaration('name',''));
+
+            if (newObject != null){
+                newObject.declarations.push(new Declaration('name',''));
 
             graph.getModel().beginUpdate();
-            ClassUpdateController.updateClassValues(graph,sender.cells[0], classToaddMethod);
+            ClassUpdateController.updateClassValues(graph,sender.cells[0], newObject);
             graph.getModel().endUpdate();
 
             let tempSelectedCell = sender.cells[0];

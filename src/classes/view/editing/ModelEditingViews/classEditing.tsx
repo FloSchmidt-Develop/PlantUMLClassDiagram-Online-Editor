@@ -38,11 +38,12 @@ export default class ClassEditingView{
           let newAttributeButton = document.createElement('button');
           newAttributeButton.innerText = '+ Attribute';
           newAttributeButton.onclick = () =>{
+            let newClass = selectedClass.cloneModel();
             if (selectedClass != null){
-              selectedClass.attributes.push(new Attribute('name','dataType',Visibility.public,Modifiers.none));
+              newClass.attributes.push(new Attribute('name','dataType',Visibility.public,Modifiers.none));
               
               graph.getModel().beginUpdate();
-              ClassUpdateController.updateClassValues(graph,sender.cells[0], selectedClass);
+              ClassUpdateController.updateClassValues(graph,sender.cells[0], newClass);
               graph.getModel().endUpdate();
 
               let tempSelectedCell = sender.cells[0];
@@ -65,12 +66,12 @@ export default class ClassEditingView{
           let newMethodButton = document.createElement('button');
           newMethodButton.innerText = '+ Method';
           newMethodButton.onclick = () =>{
-            let classToaddMethod = (selectedClass);
-            if (classToaddMethod != null){
-              classToaddMethod.methods.push(new Method('name',Visibility.public,Modifiers.none));
+            let newClass = selectedClass.cloneModel();
+            if (newClass != null){
+              newClass.methods.push(new Method('name',Visibility.public,Modifiers.none));
 
               graph.getModel().beginUpdate();
-              ClassUpdateController.updateClassValues(graph,sender.cells[0], selectedClass);
+              ClassUpdateController.updateClassValues(graph,sender.cells[0], newClass);
               graph.getModel().endUpdate();
 
               let tempSelectedCell = sender.cells[0];

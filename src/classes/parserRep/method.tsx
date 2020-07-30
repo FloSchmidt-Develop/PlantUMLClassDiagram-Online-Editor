@@ -64,6 +64,7 @@ export default class Method extends ID implements IMethod{
             let newAttribute = oldAttribute.cloneModel();
             newMethode.attributeList.push(newAttribute);
         }
+        newMethode.id = this.id;
         return newMethode;
     }
 }

@@ -56,6 +56,9 @@ export default class NameInputCreator {
         //Check for unique name
         newElement = (elementToChange as IName).cloneModel();
         newElement.setName(input2.value);
+        console.log('name Change');
+        console.log(newElement);
+        
 
         //this.graph.model.execute(new NameChanger(elementToChange,input2.value));
 
@@ -68,7 +71,7 @@ export default class NameInputCreator {
         }
         //otherwise Only update Element
         else{
-          ElementUpdateController.updateElement(this.graph,sender.cells[0],elementToChange);
+          ElementUpdateController.updateElement(this.graph,sender.cells[0],newElement);
         }
         this.graph.getModel().endUpdate();
         

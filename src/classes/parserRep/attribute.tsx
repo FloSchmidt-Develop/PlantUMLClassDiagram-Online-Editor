@@ -44,6 +44,7 @@ export default class Attribute extends ID implements IName, IAttribute {
 
     public cloneModel(): IAttribute{
         let newAttribute = new Attribute(this.name,this.dataType,this.visibility,this.modifiers);
+        newAttribute.id = this.id;
         return newAttribute;
     }
 }

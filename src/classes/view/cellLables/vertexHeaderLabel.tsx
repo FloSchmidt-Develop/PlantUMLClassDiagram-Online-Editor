@@ -1,5 +1,5 @@
 import Class from "../../../interfaces/class";
-import MyObject from "../../parserRep/object";
+import MyObject from "../../parserRep/myObject";
 
 import ClassIcon from '../../../images/Class.png'
 import AbstractClassIcon from '../../../images/AbstractClass.png'

@@ -7,11 +7,8 @@ export default class UserCreatedNewEdge{
     public static CreateNewEdgeFromCell(cell: any, graph: any): any{
 
         let connection: Connection;
-        console.log(cell);
         
         if(cell.target.value instanceof Class && cell.source.value instanceof Class){
-            console.log('create new connection');
-            
             connection = new Connection('<--','','',cell.target.value.getName(),cell.source.value.getName(),'');
 
             if(cell.target.value instanceof Class)
@@ -50,9 +47,6 @@ export default class UserCreatedNewEdge{
             connection = new Connection('','','','','','');
         }
         
-        if(connection != null)
-            //DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(connection);
-
         graph.getModel().beginUpdate();
     
         graph.model.setValue(cell, connection);

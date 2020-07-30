@@ -1,5 +1,6 @@
 import IClass from "../../../interfaces/class";
 import ClassUpdateController from '../../controller/classUpdateController';
+import MyObject from "../../parserRep/myObject";
 
 
 export default class DeclarationInputCreator {
@@ -10,7 +11,7 @@ export default class DeclarationInputCreator {
   }
 
   public createNameInputDiv(
-    elementToChange: IClass,
+    elementToChange: MyObject,
     sender: any
   ): HTMLDivElement {
     let container_div = document.createElement("div");
@@ -30,9 +31,10 @@ export default class DeclarationInputCreator {
       moveUpDeclarationButton.disabled = index === 0 ? true : false;
 
       moveUpDeclarationButton.onclick = () => {
-        elementToChange.ChangeDeclarationPosition(declaration,true);  
+        let newElement = elementToChange.cloneModel();
+        newElement.ChangeDeclarationPosition(declaration,true);  
         
-        this.UpdateClass(sender,elementToChange);
+        this.UpdateClass(sender,newElement);
     }
 
       row_div.appendChild(moveUpDeclarationButton);
@@ -45,8 +47,10 @@ export default class DeclarationInputCreator {
 
 
         deleteMethodButton.onclick = () => {
-          elementToChange.DeleteDeclaration(declaration);  
-          this.UpdateClass(sender,elementToChange);
+          let newElement = elementToChange.cloneModel();
+          newElement.DeleteDeclaration(declaration);  
+
+          this.UpdateClass(sender,newElement);
           }
 
 
@@ -68,14 +72,21 @@ export default class DeclarationInputCreator {
       input_name.onchange = () => {
 
         if (elementToChange !== null) {
-          elementToChange.declarations[index].setName(input_name.value);
+          console.log('clone Object');
+          
+          let newElement = (elementToChange as MyObject).cloneModel();
+          newElement.setName( elementToChange.getName());
+          newElement.dataType = elementToChange.dataType;
+          console.log(newElement);
+          
+          
+          newElement.declarations[index].setName(input_name.value);
+
+          this.UpdateClass(sender,newElement);
         }
-
-      //Update Cell
-      this.UpdateClass(sender,elementToChange);
-
       };
 
+      row_div.appendChild(document.createElement('br'));
 
       //DataType
       let type_p = document.createElement("p");
@@ -89,10 +100,13 @@ export default class DeclarationInputCreator {
 
       input_type.onchange = () => {
         if (elementToChange !== null) {
-          elementToChange.declarations[index].setDeclarationValue(input_type.value);
+          let newElement = elementToChange.cloneModel();
+
+          newElement.declarations[index].setDeclarationValue(input_type.value);
+
+        this.UpdateClass(sender,newElement);
         }
-        //Update Cell
-        this.UpdateClass(sender,elementToChange);
+
         
       };
       row_div.appendChild(input_type);
@@ -104,9 +118,10 @@ export default class DeclarationInputCreator {
       moveDownDeclarationButton.disabled = index >= elementToChange.declarations.length - 1 ? true : false;
 
       moveDownDeclarationButton.onclick = () => {
-        elementToChange.ChangeDeclarationPosition(declaration,false);  
+        let newElement = elementToChange.cloneModel();
+        newElement.ChangeDeclarationPosition(declaration,false);  
         
-        this.UpdateClass(sender,elementToChange);
+        this.UpdateClass(sender,newElement);
     }
 
       row_div.appendChild(moveDownDeclarationButton);
@@ -121,7 +136,7 @@ export default class DeclarationInputCreator {
     return container_div;
   }
 
-  private UpdateClass(sender,elementToChange){
+  private UpdateClass(sender,elementToChange: MyObject){
     this.graph.getModel().beginUpdate();
     ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
     this.graph.getModel().endUpdate();

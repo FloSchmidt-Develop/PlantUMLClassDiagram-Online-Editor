@@ -65,13 +65,16 @@ export default class Connection extends ObserverSubject<string> implements IConn
 
     public cloneModel(newSourceElement: string, newDestinationElement: string): IConnection{
         let newConnection = new Connection(
-            this.connector.cloneModel(),
-            this.multiplicity_left.cloneModel(),
-            this.multiplicity_right.cloneModel(),
+            '',
+            this.multiplicity_left.value,
+            this.multiplicity_right.value,
             newDestinationElement,
             newSourceElement,
             this.stereoType);
         newConnection.points = this.points;
+        newConnection.multiplicity_left = this.multiplicity_left.cloneModel();
+        newConnection.multiplicity_right = this.multiplicity_right.cloneModel();
+        newConnection.connector = this.connector.cloneModel();
         return newConnection;
     }
 }

@@ -18,7 +18,9 @@ export default class Multiplicity implements IMultiplicity, IType{
         this.type = 'Multiplicity';   
     }
 
-    public cloneModel(): string{
-        return this.value;
+    public cloneModel(): Multiplicity{
+        let newMultiplicity = new Multiplicity(this.value,this.isLeft);
+        newMultiplicity.vertex = this.vertex;
+        return newMultiplicity;
     }
 }

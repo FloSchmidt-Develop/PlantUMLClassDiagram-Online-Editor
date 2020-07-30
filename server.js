@@ -11,6 +11,7 @@ const path = require('path');
 const cors = require('cors');
 var response = {};
 var requestBody = {};
+var addedClasses;
 //const bodyParser = require('body-parser');
 
 const app = express();
@@ -37,21 +38,20 @@ app.post('/upload', (req, res) => {
     parser.buildParseTrees = true;
     var tree = parser.diagram();
 
+
     var o = {};
 
     var listener = new DiagramListener(o);
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
     
     console.log(listener.Res.diagram);
-    console.log(tree);
+    //console.log(tree);
     
 
     res.json(listener);
 })
 
 app.post('/export', (req, res) => {
-    console.log('export');
-    //console.log(req.body);
     requestBody = req.body;
     var result = createPUMLFile(req.body);
 
@@ -69,7 +69,6 @@ app.post('/png', function(req, res) {
    
     requestBody = req.body;
     var result = createPUMLFile(req.body);
-    console.log(result);
     
 
     var decode = plantuml.decode('/temp.puml');
@@ -86,12 +85,13 @@ app.listen(4000, () => console.log('Server Started'));
 
 function createPUMLFile(requestData ){
     response = requestData;
+    addedClasses = [];
     
     var result = '';
     result += '@startuml';
     result += '\n \n';
     result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData. connection_declarations);
-    result += addPackages(requestData.package_declarations, requestData.connection_declarations);
+    result += addPackages(requestData.package_declarations.filter(e => e.package === ''), requestData.connection_declarations);
     result += '@enduml';
 
     return result;
@@ -99,6 +99,7 @@ function createPUMLFile(requestData ){
 }
 
 function addPackages(packages, connections){
+    
     var result = '';
     for (let index = 0; index < packages.length; index++) {
         const pack = packages[index];
@@ -106,6 +107,8 @@ function addPackages(packages, connections){
         result += getStylingOfClass(pack) + '\n';
         classes = pack.classReferences;
         result += createClasses(classes, connections);
+        let Childpackages = pack.packageReferences;
+        result += addPackages(Childpackages,connections);
         result += '} \n \n'
     }
     return result;
@@ -121,9 +124,25 @@ function createClasses(classes, connections){
         result += getMethodsOfClass(cls);
         result += getDeclarationsOfObject(cls);
         result += '}\n \n';
-        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.name);
+        addedClasses.push(cls.name);
 
-        result += createConnections(connectionsOfClass);
+        let sourceConnectionOfClass = connections.filter(e => e.sourceElement === cls.name);
+        sourceConnectionOfClass.forEach(element => {
+            
+            let destCon = addedClasses.find(e => e === element.destinationElement);
+            if(destCon != null){
+                result += createConnections(element);
+            }
+        });
+
+        let destConnectionOfClass = connections.filter(e => e.destinationElement === cls.name);
+        destConnectionOfClass.forEach(element => {
+            
+            let sourceCon = addedClasses.find(e => e === element.sourceElement);
+            if(sourceCon != null){
+                result += createConnections(element);
+            }
+        });
     }
     return result;
 }
@@ -136,22 +155,19 @@ function getStylingOfClass(cls){
 
 function createConnections(connections){
     var result = '';
-    for (let index = 0; index < connections.length; index++) {
-        const connection = connections[index];
-        console.log(connection);
-        
-        result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
-        result += connection.destinationElement
-        result += ' '
-        + (connection.multiplicity_left.value !== '' ? ('"' + (connection.multiplicity_left.value) + '"'): '')
-        + getConnection(connection.connector,connection.destinationElement, connection.sourceElement)
-        + (connection.multiplicity_right.value !== '' ? ( '"' + connection.multiplicity_right.value + '"') : '') 
-        + ' ' + connection.sourceElement
-        + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
-        result += '\n';
-    } 
+    const connection = connections;
+    
+    result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
+    result += connection.destinationElement
+    result += ' '
+    + (connection.multiplicity_left.value !== '' ? ('"' + (connection.multiplicity_left.value) + '"'): '')
+    + getConnection(connection.connector,connection.destinationElement, connection.sourceElement)
+    + (connection.multiplicity_right.value !== '' ? ( '"' + connection.multiplicity_right.value + '"') : '') 
+    + ' ' + connection.sourceElement
+    + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
     result += '\n';
-    console.log(result);
+
+    result += '\n';
     
     return result;
 }

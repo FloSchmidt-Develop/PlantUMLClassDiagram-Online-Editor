@@ -1,5 +1,5 @@
 import IClass from "../../../interfaces/class";
-import MyObject  from '../../parserRep/object';
+import MyObject  from '../../parserRep/myObject';
 import ClassUpdateController from '../../controller/classUpdateController';
 import DiagramCreator from "../../../helper/diagramCreator";
 import Declaration from "../../parserRep/declaration";
@@ -12,12 +12,9 @@ export default class {
   }
 
   public createTypeSeclectDiv(
-    elementToChange: IClass,
+    elementToChange: MyObject,
     sender: any
   ): HTMLTableRowElement {
-
-    console.log('loaded');
-    
 
 
     //TODO Check IClass for undefined !! 
@@ -52,16 +49,16 @@ export default class {
     
 
     input.onchange = () => {
-        let obj = (elementToChange as MyObject);
-        obj.dataType = input.value;
-        let cls = DiagramCreator.diagram.map(e => e.class_declarations.filter(cls => cls.getName() === obj.dataType)).flat(1);
-
+        let newElement = elementToChange.cloneModel();
+        newElement.dataType = input.value;
+        let cls = DiagramCreator.diagram.map(e => e.class_declarations.filter(cls => cls.getName() === newElement.dataType)).flat(1);
+      
         if (cls != null && cls.length > 0) {
             let atrs = cls[0].attributes;
             for (let index = 0; index < atrs.length; index++) {
                 const atr = atrs[index];
-                if(!obj.declarations.find(e => e.getName() === atr.getName()))
-                  obj.declarations.push(new Declaration(atr.getName(),''));
+                if(!newElement.declarations.find(e => e.getName() === atr.getName()))
+                newElement.declarations.push(new Declaration(atr.getName(),''));
                 
             }
         }
@@ -71,7 +68,7 @@ export default class {
 
       //Update Cell
       this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement);
       this.graph.getModel().endUpdate();
     }
 

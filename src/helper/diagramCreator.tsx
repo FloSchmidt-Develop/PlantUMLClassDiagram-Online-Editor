@@ -4,7 +4,7 @@ import IClass, { Visibility, Modifiers } from '../interfaces/class';
 import IConnection from '../interfaces/connection';
 
 import Class from '../classes/parserRep/class';
-import MyObject from '../classes/parserRep/object';
+import MyObject from '../classes/parserRep/myObject';
 import Attribute from '../classes/parserRep/attribute';
 import Method from '../classes/parserRep/method';
 import Connection from '../classes/parserRep/connection';
@@ -40,6 +40,8 @@ export default class DiagramCreator{
                 for (let index = 0; index < jsonDiagram.package_declarations.length; index++) {
                     const pack = jsonDiagram.package_declarations[index];
                     let pak = new Package(pack.name);
+                    if(pack.package != null)
+                        pak.package = pack.package;
                     if(pack.hight != null)
                         pak.setHight(parseInt(pack.hight));
                     if(pack.width != null)
@@ -48,9 +50,19 @@ export default class DiagramCreator{
                         pak.x = parseInt(pack.x);
                     if(pack.y != null)
                         pak.y = parseInt(pack.y);
-                    DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pak)
-                    
+                    DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pak);
                 }
+                for(let i = 0; i < DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.length; i++){
+                    let actualPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations[i];
+                    if(actualPackage.package !== ''){
+                        let parentOfPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.
+                            find(e => e.getName() === actualPackage.package);
+                        if(parentOfPackage != null){
+                            parentOfPackage.AddPackageReference(actualPackage);
+                        }
+                    }
+                }
+
 
             }
 

@@ -72,44 +72,54 @@ export default class Class extends ObserverSubject<string> implements IClass  {
     }
 
     public ChangeAttributePosition(attribute: IAttribute, up: boolean){
+        let attributeToChangePosition = this.attributes.find(e => e.id === attribute.id);
+        if(attributeToChangePosition != null){
+            let old_index = this.attributes.indexOf(attributeToChangePosition);
+            let new_index = up ? old_index - 1 : old_index + 1;
 
-        let old_index = this.attributes.indexOf(attribute);
-        let new_index = up ? old_index - 1 : old_index + 1;
-
-        if (new_index >= this.attributes.length) {
-            var k = new_index - this.attributes.length + 1;
-            while (k--) {
-                 this.attributes.push(new Attribute('','',Visibility.undefined,Modifiers.none));
+            if (new_index >= this.attributes.length) {
+                var k = new_index - this.attributes.length + 1;
+                while (k--) {
+                    this.attributes.push(new Attribute('','',Visibility.undefined,Modifiers.none));
+                }
             }
-            }
-         this.attributes.splice(new_index, 0, this.attributes.splice(old_index, 1)[0]);
+            this.attributes.splice(new_index, 0, this.attributes.splice(old_index, 1)[0]);
+        }
+        
     }
     
     public ChangeMethodPosition(method: IMethod, up: boolean){
+        let methodToChangePosition = this.methods.find(e => e.id === method.id);
+        if(methodToChangePosition != null){
+            let old_index = this.methods.indexOf(methodToChangePosition);
+            let new_index = up ? old_index - 1 : old_index + 1;
 
-        let old_index = this.methods.indexOf(method);
-        let new_index = up ? old_index - 1 : old_index + 1;
-
-        if (new_index >= this.methods.length) {
-            var k = new_index - this.methods.length + 1;
-            while (k--) {
-                 this.methods.push(new Method('',Visibility.undefined,Modifiers.none));
+            if (new_index >= this.methods.length) {
+                var k = new_index - this.methods.length + 1;
+                while (k--) {
+                    this.methods.push(new Method('',Visibility.undefined,Modifiers.none));
+                }
             }
-            }
-         this.methods.splice(new_index, 0, this.methods.splice(old_index, 1)[0]);
+            this.methods.splice(new_index, 0, this.methods.splice(old_index, 1)[0]);
+        }
+        
     }
 
     public ChangeDeclarationPosition(declaration: IDeclaration, up: boolean){
-        let old_index = this.declarations.indexOf(declaration);
-        let new_index = up ? old_index - 1 : old_index + 1;
+        let declarationToChangePosition = this.declarations.find(e => e.id === declaration.id);
+        if(declarationToChangePosition != null){
+            let old_index = this.declarations.indexOf(declarationToChangePosition);
+            let new_index = up ? old_index - 1 : old_index + 1;
 
-        if (new_index >= this.declarations.length) {
-            var k = new_index - this.declarations.length + 1;
-            while (k--) {
-                 this.declarations.push(new Declaration('name',''));
+            if (new_index >= this.declarations.length) {
+                var k = new_index - this.declarations.length + 1;
+                while (k--) {
+                    this.declarations.push(new Declaration('name',''));
+                }
             }
-            }
-         this.declarations.splice(new_index, 0, this.declarations.splice(old_index, 1)[0]);
+            this.declarations.splice(new_index, 0, this.declarations.splice(old_index, 1)[0]);
+        }
+        
     }
 
     public setWidth(width: number){
@@ -182,6 +192,7 @@ export default class Class extends ObserverSubject<string> implements IClass  {
         newClass.setHight(this.hight);
         newClass.setWidth(this.width);
         newClass.package = this.package;
+        newClass.observers = this.observers;
         return newClass;
     }
 

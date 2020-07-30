@@ -6,7 +6,7 @@ export default class Connector extends ID implements IConnector{
     startArrowSymbol: Arrows = Arrows.none;
     endArrowSymbol: Arrows = Arrows.none;
     lineStyle: Lines = Lines.normal;
-    readonly layoutProperty: LayoutProperty;
+    layoutProperty: LayoutProperty;
 
     constructor(connector: string){
         super();
@@ -143,8 +143,14 @@ export default class Connector extends ID implements IConnector{
         }
     }
 
-    public cloneModel(): string{
-        return this.getEndConnector() + this.getLineStyle() + this.getStartConnector();
+    public cloneModel(): Connector{
+        let newConnector = new Connector('');
+        newConnector.startArrowSymbol = this.startArrowSymbol;
+        newConnector.endArrowSymbol = this.endArrowSymbol;
+        newConnector.lineStyle = this.lineStyle;
+        newConnector.layoutProperty = this.layoutProperty;
+        return newConnector;
+
     }
 
 

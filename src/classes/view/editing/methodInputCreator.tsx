@@ -30,9 +30,10 @@ export default class MethodInputCreator {
       moveUpMethodButton.disabled = index === 0 ? true : false;
 
       moveUpMethodButton.onclick = () => {
-        elementToChange.ChangeMethodPosition(method,true);  
+        let newElement = (elementToChange as IClass).cloneModel();
+        newElement.ChangeMethodPosition(method,true);  
         
-        this.UpdateClass(sender,elementToChange);
+        this.UpdateClass(sender,newElement);
     }
 
       row_div.appendChild(moveUpMethodButton);
@@ -87,16 +88,16 @@ export default class MethodInputCreator {
         : 0;
 
         select.onchange = () => {
-
-          if (elementToChange !== null) {
-            elementToChange.methods[index].visibility = 
+          let newElement = (elementToChange as IClass).cloneModel();
+          if (newElement !== null) {
+            newElement.methods[index].visibility = 
               Visibility[(document.getElementById("visibility-method-select" + index) as HTMLSelectElement).value];
+
+              this.UpdateClass(sender,newElement)
           }
   
       //Update Cell
-      this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-      this.graph.getModel().endUpdate();
+
       };
 
       td1.appendChild(select)
@@ -147,19 +148,16 @@ export default class MethodInputCreator {
         : 0;
 
         select2.onchange = () => {
-
-          if (elementToChange !== null) {
-            elementToChange.methods[index].modifiers = 
+          let newElement = (elementToChange as IClass).cloneModel();
+          if (newElement !== null) {
+            
+            newElement.methods[index].modifiers = 
               Modifiers[(document.getElementById("Modifier-method-select" + index) as HTMLSelectElement).value];
-          }
 
-          console.log(elementToChange);
-          
-    
+              this.UpdateClass(sender,newElement)
+          }
           //Update Cell
-          this.graph.getModel().beginUpdate();
-          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-          this.graph.getModel().endUpdate();
+         
         };
         td2.appendChild(p2);
         td2.appendChild(select2);
@@ -172,8 +170,9 @@ export default class MethodInputCreator {
 
 
       deleteMethodButton.onclick = () => {
-        elementToChange.DeleteMethod(method);  
-        this.UpdateClass(sender,elementToChange);
+        let newElement = (elementToChange as IClass).cloneModel();
+        newElement.DeleteMethod(method);  
+        this.UpdateClass(sender,newElement);
         }
 
 
@@ -194,12 +193,14 @@ export default class MethodInputCreator {
       input_name.value = method.getName();
 
       input_name.onchange = () => {
-        if (elementToChange !== null) {
-          elementToChange.methods[index].setName(input_name.value);
+        let newElement = (elementToChange as IClass).cloneModel();
+        if (newElement !== null) {
+          newElement.methods[index].setName(input_name.value);
+          //Update Cell
+          this.UpdateClass(sender,newElement);
         }
 
-        //Update Cell
-        this.UpdateClass(sender,elementToChange);
+
 
       };
       row_div.appendChild(input_name);
@@ -216,11 +217,13 @@ export default class MethodInputCreator {
       input_type.value = method.dataType;
 
       input_type.onchange = () => {
-        if (elementToChange !== null) {
-          elementToChange.methods[index].setDataType(input_type.value);
+        let newElement = (elementToChange as IClass).cloneModel();
+        if (newElement !== null) {
+          newElement.methods[index].setDataType(input_type.value);
+          this.UpdateClass(sender,newElement);
         }
 
-        this.UpdateClass(sender,elementToChange);
+        
 
       };
       row_div.appendChild(input_type);
@@ -253,10 +256,15 @@ export default class MethodInputCreator {
 
 
           deleteFunctionArgumentButton.onclick = () => {
-            method.DeleteAttribute(argument);
-
             
-            this.UpdateClass(sender,elementToChange);
+
+            let newElement = (elementToChange as IClass).cloneModel();
+            let newMethode = newElement.methods.find(e => e.id === method.id);
+            if(newMethode != null){
+              newMethode.DeleteAttribute(argument);
+              this.UpdateClass(sender,newElement);
+            }
+
           }
 
           container_div.appendChild(deleteFunctionArgumentButton);
@@ -272,10 +280,24 @@ export default class MethodInputCreator {
           input_argument_name.value = argument.getName();
 
           input_argument_name.onchange = () => {
-              argument.setName(input_argument_name.value);
+            let newElement = (elementToChange as IClass).cloneModel();
+            let newMethode = newElement.methods.find(e => e.id === method.id);
             
+            if(newMethode != null){
+
+              let newArgument = newMethode.attributeList?.find(e => e.id === argument.id);
+              if(newArgument != null){
+
+                newArgument.setName(input_argument_name.value);
+                this.UpdateClass(sender,newElement);
+              }
+            }
+
+              
+          
+
           //Update Cell
-          this.UpdateClass(sender,elementToChange);
+          
 
           }
           functionArgumentDiv.appendChild(input_argument_name);
@@ -293,10 +315,18 @@ export default class MethodInputCreator {
           input_argument_dataType.value = argument.dataType;
 
           input_argument_dataType.onchange = () => {
-              argument.setDataType(input_argument_dataType.value);
+            let newElement = (elementToChange as IClass).cloneModel();
+            let newMethode = newElement.methods.find(e => e.id === method.id);
             
+            if(newMethode != null){
 
-            this.UpdateClass(sender,elementToChange);
+              let newArgument = newMethode.attributeList?.find(e => e.id === argument.id);
+              if(newArgument != null){
+
+                newArgument.setDataType(input_argument_dataType.value);
+                this.UpdateClass(sender,newElement);
+              }
+            }
 
           }
           functionArgumentDiv.appendChild(input_argument_dataType);
@@ -308,10 +338,13 @@ export default class MethodInputCreator {
         let newFunctionArgumentButton = document.createElement('button');
         newFunctionArgumentButton.innerText = '+';
         newFunctionArgumentButton.onclick = () =>{
-
-            method.attributeList?.push(new Attribute('function','return value',Visibility.public,Modifiers.none));
-
-            this.UpdateClass(sender,elementToChange);
+          let newElement = (elementToChange as IClass).cloneModel();
+          let newMethode = newElement.methods.find(e => e.id === method.id);
+          
+          if(newMethode != null){
+            newMethode.attributeList?.push(new Attribute('function','return value',Visibility.public,Modifiers.none));
+            this.UpdateClass(sender,newElement);
+          }
        }
 
 
@@ -321,12 +354,13 @@ export default class MethodInputCreator {
        moveDownMethodButton.innerText = '\\/';
        moveDownMethodButton.style.float = 'right';
        moveDownMethodButton.style.marginRight = '10px';
-       moveDownMethodButton.disabled = index >= elementToChange.declarations.length - 1 ? true : false;
+       moveDownMethodButton.disabled = index >= elementToChange.methods.length - 1 ? true : false;
  
        moveDownMethodButton.onclick = () => {
-         elementToChange.ChangeMethodPosition(method,false);  
+        let newElement = (elementToChange as IClass).cloneModel();
+        newElement.ChangeMethodPosition(method,false);  
          
-         this.UpdateClass(sender,elementToChange);
+         this.UpdateClass(sender,newElement);
      }
  
        row_div.appendChild(moveDownMethodButton);

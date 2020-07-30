@@ -25,13 +25,12 @@ export default class Declaration extends ID implements IDeclaration{
     }
 
     public getWidth(): number{
-        console.log(this.name);
-        console.log(this.declaration_value);
         return (this.name.length + this.declaration_value.length) * 10;
     }
 
     public cloneModel(): IDeclaration{
         let newDeclaration = new Declaration(this.name,this.declaration_value);
+        newDeclaration.id = this.id;
         return newDeclaration;
     }
 }

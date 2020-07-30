@@ -12,7 +12,7 @@ class_diagram
 
 package_section:
 	PACKAGE WHITESPACE? QUOTATION package_name QUOTATION WHITESPACE? ('{'    
-	(class_declaration | connection | styling |NEWLINE)*
+	(class_declaration | connection | styling | package_section | NEWLINE)*
 	'}')?
 	;
 
