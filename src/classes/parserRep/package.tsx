@@ -96,7 +96,7 @@ export default class Package extends ID implements IPackage{
         if(this.package !== ''){
             let parentPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === this.package);
             parentPackage?.RemovePackageReferences(this);
-            parentPackage?.AddPackageReference(newPackage)
+            parentPackage?.AddPackageReference(newPackage);
         }
 
         return newPackage;

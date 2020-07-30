@@ -126,23 +126,17 @@ function createClasses(classes, connections){
         result += '}\n \n';
         addedClasses.push(cls.name);
 
-        let sourceConnectionOfClass = connections.filter(e => e.sourceElement === cls.name);
-        sourceConnectionOfClass.forEach(element => {
-            
-            let destCon = addedClasses.find(e => e === element.destinationElement);
-            if(destCon != null){
-                result += createConnections(element);
-            }
-        });
 
-        let destConnectionOfClass = connections.filter(e => e.destinationElement === cls.name);
-        destConnectionOfClass.forEach(element => {
-            
-            let sourceCon = addedClasses.find(e => e === element.sourceElement);
-            if(sourceCon != null){
-                result += createConnections(element);
+        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.name || e.destinationElement === cls.name);
+        connectionsOfClass.forEach(connection => {
+            if(addedClasses.find(srcCls => srcCls === connection.sourceElement) && addedClasses.find(dstCls => dstCls === connection.destinationElement)){
+                result += createConnections(connection);
             }
         });
+        
+
+
+
     }
     return result;
 }

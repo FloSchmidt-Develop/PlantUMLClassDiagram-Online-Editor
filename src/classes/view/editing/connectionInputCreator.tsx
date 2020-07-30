@@ -55,12 +55,12 @@ export default class ConnectionInputCreator{
 
     let option_normal = document.createElement("option");
     option_normal.value = "normal";
-    let normal_text = document.createTextNode("..");
+    let normal_text = document.createTextNode(".. dotted Line");
     option_normal.appendChild(normal_text);
 
     let option_dotted = document.createElement("option");
     option_dotted.value = "dotted";
-    let dotted_text = document.createTextNode("--");
+    let dotted_text = document.createTextNode("-- normal Line");
     option_dotted.appendChild(dotted_text);
 
     select_line.appendChild(option_normal);
@@ -122,6 +122,7 @@ export default class ConnectionInputCreator{
         startArrow_option_big.value = "diamond";
         let startArrow_option_big_text = document.createTextNode("<|- inheritance");
         startArrow_option_big.appendChild(startArrow_option_big_text);
+        
 
         let startArrow_option_none = document.createElement("option");
         startArrow_option_none.value = "none";

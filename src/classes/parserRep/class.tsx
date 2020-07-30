@@ -8,6 +8,7 @@ import Method from './method';
 import Observer from '../../interfaces/observer'
 import ObserverSubject from './subject'
 import Declaration from './declaration';
+import DiagramCreator from '../../helper/diagramCreator';
 
 
 
@@ -192,6 +193,11 @@ export default class Class extends ObserverSubject<string> implements IClass  {
         newClass.setHight(this.hight);
         newClass.setWidth(this.width);
         newClass.package = this.package;
+        if(this.package !== ''){
+            let parentPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === this.package);
+            parentPackage?.RemoveClassReference(this);
+            parentPackage?.AddClassReference(newClass);
+        }
         newClass.observers = this.observers;
         return newClass;
     }
