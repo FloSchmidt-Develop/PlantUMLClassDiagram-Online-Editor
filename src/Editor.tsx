@@ -56,6 +56,7 @@ import EditingView from "./classes/view/editing/editingView";
 import UserCreatedNewEdge from "./classes/controller/userCreatedNewEdge";
 import CellLabel from "./classes/view/cellLables/cellLabel";
 import MyObject from "./classes/parserRep/myObject";
+import Observer from "./interfaces/observer";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -303,12 +304,6 @@ const Editor = (props) => {
         {  
           if(cell.edge && cell.target != null && cell.source != null)
           {
-            console.log('user Created new Connection:');
-            console.log(cell);
-            console.log('----------------------------');
-            
-            
-            
             return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
           }
           else{
@@ -544,9 +539,7 @@ const Editor = (props) => {
               }
               else if(change.parent.value instanceof Package ){
 
-                if(change.previous != null && change.previous.value instanceof Package){
-                  console.log('move package from Package to Package');
-                  
+                if(change.previous != null && change.previous.value instanceof Package){                  
                   (change.previous.value as Package).RemovePackageReferences(pkg);
                 }
                 else if(change.previous == null){
@@ -554,11 +547,6 @@ const Editor = (props) => {
                 }
                 (change.parent.value as Package).AddPackageReference(pkg);
                 pkg.package = (change.parent.value as Package).getName();
-                console.log(pkg);
-                
-
-
-
               }
               else if(typeof change.parent.value === 'undefined'){
                 console.log(change);
@@ -573,9 +561,7 @@ const Editor = (props) => {
             }
 
             //Add Remove Support for Connections
-            else if(child != null && child instanceof Connection){
-              console.log(change);
-              
+            else if(child != null && child instanceof Connection){              
               let con = child as Connection;
               if(change.parent === null){
                 DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(con);
@@ -602,8 +588,7 @@ const Editor = (props) => {
               DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(change.previous);
               DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(change.value);
             }
-            else if(change.value == null && change.previous instanceof Connection){
-
+            else if(change.value == null && change.previous instanceof Connection){              
               DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(change.previous);
             }
             else if(change.value instanceof Package && change.previous instanceof Package){
@@ -611,17 +596,21 @@ const Editor = (props) => {
               DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(change.value);
             }
           }
-
+          
           else if(change.constructor.name === 'mxTerminalChange'){
             let child = change.cell;
+            console.log(change);
+            console.log(child);
+            
             if(child != null && child.value instanceof Connection){
-      
+              
+              
               
               let con = child.value as Connection;
               let changeSource = false;
               
               if(change.previous != null && change.previous.value instanceof Class){
-                let previous = change.previous.value as Class;
+                let previous = change.previous.value as Class
                 
                 
                 previous.removeObserver(con);
@@ -632,7 +621,23 @@ const Editor = (props) => {
                   changeSource = false;
                 }
               }
-              if(change.terminal != null && change.terminal.value instanceof Class){
+              else if(change.previous != null && change.previous.value instanceof Connection){
+                let previous = change.previous.value as Connection;
+                
+                
+                previous.removeObserver(con);
+                if(con.sourceElement == '(' +previous.destinationElement + ',' + previous.sourceElement + ')'){
+                  changeSource = true;
+                }
+                else{
+                  changeSource = false;
+                }
+              }
+
+              if(change.previous == null && child.target.value instanceof Connection){
+                //Don't change anything
+              }
+              else if(change.terminal != null && change.terminal.value instanceof Class){
                 let terminal = change.terminal.value as Class;
 
                 terminal.registerObserver(con);
@@ -641,6 +646,17 @@ const Editor = (props) => {
                 }
                 else{
                   con.destinationElement = terminal.alias;
+                }
+              }
+              else if(change.terminal != null && change.terminal.value instanceof Connection){
+                let terminal = change.terminal.value as Connection;
+
+                terminal.registerObserver(con);
+                if(changeSource){
+                  con.sourceElement = '(' + terminal.destinationElement + ',' + terminal.sourceElement + ')';
+                }
+                else{
+                  con.destinationElement = '(' + terminal.destinationElement + ',' + terminal.sourceElement + ')';
                 }
               }
 

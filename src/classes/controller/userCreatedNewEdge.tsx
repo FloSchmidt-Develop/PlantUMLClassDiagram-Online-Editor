@@ -10,7 +10,9 @@ export default class UserCreatedNewEdge{
         
         if(cell.target.value instanceof Class && cell.source.value instanceof Class){
             connection = new Connection('<--','','',cell.target.value.getName(),cell.source.value.getName(),'');
-
+            console.log('Connection with Class');
+            
+            
             if(cell.target.value instanceof Class)
                 (cell.target.value as Class).registerObserver(connection);
             if(cell.source.value instanceof Class)
@@ -21,7 +23,7 @@ export default class UserCreatedNewEdge{
             let sourceConnectionName =
              '(' + (cell.source.value as Connection).destinationElement + ',' + (cell.source.value as Connection).sourceElement + ')';
 
-            connection = new Connection('<--','','',cell.target.value.getName(),sourceConnectionName,'');
+            connection = new Connection('<--','','',cell.target.value.getName(),sourceConnectionName,'');    
 
             if(cell.target.value instanceof Class)
                 (cell.target.value as Class).registerObserver(connection);
@@ -30,11 +32,20 @@ export default class UserCreatedNewEdge{
                 (cell.source.value as Connection).registerObserver(connection);
 
         }
-        else if(cell.target.value instanceof Connection && cell.source.value instanceof Class){
-            let targetConnectionName =
-             '(' + (cell.target.value as Connection).destinationElement + ',' + (cell.target.value as Connection).sourceElement + ')';
+        else if((cell.target.value instanceof Connection) && (cell.source.value instanceof Class)){
+            let targetConnectionName = 
+            '(' 
+            + (cell.target.value as Connection).destinationElement 
+            + ',' + (cell.target.value as Connection).sourceElement 
+            + ')';
+            console.log(targetConnectionName);
+            
+            connection = new Connection('<-','','',targetConnectionName,cell.source.value.getName(),'');
+            connection.destinationElement = targetConnectionName;
 
-            connection = new Connection('<--','','',targetConnectionName, cell.source.value.getName(),'');
+            console.log(connection);
+            
+
 
             if(cell.target.value instanceof Connection)
                 (cell.target.value as Connection).registerObserver(connection);

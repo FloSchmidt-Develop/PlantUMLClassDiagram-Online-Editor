@@ -12,6 +12,7 @@ const cors = require('cors');
 var response = {};
 var requestBody = {};
 var addedClasses;
+var addedConnections;
 //const bodyParser = require('body-parser');
 
 const app = express();
@@ -86,6 +87,7 @@ app.listen(4000, () => console.log('Server Started'));
 function createPUMLFile(requestData ){
     response = requestData;
     addedClasses = [];
+    addedConnections = [];
     
     var result = '';
     result += '@startuml';
@@ -126,13 +128,20 @@ function createClasses(classes, connections){
         result += '}\n \n';
         addedClasses.push(cls.name);
 
-
+        
         let connectionsOfClass = connections.filter(e => e.sourceElement === cls.name || e.destinationElement === cls.name);
         connectionsOfClass.forEach(connection => {
             if(addedClasses.find(srcCls => srcCls === connection.sourceElement) && addedClasses.find(dstCls => dstCls === connection.destinationElement)){
                 result += createConnections(connection);
             }
         });
+
+        connectionsOfClass.filter(e => e.destinationElement.includes('(')).forEach(connection => {
+            if(addedConnections.find(dstConnection => connection.destinationElement === dstConnection)){
+                result += createConnections(connection);
+            }
+        })
+        
         
 
 
@@ -151,6 +160,7 @@ function createConnections(connections){
     var result = '';
     const connection = connections;
     
+    
     result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
     result += connection.destinationElement
     result += ' '
@@ -162,7 +172,7 @@ function createConnections(connections){
     result += '\n';
 
     result += '\n';
-    
+    addedConnections.push('(' + connection.destinationElement + ',' + connection.sourceElement + ')');
     return result;
 }
 
@@ -231,21 +241,22 @@ function getConnection(connector,destination,sourceElement){
 function getLayoutInfo(destinationClass,sourceClass){
     result = '';
     delta = 100;
-    console.log(sourceClass.x);
+    if(destinationClass){
+        if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
+            result = 'left';
+        }
+        else{
+            result = 'right';
+        }
     
-    if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
-        result = 'left';
-    }
-    else{
-        result = 'right';
+        if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
+            result = 'up';
+        }
+        else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
+            result = 'down';
+        }
     }
 
-    if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
-        result = 'up';
-    }
-    else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
-        result = 'down';
-    }
     return result;
 }
 

@@ -23,18 +23,20 @@ export default class Connection extends ObserverSubject<string> implements IConn
         destinationElement: string,
         sourceElement: string,
         stereoType: string) {
-
             super();
+            console.log('construktor');
+
             this.connector = new Connector(connector);
             this.multiplicity_left = new Multiplicity(multiplicity_left,true);
-            this.multiplicity_right = new Multiplicity(multiplicity_right,false)
-            this.destinationElement = destinationElement;
+            this.multiplicity_right = new Multiplicity(multiplicity_right,false);
+            this.destinationElement = destinationElement;            
             this.sourceElement = sourceElement;
             this.stereoType = stereoType ? stereoType : '';
-        
+
     }
 
     refresh(oldValue: string, newValue: string) {
+        
         if(this.destinationElement === oldValue){
             this.destinationElement = newValue;
             this.NotifyObservers('(' + oldValue + ',' + this.sourceElement + ')',
@@ -45,6 +47,7 @@ export default class Connection extends ObserverSubject<string> implements IConn
             this.NotifyObservers('(' + this.destinationElement + ',' + oldValue + ')',
             '(' + this.destinationElement + ',' + newValue + ')' );
         }
+        
     }
     
     public setStartMultiplicity(multiplicity: string) {

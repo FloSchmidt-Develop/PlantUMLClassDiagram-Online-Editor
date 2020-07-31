@@ -94,6 +94,7 @@ export default class MxGraphCreator {
         );
         
       }
+      
       else if(connection.destinationElement.includes('(')){
    
         activeEdges['(' + connection.destinationElement.replace('(','').replace(')', '') + ',' + connection.sourceElement + ')']   = this.graph.insertEdge(
@@ -105,9 +106,8 @@ export default class MxGraphCreator {
           this.getEdgeStyle(connection.connector)
         );
       }
+
       else{
-        //console.log(connection);
-        
         let source = this.diagram.class_declarations.find(e => e.getName() === connection.sourceElement) as Class;
         source?.registerObserver(connection as Connection);
 
