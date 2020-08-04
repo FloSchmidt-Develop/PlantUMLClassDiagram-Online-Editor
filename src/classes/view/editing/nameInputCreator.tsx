@@ -2,11 +2,9 @@ import IName from "../../../interfaces/named";
 import ClassUpdateController from '../../controller/classUpdateController';
 import ElementUpdateController from '../../controller/elementUpdateController';
 import Class from '../../parserRep/class';
-import Diagram from "../../parserRep/diagram";
 import DiagramCreator from "../../../helper/diagramCreator";
 import Package from "../../parserRep/package";
-import NameChanger from "../../controller/nameChanger";
-import Clonable from "../../../interfaces/cloneable";
+
 
 
 

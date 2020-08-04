@@ -6,6 +6,8 @@ import Point from './point'
 import ID from './id';
 import Observer from '../../interfaces/observer';
 import ObserverSubject from './subject';
+import DiagramCreator from '../../helper/diagramCreator';
+import Class from './class';
 
 export default class Connection extends ObserverSubject<string> implements IConnection, Observer<string>{
     public connector: IConnector;
@@ -24,8 +26,6 @@ export default class Connection extends ObserverSubject<string> implements IConn
         sourceElement: string,
         stereoType: string) {
             super();
-            console.log('construktor');
-
             this.connector = new Connector(connector);
             this.multiplicity_left = new Multiplicity(multiplicity_left,true);
             this.multiplicity_right = new Multiplicity(multiplicity_right,false);
@@ -36,6 +36,7 @@ export default class Connection extends ObserverSubject<string> implements IConn
     }
 
     refresh(oldValue: string, newValue: string) {
+        console.log('refresh');
         
         if(this.destinationElement === oldValue){
             this.destinationElement = newValue;
@@ -78,6 +79,10 @@ export default class Connection extends ObserverSubject<string> implements IConn
         newConnection.multiplicity_left = this.multiplicity_left.cloneModel();
         newConnection.multiplicity_right = this.multiplicity_right.cloneModel();
         newConnection.connector = this.connector.cloneModel();
+        let connectedClasses = DiagramCreator.diagram[DiagramCreator.activeIndex]
+            .class_declarations.filter(e => e.getName() === newDestinationElement || e.getName() === newSourceElement);
+        connectedClasses.forEach(e => (e as Class).removeObserver(this));
+        connectedClasses.forEach(e => (e as Class).registerObserver(newConnection));
         return newConnection;
     }
 }

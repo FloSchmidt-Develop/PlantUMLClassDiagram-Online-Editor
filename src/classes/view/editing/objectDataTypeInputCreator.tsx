@@ -1,5 +1,4 @@
 import IClass from "../../../interfaces/class";
-import MyObject  from '../../parserRep/myObject';
 import ClassUpdateController from '../../controller/classUpdateController';
 import DiagramCreator from "../../../helper/diagramCreator";
 import Declaration from "../../parserRep/declaration";
@@ -12,7 +11,7 @@ export default class {
   }
 
   public createTypeSeclectDiv(
-    elementToChange: MyObject,
+    elementToChange: IClass,
     sender: any
   ): HTMLTableRowElement {
 
@@ -28,7 +27,7 @@ export default class {
 
     let input = document.createElement("input");
     input.style.width = "200px";
-    input.value = (elementToChange as MyObject).dataType;
+    input.value = (elementToChange as IClass).dataType;
     let datalist = document.createElement("dataList");
     datalist.id = "datalist";
     input.setAttribute('list','datalist');

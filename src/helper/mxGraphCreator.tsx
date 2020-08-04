@@ -19,6 +19,8 @@ export default class MxGraphCreator {
   parentContainer: any;
   diagram: IDiagram;
   editPanel: React.RefObject<HTMLDivElement>;
+  x = 100;
+  y = 100;
 
   constructor(graph: any, diagram: IDiagram, editPanel: React.RefObject<HTMLDivElement>) {
     this.graph = graph;
@@ -34,47 +36,69 @@ export default class MxGraphCreator {
     var activeVertexes: { [id: string]: any } = {};
     var activePackages: { [id: string]: any } = {};
     var activeEdges: {[id: string]: any } = {};
-    var x = 100;
-    var y = 100;
-    
 
-
-    //Packages without package
-    let topLevelPackages = this.diagram?.package_declarations.filter(e => e.package === '');
-    this.addPackages(topLevelPackages, activePackages, x, y)
-    
     //classes
-    var count = this.diagram?.class_declarations.length
-      ? this.diagram?.class_declarations.length
-      : 0;
-
-    for (let index = 0; index < count; index++) {
-
-      if (index % 4 == 0) {
-        y = y + 150;
-        x = 200;
-      }
+    let index = 0;
 
       //HINT: Set Default start position --- find better solution here
 
       //Add Classes
-      let element = this.diagram?.class_declarations[index];
+      let elements = this.diagram?.class_declarations.filter(e => e.package === '');
       //console.log(element);
-      element.x = element.x === 0 ? x : element.x ;
-      element.y = element.y === 0 ? y : element.y ;
-      activeVertexes[element.alias] = this.graph.insertVertex(
-        element.package !== '' ? activePackages[element.package] : this.parentContainer,
-        element.id,
-        element,
-        element.x,
-        element.y,
-        element.getWidth(),
-        element.getHeight()
-      );
+      elements.forEach(element => {
+
+        if (index % 4 == 0) {
+          this.y = this.y + 150;
+          this.x = 200;
+        }
+
+        element.x = element.x === 0 ? this.x : element.x ;
+        element.y = element.y === 0 ? this.y : element.y ;
+        activeVertexes[element.alias] = this.graph.insertVertex(
+          this.parentContainer,
+          element.id,
+          element,
+          element.x,
+          element.y,
+          element.getWidth(),
+          element.getHeight()
+        )
+        index++
+        this.x = this.x + 400;
+      });
+    
+
       //console.log(activeVertexes[element.alias]);
+
       
-      x = x + 400;
-    }
+      //Packages without package
+      let topLevelPackages = this.diagram?.package_declarations.filter(e => e.package === '');
+      this.addPackages(topLevelPackages, activePackages)
+
+      
+      elements = this.diagram?.class_declarations.filter(e => e.package !== '');
+      elements.forEach(element => {
+
+        if (index % 4 == 0) {
+          this.y = this.y + 150;
+          this.x = 200;
+        }
+
+        element.x = element.x === 0 ? this.x : element.x ;
+        element.y = element.y === 0 ? this.y : element.y ;
+        activeVertexes[element.alias] = this.graph.insertVertex(
+          activePackages[element.package],
+          element.id,
+          element,
+          element.x,
+          element.y,
+          element.getWidth(),
+          element.getHeight()
+        )
+        index++
+        this.x = this.x + 400;
+      });
+
 
     var edgeCount = this.diagram?.connection_declarations.length
       ? this.diagram?.connection_declarations.length
@@ -154,15 +178,18 @@ export default class MxGraphCreator {
     }
   }
 
-  private addPackages(packages: IPackage[], activePackages: any, x: number, y: number){
+  private addPackages(packages: IPackage[], activePackages: any){
+    
+    this.y = this.y + 150;
+    this.x = 200;
 
     packages.forEach( e => {
       let activePackage = e
 
       if (activePackage.x === 0)
-        activePackage.x = x;
+        activePackage.x = this.x;
       if (activePackage.y === 0)
-        activePackage.y = y;
+        activePackage.y = this.y;
       
       console.log(activePackage);
       
@@ -178,7 +205,7 @@ export default class MxGraphCreator {
       )
 
       if(activePackage.packageReferences.length > 0){
-        this.addPackages(activePackage.packageReferences,activePackages,x,y);
+        this.addPackages(activePackage.packageReferences,activePackages);
       }
     }
     )

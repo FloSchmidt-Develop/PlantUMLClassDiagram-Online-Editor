@@ -41,7 +41,7 @@ export default class Diagram extends ID implements IDiagram{
         return newPackage;
     }
 
-    public removeClass(classToRemove: IClass){
+    public removeClass(classToRemove: IClass, keepConnections: boolean = false){
         this.class_declarations = this.class_declarations.filter(
              e => e.id !== classToRemove.id);
 
@@ -50,13 +50,16 @@ export default class Diagram extends ID implements IDiagram{
         );
         //Remove Connections from Classes
         for (let index = 0; index < connectionsToRemove.length; index++) {
-            this.removeConnection(connectionsToRemove[index]);
+            if(!keepConnections)
+                this.removeConnection(connectionsToRemove[index]);
         }
         let packageOfClass = this.package_declarations.find(e => e.getName() === classToRemove.package);
-        packageOfClass?.RemoveClassReference(classToRemove);
+        packageOfClass?.RemoveClassReference(classToRemove,true);
     }
 
     public removeConnection(connectionToRemove: IConnection){
+        console.log('remove Connection');
+        
         this.connection_declarations = this.connection_declarations.filter(
             e => e.id !== connectionToRemove.id);
 
@@ -69,6 +72,8 @@ export default class Diagram extends ID implements IDiagram{
         if(removeClasses){
             packageToRemove.classReferences.forEach( e => this.removeClass(e));
         }
+        let packageOfClass = this.package_declarations.find(e => e.getName() === packageToRemove.package);
+        packageOfClass?.RemovePackageReferences(packageToRemove,true);
 
 
     }

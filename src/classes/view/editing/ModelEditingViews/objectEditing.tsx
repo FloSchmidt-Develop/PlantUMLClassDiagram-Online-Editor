@@ -1,15 +1,15 @@
-import IClass from '../../../../interfaces/class';
-import Attribute from "../../../parserRep/attribute";
-import Method from "../../../parserRep/method";
+
 
 import TypeSelectCreator from '../typeSelectCreator';
 import NameSelectCreator from '../nameInputCreator';
 import ObjectDataTypeInputCreator from '../objectDataTypeInputCreator';
 import DeclarationInputCreator from '../declarationInputCreator';
-import ClassUpdateController from '../../../controller/classUpdateController';
-import Class from '../../../../interfaces/class';
+
 import Declaration from '../../../parserRep/declaration';
 import MyObject from '../../../parserRep/myObject';
+import ElementUpdateController from '../../../controller/elementUpdateController';
+import IClass from '../../../../interfaces/class';
+import ClassUpdateController from '../../../controller/classUpdateController';
 
 
 
@@ -28,24 +28,24 @@ export default class ObjectEditingView{
 
           //name
           let nameInputCreator = new NameSelectCreator(graph);
-          let name_tr = nameInputCreator.createNameInputDiv(selectedClass, sender);
+          let name_tr = nameInputCreator.createNameInputDiv(selectedClass as IClass, sender);
           table.appendChild(name_tr);
           view.appendChild(table);
 
         //dataType
         let dataTypeInputCreator = new ObjectDataTypeInputCreator(graph);
-        let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as MyObject, sender);
+        let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as IClass, sender);
 
         //declarations
         let declarationInputCreator = new DeclarationInputCreator(graph);
-        let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as MyObject, sender);
+        let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as IClass, sender);
         let declarationHeader = document.createElement('h3');
         declarationHeader.innerText = 'Declarations';
 
         let newDeclarationButton = document.createElement('button');
         newDeclarationButton.innerText = 'at new Declaration';
         newDeclarationButton.onclick = () =>{
-            let classToaddMethod = (sender.cells[0].value as MyObject);
+            let classToaddMethod = (sender.cells[0].value as IClass);
             let newObject = classToaddMethod.cloneModel();
 
 

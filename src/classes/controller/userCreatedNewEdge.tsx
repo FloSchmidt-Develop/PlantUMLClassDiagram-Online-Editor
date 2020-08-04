@@ -9,10 +9,7 @@ export default class UserCreatedNewEdge{
         let connection: Connection;
         
         if(cell.target.value instanceof Class && cell.source.value instanceof Class){
-            connection = new Connection('<--','','',cell.target.value.getName(),cell.source.value.getName(),'');
-            console.log('Connection with Class');
-            
-            
+            connection = new Connection('<--','','',cell.target.value.getName(),cell.source.value.getName(),'');            
             if(cell.target.value instanceof Class)
                 (cell.target.value as Class).registerObserver(connection);
             if(cell.source.value instanceof Class)
@@ -38,15 +35,9 @@ export default class UserCreatedNewEdge{
             + (cell.target.value as Connection).destinationElement 
             + ',' + (cell.target.value as Connection).sourceElement 
             + ')';
-            console.log(targetConnectionName);
             
             connection = new Connection('<-','','',targetConnectionName,cell.source.value.getName(),'');
             connection.destinationElement = targetConnectionName;
-
-            console.log(connection);
-            
-
-
             if(cell.target.value instanceof Connection)
                 (cell.target.value as Connection).registerObserver(connection);
 

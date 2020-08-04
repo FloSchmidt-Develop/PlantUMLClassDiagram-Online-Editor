@@ -57,6 +57,8 @@ import UserCreatedNewEdge from "./classes/controller/userCreatedNewEdge";
 import CellLabel from "./classes/view/cellLables/cellLabel";
 import MyObject from "./classes/parserRep/myObject";
 import Observer from "./interfaces/observer";
+import ValueChangeController from "./classes/controller/propertyController/cellValueChangeController";
+import MxClipboardHelper from "./helper/mxClipboardHelper";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -304,6 +306,8 @@ const Editor = (props) => {
         {  
           if(cell.edge && cell.target != null && cell.source != null)
           {
+            console.log('add new Connection');
+            
             return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
           }
           else{
@@ -314,87 +318,13 @@ const Editor = (props) => {
 
       mxClipboard.copy = function(graph, cells)
       {
-        
-        cells = cells || graph.getSelectionCells();
-        var result = graph.getExportableCells(cells);
-
-        mxClipboard.parents = new Object();
-
-        for (var i = 0; i < result.length; i++)
-        {
-          mxClipboard.parents[i] = graph.model.getParent(cells[i]);
-        }
-
-        mxClipboard.insertCount = 1;
-        mxClipboard.setCells(graph.cloneCells(result));
-        
-        return result;
+        return MxClipboardHelper.Copy(graph,cells);
       };
 
       mxClipboard.paste = function(graph)
       {
-        if (!mxClipboard.isEmpty())
-        {
-
-          console.log(mxClipboard.getCells());
-          
-          var cells = graph.getImportableCells(mxClipboard.getCells());
-          var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
-          var parent = graph.getDefaultParent();
-
-          graph.model.beginUpdate();
-          try
-          {
-            console.log('Paste');
-            
-            console.log(cells);
-            
-            for (var i = 0; i < cells.length; i++)
-            {
-              var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
-                  mxClipboard.parents[i] : parent;
-              var tempObj = cells[i].value;
-             
-              //paste class
-              if(tempObj instanceof Class){
-                let newCls = (tempObj as Class).cloneModel();
-                newCls.setName(newCls.getName() + 'Copy');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
-                cells[i].value = newCls;
-                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
-              }
-              //import package
-              else if(tempObj instanceof Package){
-                let newPackage = (tempObj as Package).cloneModel();
-                newPackage.setName('Copy')
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(newPackage);
-                let children = cells[i].children;
-                if(children != null)
-                for (let index = 0; index < children.length; index++) {
-                  const child = children[index];
-                  if(child.value instanceof Class){
-                    let newCls = (child.value as Class).cloneModel();
-                    DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
-                    cells[i].value = newCls;
-                    newPackage.AddClassReference(newCls);
-                  }
-                  
-                }
-                cells[i].value = newPackage;
-                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
-              }
-            }
-            
-          }
-          finally
-          {
-            graph.model.endUpdate();
-          }
-
-          // Increments the counter and selects the inserted cells
-          mxClipboard.insertCount++;
-          graph.setSelectionCells(cells);
-        }
+        
+        MxClipboardHelper.Paste(graph);
       };
 
       graph.isValidDropTarget = (cell,cells,evt) => {
@@ -419,7 +349,11 @@ const Editor = (props) => {
       }
 
       graph.isValidConnection = (source,target) => {
+        console.log(target);
+        
         if(source.value instanceof Connection && target.value instanceof Connection)
+          return false;
+        else if(target.value instanceof Connection && (target.value as Connection).destinationElement.includes('('))
           return false;
         return true;
       }
@@ -486,14 +420,21 @@ const Editor = (props) => {
         {
           var change = changes[i];
           
+          
           if (change.constructor.name === 'mxChildChange')
           {
+            console.log('mxChildChange');
+            console.log(change);
+            
+            
             let child = change.child.value;
             if(child != null && child instanceof Class){
               let cls = child as Class;
   
               if(change.parent === null ){
                   //#1: 2,4; #4: 1
+                  console.log('1');
+                  
                   DiagramCreator.diagram[DiagramCreator.activeIndex].removeClass(cls);
               }
   
@@ -501,11 +442,13 @@ const Editor = (props) => {
                 
                 if(change.previous === null){
                   //#1: 1 ; #4: 2
+                  console.log('2');
                   DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(cls);
                 }
                 else if(change.previous.value instanceof Package){
                   let temp = change.previous.value as Package;
                   //#2: 2
+                  console.log('3');
                   temp.RemoveClassReference(cls);
                 }
               }
@@ -514,13 +457,17 @@ const Editor = (props) => {
                 let pakg = change.parent.value as Package;
                 //#1: 3
                 if(change.previous === null){
+                  console.log('4');
+                  
                   DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(cls);
                   pakg.AddClassReference(cls);
                 }
                 else if(typeof change.previous.value === 'undefined'){
+                  console.log('5');
                   pakg.AddClassReference(cls);
                 }
                 else if(change.previous.value instanceof Package){
+                  console.log('6');
                   let prev = change.previous.value as Package;
                   prev.RemoveClassReference(cls);
                   pakg.AddClassReference(cls)
@@ -535,26 +482,30 @@ const Editor = (props) => {
               
               let pkg = child as Package;
               if(change.parent === null){
+                console.log('Package 1');
+                
                 DiagramCreator.diagram[DiagramCreator.activeIndex].removePackage(pkg,true);
               }
               else if(change.parent.value instanceof Package ){
-
-                if(change.previous != null && change.previous.value instanceof Package){                  
+                
+                if(change.previous != null && change.previous.value instanceof Package){      
+                  console.log('Package 2');            
                   (change.previous.value as Package).RemovePackageReferences(pkg);
                 }
                 else if(change.previous == null){
+                  console.log('Package 3');
                   DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pkg);
                 }
                 (change.parent.value as Package).AddPackageReference(pkg);
                 pkg.package = (change.parent.value as Package).getName();
               }
               else if(typeof change.parent.value === 'undefined'){
-                console.log(change);
                 if(change.previous === null){
-                  //#1: 1 ; #4: 2
+                  console.log('Package 4');
                   DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(pkg);
                 }
-                else if(change.previous.value instanceof Package){                  
+                else if(change.previous.value instanceof Package){       
+                  console.log('Package 5');           
                   (change.previous.value as Package).RemovePackageReferences(pkg);
                 }
               }
@@ -578,23 +529,7 @@ const Editor = (props) => {
 
           else if(change.constructor.name === 'mxValueChange'){
             
-            if(change.value instanceof Class && change.previous instanceof Class){
-              DiagramCreator.diagram[DiagramCreator.activeIndex].removeClass(change.previous);
-              DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(change.value);
-            }
-            else if(change.value instanceof Connection && change.previous instanceof Connection){
-
-              
-              DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(change.previous);
-              DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(change.value);
-            }
-            else if(change.value == null && change.previous instanceof Connection){              
-              DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(change.previous);
-            }
-            else if(change.value instanceof Package && change.previous instanceof Package){
-              DiagramCreator.diagram[DiagramCreator.activeIndex].removePackage(change.previous,false);
-              DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(change.value);
-            }
+            ValueChangeController.valueChanged( change.value, change.previous);
           }
           
           else if(change.constructor.name === 'mxTerminalChange'){

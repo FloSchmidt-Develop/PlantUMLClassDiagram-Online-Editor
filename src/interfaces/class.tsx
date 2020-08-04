@@ -14,6 +14,7 @@ export default interface Class extends ITyped, IName, ID{
     alias: string,
     x: number;
     y: number;
+    dataType: string;
 
     AddMethods(method:IMethod ): void;
     DeleteMethod(method: IMethod): void;

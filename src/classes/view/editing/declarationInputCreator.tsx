@@ -1,6 +1,5 @@
 import IClass from "../../../interfaces/class";
 import ClassUpdateController from '../../controller/classUpdateController';
-import MyObject from "../../parserRep/myObject";
 
 
 export default class DeclarationInputCreator {
@@ -11,7 +10,7 @@ export default class DeclarationInputCreator {
   }
 
   public createNameInputDiv(
-    elementToChange: MyObject,
+    elementToChange: IClass,
     sender: any
   ): HTMLDivElement {
     let container_div = document.createElement("div");
@@ -74,7 +73,7 @@ export default class DeclarationInputCreator {
         if (elementToChange !== null) {
           console.log('clone Object');
           
-          let newElement = (elementToChange as MyObject).cloneModel();
+          let newElement = (elementToChange as IClass).cloneModel();
           newElement.setName( elementToChange.getName());
           newElement.dataType = elementToChange.dataType;
           console.log(newElement);
@@ -136,7 +135,8 @@ export default class DeclarationInputCreator {
     return container_div;
   }
 
-  private UpdateClass(sender,elementToChange: MyObject){
+  private UpdateClass(sender,elementToChange: IClass){
+    
     this.graph.getModel().beginUpdate();
     ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
     this.graph.getModel().endUpdate();

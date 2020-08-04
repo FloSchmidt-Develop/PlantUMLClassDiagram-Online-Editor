@@ -21,9 +21,9 @@ export default interface Package extends ITyped, IName, ID{
     packageReferences: IPackage[];
     
     AddClassReference(classToAdd : IClass): void;
-    RemoveClassReference(classToRemove: IClass): void;
+    RemoveClassReference(classToRemove: IClass, keepName?: boolean): void;
     AddPackageReference(packageToAd : IPackage): void;
-    RemovePackageReferences(packageToRemove: IPackage): void;
+    RemovePackageReferences(packageToRemove: IPackage, keepName?: boolean): void;
     setName(name: string): void;
     cloneModel(): Package;
 }

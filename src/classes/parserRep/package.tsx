@@ -67,9 +67,12 @@ export default class Package extends ID implements IPackage{
         this.classReferences.push(classToAdd);
     }
 
-    public RemoveClassReference(classToRemove: IClass){
+    public RemoveClassReference(classToRemove: IClass, keepName: boolean = false){
         this.classReferences = this.classReferences.filter(e => e.id !== classToRemove.id);
-        classToRemove.package = '';
+        if(keepName == null || keepName === false){
+            classToRemove.package = '';
+        }
+
     }
 
     public AddPackageReference(packageToAd : IPackage){
@@ -80,25 +83,25 @@ export default class Package extends ID implements IPackage{
         this.packageReferences.push(packageToAd);
     }
 
-    public RemovePackageReferences(packageToRemove: IPackage){
+    public RemovePackageReferences(packageToRemove: IPackage, keepName: boolean = false){
         this.packageReferences = this.packageReferences.filter(e => e.id !== packageToRemove.id);
-        packageToRemove.package = '';
+        if(!keepName)
+            packageToRemove.package = '';
     }
 
     public cloneModel(): IPackage{
         let newPackage = new Package(this.name); 
-        newPackage.x = this.x
-        newPackage.y = this.y
+        newPackage.x = this.x;
+        newPackage.y = this.y;
         newPackage.setWidth(this.width);
         newPackage.setHight(this.hight);
-        newPackage.classReferences = this.classReferences;
-        newPackage.packageReferences = this.packageReferences;
+        newPackage.classReferences = [...this.classReferences];
+        newPackage.packageReferences = [...this.packageReferences];
         if(this.package !== ''){
             let parentPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === this.package);
-            parentPackage?.RemovePackageReferences(this);
+            parentPackage?.RemovePackageReferences(this,true);
             parentPackage?.AddPackageReference(newPackage);
         }
-
         return newPackage;
 
     }

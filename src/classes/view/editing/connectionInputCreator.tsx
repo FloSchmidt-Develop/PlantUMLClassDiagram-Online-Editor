@@ -386,7 +386,13 @@ export default class ConnectionInputCreator{
     this.graph.model.setValue(sender.cells[0], connectionToEdit);
     this.graph.model.setStyle(sender.cells[0], this.getUpdatedCellStyle(connectionToEdit));
 
+    
     this.graph.getModel().endUpdate();
+
+    let tempSelectedCell = sender.cells[0];
+    this.graph.getSelectionModel().clear();
+    this.graph.getSelectionModel().addCell(tempSelectedCell);
+
   }
 
 
