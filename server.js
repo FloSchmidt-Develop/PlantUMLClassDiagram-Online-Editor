@@ -94,6 +94,11 @@ function createPUMLFile(requestData ){
     result += '\n \n';
     result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData. connection_declarations);
     result += addPackages(requestData.package_declarations.filter(e => e.package === ''), requestData.connection_declarations);
+    requestData.connection_declarations.filter(e => e.destinationElement.includes('(')).forEach(connection => {
+        if(addedConnections.find(dstConnection => connection.destinationElement === dstConnection)){
+            result += createConnections(connection);
+        }
+    })
     result += '@enduml';
 
     return result;
@@ -138,12 +143,6 @@ function createClasses(classes, connections){
 
 
     }
-
-    connections.filter(e => e.destinationElement.includes('(')).forEach(connection => {
-        if(addedConnections.find(dstConnection => connection.destinationElement === dstConnection)){
-            result += createConnections(connection);
-        }
-    })
 
     return result;
 }
@@ -239,7 +238,7 @@ function getConnection(connector,destination,sourceElement){
 function getLayoutInfo(destinationClass,sourceClass){
     result = '';
     delta = 100;
-    if(destinationClass){
+    if(false){
         if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
             result = 'left';
         }
