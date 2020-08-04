@@ -5,17 +5,22 @@ var DiagramListener = require('./parser/DiagramListener').DiagramListener;
 
 const express = require('./node_modules/express');
 const fileUpload = require('./node_modules/express-fileupload');
-const cors = require('./node_modules/cors');
+var plantuml = require('node-plantuml');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 var response = {};
+var requestBody = {};
+var addedClasses;
+var addedConnections;
 //const bodyParser = require('body-parser');
 
 const app = express();
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 
 app.use(fileUpload());
 app.use(cors());
+plantuml.useNailgun(); 
 
 app.post('/upload', (req, res) => {
     if(req.file === null){
@@ -34,20 +39,23 @@ app.post('/upload', (req, res) => {
     parser.buildParseTrees = true;
     var tree = parser.diagram();
 
+
     var o = {};
 
     var listener = new DiagramListener(o);
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
     
     console.log(listener.Res.diagram);
+    //console.log(tree);
+    
 
     res.json(listener);
 })
 
 app.post('/export', (req, res) => {
-    console.log('export');
-    //console.log(req.body);
+    requestBody = req.body;
     var result = createPUMLFile(req.body);
+
 
     res.setHeader('Content-disposition', 'attachment; filename=theDocument.puml');
     res.setHeader('Content-type', 'text/plain');
@@ -57,6 +65,20 @@ app.post('/export', (req, res) => {
 
 })
 
+app.post('/png', function(req, res) {
+    res.set('Content-Type', 'image/png');
+   
+    requestBody = req.body;
+    var result = createPUMLFile(req.body);
+    
+
+    var decode = plantuml.decode('/temp.puml');
+    var gen = plantuml.generate({format: 'png'});
+   
+    decode.out.pipe(gen.in);
+    gen.out.pipe(res);
+  });
+
 
 app.listen(4000, () => console.log('Server Started'));
 
@@ -64,26 +86,22 @@ app.listen(4000, () => console.log('Server Started'));
 
 function createPUMLFile(requestData ){
     response = requestData;
-    console.log(requestData);
+    addedClasses = [];
+    addedConnections = [];
     
     var result = '';
     result += '@startuml';
     result += '\n \n';
     result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData. connection_declarations);
-    result += addPackages(requestData.package_declarations, requestData.connection_declarations);
+    result += addPackages(requestData.package_declarations.filter(e => e.package === ''), requestData.connection_declarations);
     result += '@enduml';
-    
-    //----For testing delete in final solution
-    fs.writeFile('temp.puml',result, function (err){
-        if(err) throw err;
-    })
-    //--------------------------------------
 
     return result;
 
 }
 
 function addPackages(packages, connections){
+    
     var result = '';
     for (let index = 0; index < packages.length; index++) {
         const pack = packages[index];
@@ -91,6 +109,8 @@ function addPackages(packages, connections){
         result += getStylingOfClass(pack) + '\n';
         classes = pack.classReferences;
         result += createClasses(classes, connections);
+        let Childpackages = pack.packageReferences;
+        result += addPackages(Childpackages,connections);
         result += '} \n \n'
     }
     return result;
@@ -106,10 +126,25 @@ function createClasses(classes, connections){
         result += getMethodsOfClass(cls);
         result += getDeclarationsOfObject(cls);
         result += '}\n \n';
-        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.name);
+        addedClasses.push(cls.name);
 
-        result += createConnections(connectionsOfClass);
+        
+        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.name || e.destinationElement === cls.name);
+        connectionsOfClass.forEach(connection => {
+            if(addedClasses.find(srcCls => srcCls === connection.sourceElement) && addedClasses.find(dstCls => dstCls === connection.destinationElement)){
+                result += createConnections(connection);
+            }
+        });
+
+
     }
+
+    connections.filter(e => e.destinationElement.includes('(')).forEach(connection => {
+        if(addedConnections.find(dstConnection => connection.destinationElement === dstConnection)){
+            result += createConnections(connection);
+        }
+    })
+
     return result;
 }
 
@@ -121,21 +156,21 @@ function getStylingOfClass(cls){
 
 function createConnections(connections){
     var result = '';
-    for (let index = 0; index < connections.length; index++) {
-        const connection = connections[index];
-        result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
-        result += connection.destinationElement
-        result += ' '
-        + (connection.multiplicity_left.value !== '' ? (connection.multiplicity_left.value) : '')
-        + getConnection(connection.connector) 
-        + (connection.multiplicity_right.value !== '' ? (connection.multiplicity_right.value) : '') 
-        + ' ' + connection.sourceElement;
-        + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
-        result += '\n';
-    } 
-    result += '\n';
-    console.log(result);
+    const connection = connections;
     
+    
+    result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
+    result += connection.destinationElement
+    result += ' '
+    + (connection.multiplicity_left.value !== '' ? ('"' + (connection.multiplicity_left.value) + '"'): '')
+    + getConnection(connection.connector,connection.destinationElement, connection.sourceElement)
+    + (connection.multiplicity_right.value !== '' ? ( '"' + connection.multiplicity_right.value + '"') : '') 
+    + ' ' + connection.sourceElement
+    + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
+    result += '\n';
+
+    result += '\n';
+    addedConnections.push('(' + connection.destinationElement + ',' + connection.sourceElement + ')');
     return result;
 }
 
@@ -154,8 +189,11 @@ function getConnectionPoints(points){
     return result;
 }
 
-function getConnection(connector){
+function getConnection(connector,destination,sourceElement){
     result = '';
+    let destinationClass = requestBody.class_declarations.find(e => e.name === destination);
+    let sourceClass = requestBody.class_declarations.find(e => e.name === sourceElement);
+
     switch(connector.endArrowSymbol){
         case 0: 
             result += '<';
@@ -175,7 +213,7 @@ function getConnection(connector){
         default:
             break;
     }
-    result += connector.lineStyle === 0 ? '--' : '..';
+    result += connector.lineStyle === 0 ? ('-' + getLayoutInfo(destinationClass,sourceClass) + '-') : ('.' + getLayoutInfo(destinationClass,sourceClass) + '.');
     switch(connector.startArrowSymbol){
         case 0: 
             result += '>';
@@ -198,15 +236,66 @@ function getConnection(connector){
     return result;
 }
 
+function getLayoutInfo(destinationClass,sourceClass){
+    result = '';
+    delta = 100;
+    if(destinationClass){
+        if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
+            result = 'left';
+        }
+        else{
+            result = 'right';
+        }
+    
+        if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
+            result = 'up';
+        }
+        else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
+            result = 'down';
+        }
+    }
+
+    return result;
+}
+
 function getAttributesOfClass(cls){
     var result = ''
     var attrs = cls.attributes;
     for (let index = 0; index < attrs.length; index++) {
         const attr = attrs[index];
         result += '\t';
-        result += attr.visibility + attr.name + ': ' + attr.dataType + '\n';
+        result += getVisibility(attr.visibility) + getModifier(attr.modifiers) + attr.name + ': ' + attr.dataType + '\n';
     }
     return result;
+}
+
+
+function getVisibility(visibility){
+    switch(visibility){
+        case 0:
+            return '-';
+        case 1:
+            return '#';
+        case 2:
+            return '~';
+        case 3:
+            return '+';
+        default:
+            return ''
+    }
+}
+
+function getModifier(modifier){
+    switch(modifier){
+        case 0:
+            return '{static}';
+        case 1:
+            return '{abstract}';
+        case 2:
+            return '';
+        default:
+            return '';
+    }
 }
 
 function getMethodsOfClass(cls){
@@ -215,7 +304,7 @@ function getMethodsOfClass(cls){
     for (let index = 0; index < mets.length; index++) {
         const met = mets[index];
         result += '\t';
-        result += met.visibility + met.name + '(' + getFunctionArguments(met) + '): ' + met.dataType + '\n';
+        result += getVisibility(met.visibility) + getModifier(met.modifiers) + met.name + '(' + getFunctionArguments(met) + '): ' + met.dataType + '\n';
     }
 
     return result;

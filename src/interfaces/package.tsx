@@ -1,12 +1,14 @@
 import IClass from './class';
 import ITyped from './typed';
 import IName from './named';
+import IPackage from './package';
 import ID from './id';
 
 
 export default interface Package extends ITyped, IName, ID{
     y: number;
     x: number;
+    package: string;
 
 
 
@@ -16,9 +18,12 @@ export default interface Package extends ITyped, IName, ID{
     getHight():number;
 
     classReferences: IClass[];
+    packageReferences: IPackage[];
     
     AddClassReference(classToAdd : IClass): void;
-    RemoveClassReference(classToRemove: IClass): void;
+    RemoveClassReference(classToRemove: IClass, keepName?: boolean): void;
+    AddPackageReference(packageToAd : IPackage): void;
+    RemovePackageReferences(packageToRemove: IPackage, keepName?: boolean): void;
     setName(name: string): void;
     cloneModel(): Package;
 }

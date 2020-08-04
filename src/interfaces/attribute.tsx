@@ -1,12 +1,15 @@
 import IName from './named';
 import ID from './id';
+import { Modifiers, Visibility } from './class';
 
 
 export default interface Attribute extends IName, ID{
     dataType: string,
-    visibility: string,
+    visibility: Visibility,
+    modifiers: Modifiers,
 
-    setVisibility(newVisibility: string): void;
+    setModifier(newModifier: Modifiers);
+    setVisibility(newVisibility: Visibility): void;
     setDataType(newDataType: string): void;
 
     getWidth(): number;

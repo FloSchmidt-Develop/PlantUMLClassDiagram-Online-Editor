@@ -15,7 +15,6 @@ import "./App.css";
 import Editor from "./Editor";
 import DiagramCreator from "./helper/diagramCreator";
 import { Button, Toolbar } from "@material-ui/core";
-import { brotliDecompress } from "zlib";
 
 
 function TabPanel(props) {
@@ -60,6 +59,11 @@ const useStyles = makeStyles((theme) => ({
   button: {
     fontWeight: 'bold',
     color: 'white'
+  },
+  closeButton:{
+    position: "absolute",
+    top: '50px',
+    right: '10px'
   }
 }));
 
@@ -80,9 +84,16 @@ function App(){
     setDiagrams(temp);
     setIndex(index + 1);
     DiagramCreator.activeIndex = index;
-    setValue(index)
+    setValue(index);
     
     //setDiagrams(temp);
+  }
+
+  const closeDiagram = () => {
+   //ToDO: need to be done
+   alert('not implemented jet')
+   
+    
   }
 
   return (
@@ -103,6 +114,7 @@ function App(){
       {diagrams.map((number) => 
         <TabPanel value={value} index={number}>
           <Editor index={number}/>
+          <Button variant="contained" color="secondary" className={classes.closeButton} onClick={closeDiagram}>X</Button>
         </TabPanel>
       )}
     </div>

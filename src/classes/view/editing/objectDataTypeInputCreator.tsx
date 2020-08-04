@@ -1,8 +1,7 @@
-import IClass from "../../interfaces/class";
-import MyObject  from '../../classes/parserRep/object';
-import ClassUpdateController from '../../classes/controller/classUpdateController';
-import DiagramCreator from "../diagramCreator";
-import Declaration from "../../classes/parserRep/declaration";
+import IClass from "../../../interfaces/class";
+import ClassUpdateController from '../../controller/classUpdateController';
+import DiagramCreator from "../../../helper/diagramCreator";
+import Declaration from "../../parserRep/declaration";
 
 export default class {
   graph: any;
@@ -16,9 +15,6 @@ export default class {
     sender: any
   ): HTMLTableRowElement {
 
-    console.log('loaded');
-    
-
 
     //TODO Check IClass for undefined !! 
     let tr1 = document.createElement("tr");
@@ -31,7 +27,7 @@ export default class {
 
     let input = document.createElement("input");
     input.style.width = "200px";
-    input.value = (elementToChange as MyObject).dataType;
+    input.value = (elementToChange as IClass).dataType;
     let datalist = document.createElement("dataList");
     datalist.id = "datalist";
     input.setAttribute('list','datalist');
@@ -52,23 +48,26 @@ export default class {
     
 
     input.onchange = () => {
-        console.log('Change');
-        let obj = (elementToChange as MyObject);
-        obj.dataType = input.value;
-        let cls = DiagramCreator.diagram.map(e => e.class_declarations.filter(cls => cls.getName() === obj.dataType)).flat(1);
-
+        let newElement = elementToChange.cloneModel();
+        newElement.dataType = input.value;
+        let cls = DiagramCreator.diagram.map(e => e.class_declarations.filter(cls => cls.getName() === newElement.dataType)).flat(1);
+      
         if (cls != null && cls.length > 0) {
             let atrs = cls[0].attributes;
             for (let index = 0; index < atrs.length; index++) {
                 const atr = atrs[index];
-                obj.declarations.push(new Declaration(atr.getName(),''));
+                if(!newElement.declarations.find(e => e.getName() === atr.getName()))
+                newElement.declarations.push(new Declaration(atr.getName(),''));
                 
             }
+        }
+        else{
+          alert('Class with name: ' + input.value + ' can not be found!!!');
         }
 
       //Update Cell
       this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
+      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement);
       this.graph.getModel().endUpdate();
     }
 

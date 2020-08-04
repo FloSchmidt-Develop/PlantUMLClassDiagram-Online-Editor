@@ -1,5 +1,7 @@
-import IClass from "../../interfaces/class";
-import ClassUpdateController from '../../classes/controller/classUpdateController';
+import IClass from "../../../interfaces/class";
+import ClassUpdateController from '../../controller/classUpdateController';
+import Clonable from "../../../interfaces/cloneable";
+import Class from "../../../interfaces/class";
 
 export default class {
   graph: any;
@@ -38,7 +40,7 @@ export default class {
     option_interface.appendChild(interface_text);
 
     let option_abstract = document.createElement("option");
-    option_abstract.value = "abstractclass";
+    option_abstract.value = "abstract";
     let abstract_text = document.createTextNode("Abstract");
     option_abstract.appendChild(abstract_text);
 
@@ -57,24 +59,29 @@ export default class {
         ? 0
         : elementToChange.type === "interface"
         ? 1
-        : elementToChange.type === "abstractclass"
+        : elementToChange.type === "abstract"
         ? 2
         : elementToChange.type === "object"
         ? 3
         : 0;
 
     select.onchange = () => {
-
+      var newElement: Class;
       if (elementToChange !== null) {
-        elementToChange.setType(
+
+        newElement = (elementToChange as Class).cloneModel();
+        newElement.setType(
           (document.getElementById("type-select") as HTMLSelectElement).value
         );
+
+        //Update Cell
+        this.graph.getModel().beginUpdate();
+        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement);
+        this.graph.getModel().endUpdate();
       }
 
-      //Update Cell
-      this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-      this.graph.getModel().endUpdate();
+
+     
     };
 
     td2.appendChild(select);

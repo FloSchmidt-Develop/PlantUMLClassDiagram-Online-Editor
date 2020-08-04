@@ -1,547 +1,104 @@
 import IDiagram from "../interfaces/diagram";
 import IClass from "../interfaces/class";
-import IConnector, {Arrows, Lines} from '../interfaces/connector'
+import IConnector, {Arrows, Lines, LayoutProperty} from '../interfaces/connector'
 
 import Class from "../classes/parserRep/class";
-import MyObject from '../classes/parserRep/object';
+import MyObject from '../classes/parserRep/myObject';
 import Connection from "../classes/parserRep/connection";
-import TypeSelectCreator from './htmlCreators/typeSelectCreator';
-import NameSelectCreator from './htmlCreators/nameInputCreator';
-import DeclarationInputCreator from './htmlCreators/declarationInputCreator';
-import ConnectionInputCreator from './htmlCreators/connectionInputCreator';
-import ObjectDataTypeInputCreator from './htmlCreators/objectDataTypeInputCreator';
-import ClassEditingView from '../classes/view/editing/classEditing';
 
-import IName from '../interfaces/named';
-import ClassIcon from '../images/Class.png'
-import AbstractClassIcon from '../images/AbstractClass.png'
-import InterfaceIcon from '../images/Interface.png'
-import ObjectIcon from '../images/Object.png'
-
-import { start } from "repl";
 
 import {
-  mxGraph,
-  mxMarker,
-  mxKeyHandler,
-  mxClient,
-  mxUtils,
-  mxEvent,
   mxPoint,
-  mxDragSource,
-  mxGraphHandler,
-  mxEdgeHandler,
-  mxConstants,
-  mxEdgeStyle,
-  mxHierarchicalLayout,
-  mxRubberband,
-  mxCodec,
-  mxUndoManager
 } from "mxgraph-js";
-import Declaration from "../classes/parserRep/declaration";
-import Package from "../classes/parserRep/package";
-import DiagramCreator from "./diagramCreator";
-import ClassUpdateController from "../classes/controller/classUpdateController";
-import Multiplicity from "../classes/parserRep/multiplicity";
-import Point from "../classes/parserRep/point";
+import IPackage from "../interfaces/package";
+
+
 
 export default class MxGraphCreator {
   graph: any;
   parentContainer: any;
   diagram: IDiagram;
   editPanel: React.RefObject<HTMLDivElement>;
+  x = 100;
+  y = 100;
 
   constructor(graph: any, diagram: IDiagram, editPanel: React.RefObject<HTMLDivElement>) {
     this.graph = graph;
     this.editPanel = editPanel;
     this.parentContainer = graph.getDefaultParent();
-    
-
-    this.graph.setHtmlLabels(true);
-    this.graph.setCellsResizable(true);
-    this.graph.setResizeContainer(false);
-
-    var style = graph.getStylesheet().getDefaultEdgeStyle();
-    style[mxConstants.STYLE_ROUNDED] = true;
-    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-    this.graph.alternateEdgeStyle = 'elbow=vertical';
-
-
-    mxGraphHandler.prototype.guidesEnabled = true;
-    mxEdgeHandler.prototype.snapToTerminals = true;
-      
-    this.graph.getSelectionModel().addListener(mxEvent.REMOVE, function(sender, evt){
-      console.log('delete Event');
-      
-    })
-
-    //Function to show the Element in the editing Panel
-    this.graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
-		{
-      console.log(DiagramCreator.diagram);
-      
-      
-      let view = document.createElement('div');
-
-        var senderClass = sender.cells[0];
-        
-        
-          if ( typeof senderClass !== 'undefined'){
-            if( senderClass.value != null 
-            && (typeof senderClass.value) !== 'undefined'
-            && ((senderClass.value as Class).type === 'class'
-              || (senderClass.value as Class).type === 'abstractclass'
-              || (senderClass.value as Class).type === 'interface'
-              || (senderClass.value as Class).type === 'object')) {
-
-
-          let table = document.createElement("table");
-
-          //type
-          let typeSelectCreator = new TypeSelectCreator(graph);
-          let type_tr = typeSelectCreator.createTypeSeclectDiv(sender.cells[0].value, sender);
-          table.appendChild(type_tr);
-
-          //name
-          let nameInputCreator = new NameSelectCreator(graph);
-          let name_tr = nameInputCreator.createNameInputDiv(sender.cells[0].value as Class, sender);
-          table.appendChild(name_tr);
-          view.appendChild(table);
-
-          if((senderClass.value as Class).type === 'class'
-          || (senderClass.value as Class).type === 'abstractclass'
-          || (senderClass.value as Class).type === 'interface'){
-            
-          ClassEditingView.CreateClassEditingView(senderClass.value as Class,sender,graph,view);
-
-        }
-        else if(
-          (senderClass.value as Class).type === 'object'
-        ){
-          
-          //declarations
-          let dataTypeInputCreator = new ObjectDataTypeInputCreator(graph);
-          let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as Class, sender);
-
-
-          let declarationInputCreator = new DeclarationInputCreator(graph);
-          let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as Class, sender);
-          let declarationHeader = document.createElement('h3');
-          declarationHeader.innerText = 'Declarations';
-
-          let newDeclarationButton = document.createElement('button');
-          newDeclarationButton.innerText = 'at new Declaration';
-          newDeclarationButton.onclick = () =>{
-            let classToaddMethod = (sender.cells[0].value as Class);
-
-            if (classToaddMethod != null){
-              classToaddMethod.declarations.push(new Declaration('name',''));
-
-              graph.getModel().beginUpdate();
-              ClassUpdateController.updateClassValues(graph,sender.cells[0], classToaddMethod);
-              graph.getModel().endUpdate();
-
-              let tempSelectedCell = sender.cells[0];
-              graph.getSelectionModel().clear();
-              graph.getSelectionModel().addCell(tempSelectedCell);
-            }
-          }
-
-          view.appendChild(dataTypediv);
-          view.appendChild(declarationHeader);
-          view.appendChild(declaration_div);
-          view.appendChild(newDeclarationButton);
-        }
-
-          
-      }
-
-      //Connection------------------------------------
-      else if (senderClass.value != null 
-        && (sender.cells[0].value as Connection) != null 
-        && (sender.cells[0].value as Connection).type === 'Connection') {
-          
-        let attributeHeader = document.createElement('h3');
-        attributeHeader.innerText = 'Connection';
-
-        let table = document.createElement("table");
-
-        //type
-        let connectionInputCreator = new ConnectionInputCreator(graph);
-        let type_tr = connectionInputCreator.createTypeSeclectDiv(sender.cells[0].value, sender);
-        table.appendChild(type_tr[0]);
-        table.appendChild(type_tr[1]);
-        table.appendChild(type_tr[2]);
-        table.appendChild(type_tr[3]);
-        table.appendChild(type_tr[4]);
-        table.appendChild(type_tr[5]);
-
-
-
-        view.appendChild(attributeHeader);
-        view.appendChild(table);
-      }
-      else if (senderClass.value != null 
-        && (sender.cells[0].value as Package) != null 
-        && (sender.cells[0].value as Package).type === 'Package') {
-          
-        let attributeHeader = document.createElement('h3');
-        attributeHeader.innerText = 'Package';
-
-        let table = document.createElement("table");
-
-        let nameInputCreator = new NameSelectCreator(graph);
-        let name_tr = nameInputCreator.createNameInputDiv(sender.cells[0].value as IName, sender);
-        table.appendChild(name_tr);
-        view.appendChild(table);
-
-        //type
-
-
-        view.appendChild(attributeHeader);
-        view.appendChild(table);
-      }
-    }
-    else{
-      let attributeHeader = document.createElement('h3');
-      attributeHeader.innerText = 'no Element Selected';
-      view.appendChild(attributeHeader);
-    }
-
-      if (editPanel.current !== null) {
-        var oldChild = editPanel.current.firstChild;
-        if (oldChild !== null) {
-          editPanel.current?.removeChild(oldChild);
-        }
-        editPanel.current?.appendChild(view);
-      }
-           
-    });
-    
-    new mxKeyHandler(this.graph);
-
-    // Overrides method to disallow edge label editing
-    this.graph.isCellEditable = function(cell)
-    {
-      return this.getModel().isEdge(cell);
-    };
-    
     this.diagram = diagram;
-
-    this.graph.getLabel = function (cell) {
-
-      //Class------------------------------------------------------------------------------------------------
-      var actual_class: IClass | MyObject = cell.value;
-      if(actual_class !== null 
-        && typeof actual_class !== 'undefined' 
-        && (actual_class.type === 'interface' || actual_class.type === 'abstractclass'
-          || actual_class.type === 'class' || actual_class.type === 'object')){
-      if (actual_class !== null) {
-        var table = document.createElement("table");
-        table.style.fontFamily = 'Consolas'
-        table.style.padding = "10px";
-        table.style.maxWidth = actual_class.getWidth().toString();
-        table.style.border = '0px';
-        table.style.margin = '0px';
-
-
-        var body = document.createElement("tbody");
-
-        //tr1.style.borderCollapse = 'collapse';
-
-        //Header
-        var tr1 = document.createElement("tr");
-        var container_div = document.createElement("div");
-
-        container_div.style.textAlign = "center";
-        container_div.style.fontSize = "12px";
-        container_div.style.borderBottom = "1px solid black";
-
-        var header_div = document.createElement("div");
-        var dummy_div = document.createElement("div");
-        var header_icon = document.createElement("img");
-        var header_text = document.createElement("p");
-
-        header_icon.src = actual_class.type === 'class' 
-          ? ClassIcon : actual_class.type === 'abstractclass' 
-          ? AbstractClassIcon : actual_class.type === 'interface' 
-          ? InterfaceIcon : actual_class.type === 'object'
-          ? ObjectIcon : ClassIcon;
-        header_icon.style.width = '40px';
-        header_icon.style.height = '40px';
-        header_icon.style.marginLeft = '20px';
-        header_icon.style.marginRight= '20px';
-
-        dummy_div.style.width = '40px';
-        dummy_div.style.height = '40px';
-        dummy_div.style.marginRight = '20px';
-        dummy_div.style.marginLeft = '20px';
-
-        header_text.innerText = actual_class.getName() + (actual_class.type === 'object' ? (':' + (actual_class as MyObject).dataType) : '');
-        header_text.style.marginTop = '13px';
-        header_text.style.fontSize = '14px';
-        header_text.style.marginBottom = '13px';
-
-        header_div.style.display = 'flex';
-        header_div.style.justifyContent = 'space-between';
-
-        header_div.appendChild(header_icon);
-        header_div.appendChild(header_text);
-
-
-        header_div.appendChild(dummy_div);
-        container_div.appendChild(header_div);
-        tr1.appendChild(container_div);
-
-        body.appendChild(tr1);
-
-        if (actual_class.type === "interface" 
-        || actual_class.type === "class" 
-        || actual_class.type === "abstractclass") {
-
-        //Attributes
-            var tr2 = document.createElement("tr");
-            var attribute_container_div = document.createElement("div");
-
-            attribute_container_div.style.textAlign = "left";
-            attribute_container_div.style.fontSize = "10px";
-            attribute_container_div.style.borderBottom = "1px solid black";
-            attribute_container_div.style.minHeight = "5px";
-
-            for (let index = 0; index < actual_class.attributes.length; index++) {
-            const attribute = actual_class.attributes[index];
-
-            var attribute_div = document.createElement("div");
-            attribute_div.style.display = 'flex';
-
-            var content_string =
-                attribute.visibility +
-                " " +
-                attribute.getName() +
-                ": " +
-                attribute.dataType;
-
-            //attribute_div.appendChild(icon);
-            mxUtils.write(attribute_div, content_string);
-            
-
-            //attribute_container_div.appendChild(icon);
-            attribute_container_div.appendChild(attribute_div);
-            }
-
-            tr2.appendChild(attribute_container_div);
-
-        //Methods
-            var tr3 = document.createElement("tr");
-            var method_container_div = document.createElement("div");
-
-            method_container_div.style.textAlign = "left";
-            method_container_div.style.fontSize = "10px";
-            method_container_div.style.borderBottom = "1px solid black";
-            method_container_div.style.minHeight = "5px";
-
-            for (let index = 0; index < actual_class.methods.length; index++) {
-            const method = actual_class.methods[index];
-
-            var method_div = document.createElement("div");
-
-            var content_string =
-                method.visibility +
-                " " +
-                method.getName() +
-                " " +
-                method.getAttributeListAsString() +
-                ": " +
-                method.dataType;
-
-            mxUtils.write(method_div, content_string);
-
-            method_container_div.appendChild(method_div);
-
-
-        }
-
-        tr3.appendChild(method_container_div);
-        body.appendChild(tr2);
-        body.appendChild(tr3);
-        }
-
-        //Object-----------------------------------------------------------------------------
-        else if (actual_class.type === 'object') {
-            var tr2 = document.createElement("tr");
-            var declaration_divContainer = document.createElement("div");
-
-            declaration_divContainer.style.textAlign = "left";
-            declaration_divContainer.style.fontSize = "10px";
-            declaration_divContainer.style.borderBottom = "1px solid black";
-            declaration_divContainer.style.minHeight = "5px";
-
-            for (let index = 0; index < actual_class.declarations.length; index++) {
-                const declaration = actual_class.declarations[index];
-    
-                var declaration_div = document.createElement("div");
-    
-                var content_string =
-                    declaration.getName() +
-                    "= " +
-                    declaration.declaration_value;
-    
-                mxUtils.write(declaration_div, content_string);
-    
-                declaration_divContainer.appendChild(declaration_div);
-                }
-    
-                tr2.appendChild(declaration_divContainer);
-                body.appendChild(tr2);
-        }
-
-        
-
-        table.appendChild(body);
-
-        return table;
-      }
-
-    }
-    //Connection
-    else if((cell.value as Connection) != null && (cell.value as Connection).type === 'Connection'){ 
-      let connection = (cell.value as Connection);
-      return connection.stereoType;
-    }
-    //Package
-    else if((cell.value as Package) != null && (cell.value as Package).type === 'Package'){ 
-      let actualPackage = (cell.value as Package);
-      return actualPackage.getName();
-    }
-    //Multiplicity
-    else if((cell.value as Multiplicity) != null && (cell.value as Multiplicity).type === 'Multiplicity'){ 
-      let actualMultiplicity = (cell.value as Multiplicity);
-      return actualMultiplicity.value;
-    }
-    else{  
-        if(cell.edge && cell.target != null && cell.source != null){
-          console.log('added new Connection');
-          console.log(cell.source);
-          console.log(cell.target);
-          
-          let connection = new Connection('<--','','',cell.target.value.getName(),cell.source.value.getName(),'');
-          //ToDo: Check for Connection as Source
-          if(cell.target.value instanceof Class)
-            (cell.target.value as Class).registerObserver(connection);
-          if(cell.source.value instanceof Class)
-            (cell.source.value as Class).registerObserver(connection);
-
-          diagram.addConnection(connection);
-          
-          graph.getModel().beginUpdate();
-    
-          graph.model.setValue(cell, connection);
-          connection.points = cell.geometry.points?.reduce((acc,curr) => acc.push(new Point(curr.x,curr.y)),[]);
-          
-          graph.model.setStyle(cell, "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;");
-
-          var e21 = graph.insertVertex(cell, connection.id + 'L', connection.multiplicity_left, -0.9, 0, 0, 0,
-          'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
-          connection.multiplicity_left.vertex = e21;
-          e21.isConnectable = () => false;
-
-          var e12 = graph.insertVertex(cell, null, connection.multiplicity_right, 0.9, 0, 0, 0,
-          'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);
-          connection.multiplicity_right.vertex = e12;
-          e12.isConnectable = false;
-
-          graph.getModel().endUpdate();
-        }
-        else{
-          return cell.value;   
-        }
-    }
-  }
   }
 
   public start(): void {
-
-    let style = new Object();
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
-    style[mxConstants.STYLE_STROKECOLOR] = '#0ff000';
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-    style[mxConstants.STYLE_SPACING_TOP] = '0';
-    style[mxConstants.STYLE_SPACING] = '0';
-    this.graph.getStylesheet().putCellStyle('bottom', style);
 
     this.graph.getModel().beginUpdate();
 
     var activeVertexes: { [id: string]: any } = {};
     var activePackages: { [id: string]: any } = {};
     var activeEdges: {[id: string]: any } = {};
-    var x = 100;
-    var y = 100;
-    
 
-
-    //Package
-    var packageCount = this.diagram?.package_declarations.length ?
-      this.diagram?.package_declarations.length :
-      0;
-
-
-    for (let index = 0; index < packageCount; index++) {
-      let activePackage = this.diagram?.package_declarations[index];
-
-      console.log('--Graph Creator Package--');    
-      console.log(activePackage);
-
-        if (activePackage.x === 0)
-          activePackage.x = x;
-        if (activePackage.y === 0)
-          activePackage.y = y;
-
-         
-          
-      
-        activePackages[activePackage.getName()] = this.graph.insertVertex(
-          this.parentContainer,
-          null,
-          activePackage,
-          activePackage.x,
-          activePackage.y,
-          activePackage.getWidth(),
-          activePackage.getHight(),
-          'shape=swimlane;startSize=20;'
-        )
-    }
-
-    var count = this.diagram?.class_declarations.length
-      ? this.diagram?.class_declarations.length
-      : 0;
-
-    for (let index = 0; index < count; index++) {
+    //classes
+    let index = 0;
 
       //HINT: Set Default start position --- find better solution here
-      if (index % 4 == 0) {
-        y = y + 150;
-        x = 200;
-      }
 
       //Add Classes
-      let element = this.diagram?.class_declarations[index];
-      console.log(element);
-      element.x = element.x === 0 ? x : element.x ;
-      element.y = element.y === 0 ? y : element.y ;
-      activeVertexes[element.alias] = this.graph.insertVertex(
-        element.package !== '' ? activePackages[element.package] : this.parentContainer,
-        element.id,
-        element,
-        element.x,
-        element.y,
-        element.getWidth(),
-        element.getHeight()
-      );
-      console.log(activeVertexes[element.alias]);
+      let elements = this.diagram?.class_declarations.filter(e => e.package === '');
+      //console.log(element);
+      elements.forEach(element => {
+
+        if (index % 4 == 0) {
+          this.y = this.y + 150;
+          this.x = 200;
+        }
+
+        element.x = element.x === 0 ? this.x : element.x ;
+        element.y = element.y === 0 ? this.y : element.y ;
+        activeVertexes[element.alias] = this.graph.insertVertex(
+          this.parentContainer,
+          element.id,
+          element,
+          element.x,
+          element.y,
+          element.getWidth(),
+          element.getHeight()
+        )
+        index++
+        this.x = this.x + 400;
+      });
+    
+
+      //console.log(activeVertexes[element.alias]);
+
       
-      x = x + 400;
-    }
+      //Packages without package
+      let topLevelPackages = this.diagram?.package_declarations.filter(e => e.package === '');
+      this.addPackages(topLevelPackages, activePackages)
+
+      
+      elements = this.diagram?.class_declarations.filter(e => e.package !== '');
+      elements.forEach(element => {
+
+        if (index % 4 == 0) {
+          this.y = this.y + 150;
+          this.x = 200;
+        }
+
+        element.x = element.x === 0 ? this.x : element.x ;
+        element.y = element.y === 0 ? this.y : element.y ;
+        activeVertexes[element.alias] = this.graph.insertVertex(
+          activePackages[element.package],
+          element.id,
+          element,
+          element.x,
+          element.y,
+          element.getWidth(),
+          element.getHeight()
+        )
+        index++
+        this.x = this.x + 400;
+      });
+
 
     var edgeCount = this.diagram?.connection_declarations.length
       ? this.diagram?.connection_declarations.length
@@ -549,7 +106,7 @@ export default class MxGraphCreator {
 
     for (let index = 0; index < edgeCount; index++) {
       let connection = this.diagram?.connection_declarations[index];
-
+      
       if(connection.sourceElement.includes('(')){
         activeEdges['(' + connection.destinationElement + ',' + connection.sourceElement.replace('(','').replace(')', '') + ')']  = this.graph.insertEdge(
           this.parentContainer,
@@ -561,6 +118,7 @@ export default class MxGraphCreator {
         );
         
       }
+      
       else if(connection.destinationElement.includes('(')){
    
         activeEdges['(' + connection.destinationElement.replace('(','').replace(')', '') + ',' + connection.sourceElement + ')']   = this.graph.insertEdge(
@@ -572,8 +130,8 @@ export default class MxGraphCreator {
           this.getEdgeStyle(connection.connector)
         );
       }
-      else{
 
+      else{
         let source = this.diagram.class_declarations.find(e => e.getName() === connection.sourceElement) as Class;
         source?.registerObserver(connection as Connection);
 
@@ -588,6 +146,8 @@ export default class MxGraphCreator {
           activeVertexes[connection.destinationElement],
           this.getEdgeStyle(connection.connector)
         );
+
+        
 
         if(connection.points != null){
           let points: any[] = [];
@@ -616,29 +176,39 @@ export default class MxGraphCreator {
         e12.isConnectable = () => false;
             
     }
-    this.graph.getModel().parentForCellChanged = function(cell,parent,index){
+  }
+
+  private addPackages(packages: IPackage[], activePackages: any){
+    
+    this.y = this.y + 150;
+    this.x = 200;
+
+    packages.forEach( e => {
+      let activePackage = e
+
+      if (activePackage.x === 0)
+        activePackage.x = this.x;
+      if (activePackage.y === 0)
+        activePackage.y = this.y;
       
-      if(parent != null){
-        parent.insert(cell,index);
+      console.log(activePackage);
       
-        if(parent.value != null && cell.value != null){
-          let newPackage = parent.value as Package;
-          let changedClass = cell.value as Class;
-          if(newPackage != null && changedClass != null && newPackage instanceof Package && changedClass instanceof Class){
-            newPackage.AddClassReference(changedClass);
-          }
-        }
-        else if(cell.value != null && cell.value instanceof Class){
-          let changedClass = cell.value as Class;
-          if(changedClass != null){
-            let packageOfClass = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === changedClass.package)
-            packageOfClass?.RemoveClassReference(changedClass);
-            
-          }
-        } 
+      activePackages[activePackage.getName()] = this.graph.insertVertex(
+        activePackage.package !== '' ? activePackages[activePackage.package] : this.parentContainer,
+        null,
+        activePackage,
+        activePackage.x,
+        activePackage.y,
+        activePackage.getWidth(),
+        activePackage.getHight(),
+        'shape=swimlane;startSize=20;'
+      )
+
+      if(activePackage.packageReferences.length > 0){
+        this.addPackages(activePackage.packageReferences,activePackages);
       }
-  
     }
+    )
   }
 
 

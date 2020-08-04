@@ -5,7 +5,7 @@ import {
     mxUtils
   } from "mxgraph-js";
 import Class from "../../parserRep/class";
-import MyObject from "../../parserRep/object";
+import MyObject from "../../parserRep/myObject";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
@@ -43,7 +43,7 @@ export default class Toolbar{
 
             var cls = new Class('new Class','class');
             var itf = new Class('new Interface','interface');
-            var abs = new Class('new Class', 'abstractclass');
+            var abs = new Class('new Class', 'abstract');
             var obj = new MyObject('new Object', 'object');
             var pkg = new Package('new Package');
     
@@ -80,27 +80,27 @@ export default class Toolbar{
 
             if(vertex.value.type === 'class'){
                 vertex.value = new Class('NewClass' + Toolbar.classCounter,'class');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.classCounter++;
             }
             if(vertex.value.type === 'interface'){
                 vertex.value = new Class('NewInterface' + Toolbar.interfaceCounter,'interface');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.interfaceCounter++;
             }
-            if(vertex.value.type === 'abstractclass'){
-                vertex.value = new Class('newAbstractClass' + Toolbar.classCounter,'abstractclass');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+            if(vertex.value.type === 'abstract'){
+                vertex.value = new Class('newAbstractClass' + Toolbar.classCounter,'abstract');
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.classCounter++;
             }
             if(vertex.value.type === 'object'){
                 vertex.value = new MyObject('newObject' + Toolbar.objectCounter, 'object');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(vertex.value);
                 Toolbar.objectCounter++;
             }
             else if(vertex.value instanceof Package){
                 vertex.value = new Package('PackageName' + Toolbar.packageCounter);
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(vertex.value);
+                //DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(vertex.value);
                 Toolbar.packageCounter++;
             }
             

@@ -18,11 +18,16 @@ export default class Diagram extends ID implements IDiagram{
     }
 
     public addClass(newClass : IClass) :void{
-        this.class_declarations.push(newClass);
+        if(this.class_declarations.find(e => e.id === newClass.id) == null)
+            this.class_declarations.push(newClass);
     }
 
     public addConnection(newConnection : IConnection): void{
-        this.connection_declarations.push(newConnection);
+        
+        if(this.connection_declarations.find(e => e.id === newConnection.id) == null){
+            this.connection_declarations.push(newConnection);
+        }
+            
     }
 
     public addPackage(newPackage: IPackage): IPackage | null{
@@ -36,7 +41,7 @@ export default class Diagram extends ID implements IDiagram{
         return newPackage;
     }
 
-    public removeClass(classToRemove: IClass){
+    public removeClass(classToRemove: IClass, keepConnections: boolean = false){
         this.class_declarations = this.class_declarations.filter(
              e => e.id !== classToRemove.id);
 
@@ -45,24 +50,31 @@ export default class Diagram extends ID implements IDiagram{
         );
         //Remove Connections from Classes
         for (let index = 0; index < connectionsToRemove.length; index++) {
-            this.removeConnection(connectionsToRemove[index]);
+            if(!keepConnections)
+                this.removeConnection(connectionsToRemove[index]);
         }
-        let packageOfClass = this.package_declarations.find(e => e.getName() === classToRemove.getName());
-        packageOfClass?.RemoveClassReference(classToRemove);
+        let packageOfClass = this.package_declarations.find(e => e.getName() === classToRemove.package);
+        packageOfClass?.RemoveClassReference(classToRemove,true);
     }
 
     public removeConnection(connectionToRemove: IConnection){
+        console.log('remove Connection');
+        
         this.connection_declarations = this.connection_declarations.filter(
             e => e.id !== connectionToRemove.id);
-        console.log('Connection Removed');
-        console.log(connectionToRemove);
+
     }
 
-    public removePackage(packageToRemove: IPackage){
+    public removePackage(packageToRemove: IPackage, removeClasses: boolean){
         this.package_declarations = this.package_declarations.filter(
             e => e.id !== packageToRemove.id
         )
-        packageToRemove.classReferences.forEach( e => this.removeClass(e));
+        if(removeClasses){
+            packageToRemove.classReferences.forEach( e => this.removeClass(e));
+        }
+        let packageOfClass = this.package_declarations.find(e => e.getName() === packageToRemove.package);
+        packageOfClass?.RemovePackageReferences(packageToRemove,true);
+
 
     }
 

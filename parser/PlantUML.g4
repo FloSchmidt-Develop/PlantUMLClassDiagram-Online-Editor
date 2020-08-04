@@ -12,7 +12,7 @@ class_diagram
 
 package_section:
 	PACKAGE WHITESPACE? QUOTATION package_name QUOTATION WHITESPACE? ('{'    
-	(class_declaration | connection | styling |NEWLINE)*
+	(class_declaration | connection | styling | package_section | NEWLINE)*
 	'}')?
 	;
 
@@ -60,10 +60,7 @@ styling_expression:
 	;
 	
 styling_params:
-	'width:'
-	| 'hight:'
-	| 'x:'
-	| 'y:'
+	WORD ':'
 	;
 
 styling_value:
@@ -102,7 +99,7 @@ method:
     ;
 
  mathode_name:
-    WORD*
+    WORD+
     ;
 
 declaration:
@@ -113,6 +110,7 @@ declaration:
     '='
 	WHITESPACE?
     declaration_argument
+    NEWLINE?
     ;
 
 declaration_name:
@@ -120,11 +118,13 @@ declaration_name:
     ;
 
 declaration_argument:
-    WORD+ 
+    WORD* 
 	| INTEGER+
 	| ('[' WORD (',' WORD)* ']')
 	| ('[' INTEGER+ (',' INTEGER)* ']')
     ;
+
+multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"INTEGER"' );
 
 connection_left:
     instance=connection_name WHITESPACE? (mult=multiplicity)?
@@ -160,13 +160,11 @@ connection_symbol:
 	CONNECTOR
 	;
 
-multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"1"' );
-
 visibility:
-    '{abstract}'?
     ('+'     
     |'-'    
-    |'#')    
+    |'#'
+    | '~')    
     ;
 
 function_argument:
@@ -224,7 +222,7 @@ modifiers:
     ;
 
 stereotype:
-    QUOTATION ident ('(' args+=ident ')')? DOTDOT? WORD QUOTATION
+    QUOTATION ( ident ('(' args+=ident ')')? '/'? )*  (DOTDOT WORD)? QUOTATION
     ;
 
 type_declaration:

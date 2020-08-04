@@ -27,14 +27,33 @@ PlantUMLListener.prototype.enterClass_diagram = function(ctx) {
 };
 
 PlantUMLListener.prototype.enterPackage_section = function(ctx) {
-    actual_package = {};
+
+    if(actual_package != null){
+        let parentPackage = actual_package;
+        actual_package = {};
+        actual_package.package = parentPackage;
+    }
+    else{
+        actual_package = {};
+    }
 };
 
 
 PlantUMLListener.prototype.exitPackage_section = function(ctx) {
+    let parentPackage;
+    if(actual_package.package != null){
+        parentPackage = actual_package.package;
+        actual_package.package = parentPackage.name;
+    }
+    console.log('-----Package-----');
+    
+    console.log(actual_package);
+
+    console.log('------------------');
+    
     let clone = JSON.parse(JSON.stringify(actual_package));
     this.Res.diagram.package_declarations.push(clone);
-    actual_package = null;
+    actual_package = parentPackage != null ? parentPackage : null;
 };
 
 PlantUMLListener.prototype.enterPackage_name = function(ctx) {
@@ -81,7 +100,6 @@ PlantUMLListener.prototype.enterStyling_expression = function(ctx){
     if(actual_class != null)
         actual_class[ctx.styling_name.getText().replace(':','')] = ctx.styling_val.getText();
     else{
-        console.log('---Package----');
         actual_package[ctx.styling_name.getText().replace(':','')] = ctx.styling_val.getText();
     }
 }
@@ -128,6 +146,11 @@ PlantUMLListener.prototype.enterAttribute_type = function(ctx) {
 
 PlantUMLListener.prototype.enterVisibility = function(ctx) {
     actual_attribute.visibility = ctx.getText();
+};
+
+// Enter a parse tree produced by PlantUMLParser#modifiers.
+PlantUMLListener.prototype.enterModifiers = function(ctx) {
+    actual_attribute.modifiers = ctx.getText();
 };
 
 PlantUMLListener.prototype.enterMethod = function(ctx) {
@@ -179,10 +202,6 @@ PlantUMLListener.prototype.enterConnection = function(ctx) {
 
 PlantUMLListener.prototype.enterPoint_array = function(ctx) {
     let points = ctx.getText();
-    console.log('Points');
-    
-    console.log(points);
-    
     if(actual_connection != null){
         actual_connection.points = JSON.parse(points);
     }

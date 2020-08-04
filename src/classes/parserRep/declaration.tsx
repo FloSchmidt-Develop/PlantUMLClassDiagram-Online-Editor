@@ -8,8 +8,8 @@ export default class Declaration extends ID implements IDeclaration{
 
     constructor(name: string, value: string){
         super();
-        this.name = name;
-        this.declaration_value = value;
+        this.name = name ? name : '';
+        this.declaration_value = value ? value : '';
     }
 
     public setName(newName : string){
@@ -30,6 +30,7 @@ export default class Declaration extends ID implements IDeclaration{
 
     public cloneModel(): IDeclaration{
         let newDeclaration = new Declaration(this.name,this.declaration_value);
+        newDeclaration.id = this.id;
         return newDeclaration;
     }
 }

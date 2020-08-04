@@ -3,5 +3,5 @@ export default interface Multiplicity{
     readonly isLeft: boolean;
     value: string;
     vertex: any;
-    cloneModel(): string;
+    cloneModel(): Multiplicity;
 }

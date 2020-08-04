@@ -1,6 +1,7 @@
 import IClass from '../../interfaces/class';
 import IPackage from '../../interfaces/package';
 import ID from './id';
+import DiagramCreator from '../../helper/diagramCreator';
 
 
 export default class Package extends ID implements IPackage{
@@ -9,7 +10,9 @@ export default class Package extends ID implements IPackage{
     private width: number = 50;
     private hight: number = 400;
     private name: string;
-    public  classReferences: IClass[] = [];
+    public classReferences: IClass[] = [];
+    public packageReferences: IPackage[] = [];
+    public package = '';
     public readonly type = 'Package';
 
 
@@ -47,6 +50,9 @@ export default class Package extends ID implements IPackage{
         for (let index = 0; index < this.classReferences.length; index++) {
             this.classReferences[index].package = this.name;
         }
+        for (let index = 0; index < this.packageReferences.length; index++) {
+            this.packageReferences[index].package = this.name;
+        }
     }
 
     public getName(): string{
@@ -61,18 +67,41 @@ export default class Package extends ID implements IPackage{
         this.classReferences.push(classToAdd);
     }
 
-    public RemoveClassReference(classToRemove: IClass){
+    public RemoveClassReference(classToRemove: IClass, keepName: boolean = false){
         this.classReferences = this.classReferences.filter(e => e.id !== classToRemove.id);
-        classToRemove.package = '';
+        if(keepName == null || keepName === false){
+            classToRemove.package = '';
+        }
+
+    }
+
+    public AddPackageReference(packageToAd : IPackage){
+        if(this.packageReferences.find(e => e.id === packageToAd.id) != null){
+            return;
+        }
+        packageToAd.package = this.name;
+        this.packageReferences.push(packageToAd);
+    }
+
+    public RemovePackageReferences(packageToRemove: IPackage, keepName: boolean = false){
+        this.packageReferences = this.packageReferences.filter(e => e.id !== packageToRemove.id);
+        if(!keepName)
+            packageToRemove.package = '';
     }
 
     public cloneModel(): IPackage{
         let newPackage = new Package(this.name); 
-        newPackage.x = this.x
-        newPackage.y = this.y
+        newPackage.x = this.x;
+        newPackage.y = this.y;
         newPackage.setWidth(this.width);
         newPackage.setHight(this.hight);
-
+        newPackage.classReferences = [...this.classReferences];
+        newPackage.packageReferences = [...this.packageReferences];
+        if(this.package !== ''){
+            let parentPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === this.package);
+            parentPackage?.RemovePackageReferences(this,true);
+            parentPackage?.AddPackageReference(newPackage);
+        }
         return newPackage;
 
     }

@@ -14,6 +14,7 @@ export default interface Class extends ITyped, IName, ID{
     alias: string,
     x: number;
     y: number;
+    dataType: string;
 
     AddMethods(method:IMethod ): void;
     DeleteMethod(method: IMethod): void;
@@ -21,8 +22,12 @@ export default interface Class extends ITyped, IName, ID{
     DeleteAttribute(attribute: IAttribute): void;
     AddAttribute(attribute: IAttribute): void;
 
+    DeleteDeclaration(declaration: IDeclaration)
+    AddDeclaration(declaration: IDeclaration)
+
     ChangeAttributePosition(attribute: IAttribute, up: boolean): void;
     ChangeMethodPosition(method: IMethod, up: boolean): void;
+    ChangeDeclarationPosition(declaration: IDeclaration, up: boolean): void;
 
     getWidth(): number;
     getHeight(): number;
@@ -32,3 +37,18 @@ export default interface Class extends ITyped, IName, ID{
     setType(type: string);
     cloneModel(): Class;
 }
+
+export enum Modifiers{
+    static,
+    abstract,
+    none,
+}
+
+export enum Visibility{
+    private,
+    protected,
+    package,
+    public,
+    undefined,
+}
+
