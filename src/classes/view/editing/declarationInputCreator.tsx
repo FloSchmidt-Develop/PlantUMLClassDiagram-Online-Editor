@@ -76,7 +76,10 @@ export default class DeclarationInputCreator {
           let newElement = (elementToChange as IClass).cloneModel();
           newElement.setName( elementToChange.getName());
           newElement.dataType = elementToChange.dataType;
-          console.log(newElement);
+          if(this.validateName(input_name.value)){
+            alert('Name shouldn´t contain special Characters');
+            return;
+          }
           
           
           newElement.declarations[index].setName(input_name.value);
@@ -144,5 +147,11 @@ export default class DeclarationInputCreator {
     let tempSelectedCell = sender.cells[0];
     this.graph.getSelectionModel().clear();
     this.graph.getSelectionModel().addCell(tempSelectedCell);
+  }
+
+  
+  private validateName(name: string): boolean{
+    var format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return format.test(name);
   }
 }

@@ -1,6 +1,8 @@
 import IClass, { Visibility, Modifiers } from "../../../interfaces/class";
 import ClassUpdateController from '../../controller/classUpdateController';
 import Attribute from "../../parserRep/attribute";
+import Class from "../../parserRep/class";
+import DiagramCreator from "../../../helper/diagramCreator";
 
 
 export default class MethodInputCreator {
@@ -195,6 +197,10 @@ export default class MethodInputCreator {
       input_name.onchange = () => {
         let newElement = (elementToChange as IClass).cloneModel();
         if (newElement !== null) {
+          if(this.validateName(input_name.value)){
+            alert('Name shouldn´t contain special Characters');
+            return;
+          }
           newElement.methods[index].setName(input_name.value);
           //Update Cell
           this.UpdateClass(sender,newElement);
@@ -287,7 +293,10 @@ export default class MethodInputCreator {
 
               let newArgument = newMethode.attributeList?.find(e => e.id === argument.id);
               if(newArgument != null){
-
+                if(this.validateName(input_argument_name.value)){
+                  alert('Name shouldn´t contain special Characters');
+                  return;
+                }
                 newArgument.setName(input_argument_name.value);
                 this.UpdateClass(sender,newElement);
               }
@@ -393,5 +402,10 @@ export default class MethodInputCreator {
     let tempSelectedCell = sender.cells[0];
     this.graph.getSelectionModel().clear();
     this.graph.getSelectionModel().addCell(tempSelectedCell);
+  }
+
+  private validateName(name: string): boolean{
+    var format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return format.test(name);
   }
 }

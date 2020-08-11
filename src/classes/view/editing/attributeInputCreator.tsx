@@ -193,6 +193,11 @@ export default class AttributeInputCreator {
       input_name.onchange = () => {
         let newElement = (elementToChange as IClass).cloneModel();
         if (newElement !== null) {
+          if(this.validateName(input_name.value)){
+            alert('Name shouldn´t contain special Characters');
+            return;
+          }
+
           newElement.attributes[index].setName(input_name.value);
 
           this.UpdateClass(sender,newElement);
@@ -261,4 +266,11 @@ export default class AttributeInputCreator {
     this.graph.getSelectionModel().clear();
     this.graph.getSelectionModel().addCell(tempSelectedCell);
   }
+
+  
+  private validateName(name: string): boolean{
+    var format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return format.test(name);
+  }
+
 }

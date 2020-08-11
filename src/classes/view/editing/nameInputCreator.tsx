@@ -90,7 +90,7 @@ export default class NameInputCreator {
   }
 
   public validateName(name: string): boolean{
-    var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    var format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
     return format.test(name);
   }
 
