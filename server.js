@@ -6,8 +6,6 @@ var DiagramListener = require('./parser/DiagramListener').DiagramListener;
 const express = require('./node_modules/express');
 const fileUpload = require('./node_modules/express-fileupload');
 var plantuml = require('node-plantuml');
-const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
 var response = {};
 var requestBody = {};
@@ -26,7 +24,6 @@ app.post('/upload', (req, res) => {
     if(req.file === null){
         return res.status(400).json({msg: 'no file uploaded'})
     }
-    //console.log(req);
 
     const file = req.files.file;
     console.log(file.data);
@@ -46,8 +43,6 @@ app.post('/upload', (req, res) => {
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
     
     console.log(listener.Res.diagram);
-    //console.log(tree);
-    
 
     res.json(listener);
 })
@@ -238,19 +233,19 @@ function getConnection(connector,destination,sourceElement){
 function getLayoutInfo(destinationClass,sourceClass){
     result = '';
     delta = 100;
-    if(false){
+    if(destinationClass){
         if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
-            result = 'left';
+            result = '';
         }
         else{
-            result = 'right';
+            result = '';
         }
     
         if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
             result = 'up';
         }
         else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
-            result = 'down';
+            result = '';
         }
     }
 

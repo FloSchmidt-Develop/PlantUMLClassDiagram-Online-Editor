@@ -8,6 +8,9 @@ export default class ElementUpdateController{
 
 
         graph.model.setValue(mxCellToUpdate, updateSource);
+        let tempSelectedCell = mxCellToUpdate;
+        graph.getSelectionModel().clear();
+        graph.getSelectionModel().addCell(tempSelectedCell);
 
 
     }
