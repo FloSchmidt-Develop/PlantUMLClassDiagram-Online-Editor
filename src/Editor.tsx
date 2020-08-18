@@ -569,7 +569,7 @@ const Editor = (props) => {
                 }
               }
 
-              if(change.previous == null && child.target.value instanceof Connection){
+              if(change.previous == null && child.target != null && child.target.value instanceof Connection){
                 //Don't change anything
               }
               else if(change.terminal != null && change.terminal.value instanceof Class){
