@@ -31,7 +31,6 @@ export default class DiagramCreator{
         serverResponse.Res !== null &&
         serverResponse.Res.diagram !== null )
         {
-            console.log(serverResponse.Res.diagram);
             DiagramCreator.diagram[DiagramCreator.activeIndex].name = diagramName;
             
             let jsonDiagram = serverResponse.Res.diagram;
@@ -76,9 +75,6 @@ export default class DiagramCreator{
             }
 
         }
-        console.log('diagram creator');
-        console.log(DiagramCreator.diagram);
-        
         return DiagramCreator.diagram[DiagramCreator.activeIndex];
     }
 
@@ -221,7 +217,7 @@ export default class DiagramCreator{
                 tempClass.declarations.push(declaration);
                 }
                 else{
-                    throw Error("class must not have declarations")
+                    //throw Error("class must not have declarations")
                 }
 
                 

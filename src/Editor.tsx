@@ -59,6 +59,9 @@ import MyObject from "./classes/parserRep/myObject";
 import Observer from "./interfaces/observer";
 import ValueChangeController from "./classes/controller/propertyController/cellValueChangeController";
 import MxClipboardHelper from "./helper/mxClipboardHelper";
+import SaveAs from "./components/saveAs";
+
+
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -110,6 +113,8 @@ const Editor = (props) => {
     if(e.target.files[0] != null){
       setFile(e.target.files[0]);
       setFilename(e.target.files[0].name);
+      console.log(e.target.files);
+      
     }
 
   };
@@ -125,11 +130,10 @@ const Editor = (props) => {
           "Content-Type": "multipart/form-data",
         },
       });
-
+      console.log(res.data);
       
       diagramCreator.createDiagram(res.data,filename);
-
-
+      
       setDiagram(DiagramCreator.diagram[DiagramCreator.activeIndex]);
       setChange(change ? false : true);
       
@@ -656,7 +660,7 @@ const Editor = (props) => {
       <form onSubmit={onSubmit}>
         <div className="upload-section">
           <input 
-            accept=".puml" 
+            accept=".puml,.json" 
             className={classes.input} 
             id="raised-button-file" 
             multiple 
@@ -708,6 +712,8 @@ const Editor = (props) => {
         <Button variant="contained" color="primary" startIcon={<FileCopyIcon/>} onClick={copy} >copy</Button>
         <Button variant="contained" color="primary" startIcon={<FileCopyIcon/>}  onClick={paste} >paste</Button>
         <Button variant="contained" color="secondary" startIcon={<DeleteForeverSharpIcon/>} onClick={remove} >Delete</Button>
+        <SaveAs/>
+
         
       </div>
     </Fragment>

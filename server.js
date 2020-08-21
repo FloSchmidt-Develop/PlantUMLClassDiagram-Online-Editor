@@ -26,25 +26,39 @@ app.post('/upload', (req, res) => {
     }
 
     const file = req.files.file;
-    console.log(file.data);
-    var input = file.data.toString('utf8');
+    console.log(file.mimetype);
+    if(file.mimetype === "application/json")
+    {
 
-    var chars = new antlr4.InputStream(input);
-    var lexer = new PlantUMLLexer(chars);
-    var tokens  = new antlr4.CommonTokenStream(lexer);
-    var parser = new PlantUMLParser(tokens);
-    parser.buildParseTrees = true;
-    var tree = parser.diagram();
+        var input = file.data.toString('utf8');
+        let obj = JSON.parse(input);
+        let result = createJSONFile(obj);
+        //console.log(result);
+        
+        res.json(result);
+    }
+    else
+    {
+        var input = file.data.toString('utf8');
 
-
-    var o = {};
-
-    var listener = new DiagramListener(o);
-    antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
+        var chars = new antlr4.InputStream(input);
+        var lexer = new PlantUMLLexer(chars);
+        var tokens  = new antlr4.CommonTokenStream(lexer);
+        var parser = new PlantUMLParser(tokens);
+        parser.buildParseTrees = true;
+        var tree = parser.diagram();
     
-    console.log(listener.Res.diagram);
+    
+        var o = {};
+    
+        var listener = new DiagramListener(o);
+        antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
+        
+        console.log(listener.Res.diagram);
+    
+        res.json(listener);
+    }
 
-    res.json(listener);
 })
 
 app.post('/export', (req, res) => {
@@ -77,7 +91,95 @@ app.post('/png', function(req, res) {
 
 app.listen(4000, () => console.log('Server Started'));
 
+function createJSONFile(requestObject){
+    resultObj = {Res: {}};
+    resultObj.Res = { diagram: {
+        class_declaration: [],
+        connection_declaration: [],
+        object_declaration: [],
+        package_declarations: []
+     }};
+    let diagram = resultObj.Res.diagram;
+    console.log(requestObject);
+    
+    diagram.class_declaration = requestObject.class_declarations.map(cls => ({
+        alias: cls.alias,
+        hight: cls.hight,
+        name: (cls.dataType == '' ? cls.name : ( cls.name + ':' + cls.dataType)),
+        type: cls.type,
+        width: cls.width,
+        x: cls.x,
+        y: cls.y,
+        package: cls.package,
+        //attributes
+        attributes: cls.attributes.map(attr => ({
+            visibility: attr.visibility === 0 ? '-' : 
+                (attr.visibility === 1 ? '#' : 
+                (attr.visibility === 2 ? '~' : 
+                (attr.visibility === 3 ? '+' 
+                : ''))),
+            modifiers: attr.modifiers === 0 ? '{abstract}' :
+             (attr.modifiers === 1 ? '{static}' : ''),
+            name: attr.name,
+            dataType: attr.dataType
+        })),
+        //methods
+        methodes: cls.methods.map(mth => ({
+            visibility: mth.visibility === 0 ? '-' : 
+                (mth.visibility === 1 ? '#' : 
+                (mth.visibility === 2 ? '~' : 
+                (mth.visibility === 3 ? '+' 
+                : ''))),
+            modifiers: mth.modifiers === 0 ? '{abstract}' :
+             (mth.modifiers === 1 ? '{static}' : ''),
+            name: mth.name,
+            dataType: mth.dataType,
+            attributeList: mth.attributeList.map(attr => ({name: attr.name, dataType: attr.dataType})),
+        })),
+        declarations: cls.declarations.map(dec => ({
+            name: dec.name,
+            attribute: dec.declaration_value
+        })),
 
+    }))
+
+    //--Connections
+    diagram.connection_declaration = requestObject.connection_declarations.map(con => ({
+        type: con.type,
+        stereoType: con.stereoType,
+        right: con.sourceElement,
+        left: con.destinationElement,
+        multiplicity_left: con.multiplicity_left.value,
+        multiplicity_right: con.multiplicity_right.value,
+        connector: (con.connector.endArrowSymbol === 0 ? '<' : 
+            (con.connector.endArrowSymbol === 1 ? 'o' :
+            (con.connector.endArrowSymbol === 2 ? '*' :
+            (con.connector.endArrowSymbol === 3 ? '<|' :
+            con.connector.endArrowSymbol === 4 ? '' : ''))) )
+            +
+            (con.connector.lineStyle === 0 ? '-' : '.')
+            +
+            (con.connector.lineStyle === 0 ? '-' : '.')
+            +
+            (con.connector.startArrowSymbol === 0 ? '>' : 
+            (con.connector.startArrowSymbol === 1 ? 'o' :
+            (con.connector.startArrowSymbol === 2 ? '*' :
+            (con.connector.startArrowSymbol === 3 ? '|>' :
+            con.connector.startArrowSymbol === 4 ? '' : ''))) ),
+        points: con.points,
+    }))
+    //Packages
+    diagram.package_declarations = requestObject.package_declarations.map(pkg => ({
+        package: pkg.package,
+        hight: pkg.hight,
+        width: pkg.width,
+        x: pkg.x,
+        y: pkg.y,
+        name: pkg.name
+    }))
+
+    return resultObj;
+}
 
 function createPUMLFile(requestData ){
     response = requestData;
