@@ -3,7 +3,7 @@ import ID from "./id";
 
 export default abstract class ObserverSubject<T> extends ID{
 
-    protected observers: Observer<T>[];
+    public observers: Observer<T>[];
 
     constructor() {
         super();

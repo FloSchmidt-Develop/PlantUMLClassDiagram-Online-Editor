@@ -46,8 +46,13 @@ export default class MxClipboardHelper{
               //paste class
               if(tempObj instanceof Class){         
                 console.log('Paste Class');
-                   
+                console.log(cells[i]);
+
                 let newCls = (tempObj as Class).cloneModel();
+                (newCls as Class).observers = [];
+
+                
+                
                 newCls.setName(newCls.getName() + 'Copy');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
                 cells[i].value = newCls;
