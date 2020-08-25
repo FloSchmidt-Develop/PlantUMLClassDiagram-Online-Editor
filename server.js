@@ -6,6 +6,7 @@ var DiagramListener = require('./parser/DiagramListener').DiagramListener;
 const express = require('./node_modules/express');
 const fileUpload = require('./node_modules/express-fileupload');
 var plantuml = require('node-plantuml');
+var plantumlEncoder = require('plantuml-encoder');
 const cors = require('cors');
 var response = {};
 var requestBody = {};
@@ -54,7 +55,7 @@ app.post('/upload', (req, res) => {
         var listener = new DiagramListener(o);
         antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener,tree);
         
-        console.log(listener.Res.diagram);
+        //console.log(listener.Res.diagram);
     
         res.json(listener);
     }
@@ -63,7 +64,7 @@ app.post('/upload', (req, res) => {
 
 app.post('/export', (req, res) => {
     requestBody = req.body;
-    var result = createPUMLFile(req.body);
+    let result = createPUMLFile(req.body);
 
 
     res.setHeader('Content-disposition', 'attachment; filename=theDocument.puml');
@@ -74,18 +75,19 @@ app.post('/export', (req, res) => {
 
 })
 
-app.post('/png', function(req, res) {
-    res.set('Content-Type', 'image/png');
-   
+app.post('/png', (req, res) => {
     requestBody = req.body;
-    var result = createPUMLFile(req.body);
-    
+    let result = createPUMLFile(req.body);
 
-    var decode = plantuml.decode('/temp.puml');
-    var gen = plantuml.generate({format: 'png'});
+    res.setHeader('Content-disposition', 'attachment; filename=theDocument.puml');
+    res.setHeader('Content-type', 'text/plain');
+    res.charset = 'UTF-8';
    
-    decode.out.pipe(gen.in);
-    gen.out.pipe(res);
+    var encoded = plantumlEncoder.encode(result)
+ 
+    var url = 'http://www.plantuml.com/plantuml/img/' + encoded
+    res.write(url);
+    res.end();
   });
 
 
@@ -337,17 +339,17 @@ function getLayoutInfo(destinationClass,sourceClass){
     delta = 100;
     if(destinationClass){
         if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
-            result = '';
+            result = 'l';
         }
         else{
-            result = '';
+            result = 'r';
         }
     
         if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
             result = 'up';
         }
         else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
-            result = '';
+            result = 'down';
         }
     }
 

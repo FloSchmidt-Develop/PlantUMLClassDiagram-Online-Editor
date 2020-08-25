@@ -1,5 +1,8 @@
 import React from 'react';
+
 import { withStyles, ThemeProvider } from '@material-ui/core/styles';
+
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -12,6 +15,7 @@ import DiagramCreator from './helper/diagramCreator';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 import axios from "axios";
+import { Link } from '@material-ui/core';
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -58,6 +62,7 @@ const DialogActions = withStyles((theme) => ({
 export default function ExportPreviewDialog() {
   const [open, setOpen] = React.useState(false);
   const [shownText, setShownText] = React.useState('');
+  const [link, setLink] = React.useState('');
   const [state, setState] = React.useState({source: ''});
 
   function replacer(key,value)
@@ -71,23 +76,12 @@ export default function ExportPreviewDialog() {
     var obj = JSON.parse(jsonObj);
     
     const res = await axios.post("/export",obj);
-    /*
-    axios
-      .post(
-        '/png', obj,
-        { responseType: 'arraybuffer' },
-      )
-      .then(response => {
-        const base64 = btoa(
-          new Uint8Array(response.data).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            '',
-          ),
-        );
-        setState({ source: "data:;base64," + base64 });
-      });
-      */
-    //downloadTxtFile(res.data)
+    console.log(res);
+    
+    const linkContainer = await axios.post("/png",obj);
+    console.log(linkContainer.data);
+
+    setLink(linkContainer.data);
     setShownText(res.data)
     setOpen(true);
   };
@@ -119,7 +113,11 @@ export default function ExportPreviewDialog() {
           <Typography gutterBottom style={{whiteSpace: 'pre-line'}}>
             {shownText}
           </Typography>
-          <img src={state.source} />
+          <img 
+          src={link}
+          alt={link}
+          />
+          <a href={link} target="_blank">{link} </a>
         </DialogContent>
         <DialogActions>
           <Button autoFocus variant="contained" color="secondary" onClick={downloadTxtFile}>

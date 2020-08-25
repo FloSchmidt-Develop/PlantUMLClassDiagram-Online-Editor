@@ -2,10 +2,8 @@ import IClass, { Visibility, Modifiers } from '../../interfaces/class'
 import IAttribute from '../../interfaces/attribute'
 import IMethod from '../../interfaces/methode'
 import IDeclaration from '../../interfaces/declaration'
-import ID from './id';
 import Attribute from './attribute';
 import Method from './method';
-import Observer from '../../interfaces/observer'
 import ObserverSubject from './subject'
 import Declaration from './declaration';
 import DiagramCreator from '../../helper/diagramCreator';

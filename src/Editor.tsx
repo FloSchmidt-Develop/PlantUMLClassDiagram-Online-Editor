@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
+import GridLayout from 'react-grid-layout';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
@@ -60,6 +61,9 @@ import Observer from "./interfaces/observer";
 import ValueChangeController from "./classes/controller/propertyController/cellValueChangeController";
 import MxClipboardHelper from "./helper/mxClipboardHelper";
 import SaveAs from "./components/saveAs";
+import ExportProvider from "./ExportProvider";
+import DiagramPreview from "./diagramPreview";
+import PumlPreview from "./pumlPreview";
 
 
 
@@ -416,7 +420,7 @@ const Editor = (props) => {
       graph.getView().addListener(mxEvent.UNDO, listener);
 
       //Delete/Add Classes Packages Connections On Add/Remove/Undo/Redo/Copy
-      graph.model.addListener(mxEvent.CHANGE, function(sender, evt)
+      graph.model.addListener(mxEvent.CHANGE, async function(sender, evt)
       {
         var changes = evt.getProperty('edit').changes;
         
@@ -603,7 +607,24 @@ const Editor = (props) => {
           }
           
         }
+
+      var jsonObj = JSON.stringify(DiagramCreator.diagram[DiagramCreator.activeIndex],replacer);
+      var obj = JSON.parse(jsonObj);
+
+        const pumlContent = await axios.post("/export",obj);
+        const linkContainer = await axios.post("/png",obj);
+      
+        console.log(pumlContent);
+        
+
+        ExportProvider.setChange(linkContainer.data, pumlContent.data)
       });
+
+      function replacer(key,value)
+      {
+          if (key=="vertex") return undefined;
+          else return value;
+      }
 
       //Controller -- Handel moving of Classes Packages Connections
       graph?.model.addListener(mxEvent.CHANGE, function(sender, evt)
@@ -685,8 +706,17 @@ const Editor = (props) => {
         <Grid xs={1} item>
           <Paper id="toolBar">Hallo</Paper>
         </Grid>
-        <Grid xs={9} item>
-          <Paper className="graph-container" ref={divGraph} id="divGraph"></Paper>
+        <Grid xs={6} item>
+              <Paper className="graph-container" ref={divGraph} id="divGraph"></Paper>
+        </Grid>
+        <Grid xs={3} item className="graph-preview">
+          <Paper className="preview-img-container">
+            <DiagramPreview/>
+          </Paper>
+          <Paper className="preview-puml">
+            <PumlPreview/>
+          </Paper>
+
         </Grid>
         <Grid xs={2} item className={classes.edit}>
           <Paper className="edit-container">
