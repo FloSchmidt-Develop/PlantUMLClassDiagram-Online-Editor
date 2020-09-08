@@ -157,8 +157,8 @@ const Editor = (props) => {
   //this is called evertime one of the states is changed
   useEffect(() => {
       
-    if (typeof graph !== "undefined") {
-      
+    if (graph != null) {
+      graph.getModel().clear();
       if (!mxClient.isBrowserSupported()) {
         mxUtils.error("Browser is not supported!", 200, false);
       } 
@@ -257,7 +257,7 @@ const Editor = (props) => {
       graph.zoomTo( DiagramCreator.diagram[DiagramCreator.activeIndex].scale); 
 
       graph.isValidDropTarget = (cell,cells,evt) => {
-        if(cell.value instanceof Class || cell.value instanceof Multiplicity){
+        if(cell.value instanceof Class || cell.value instanceof Multiplicity || cell.value instanceof Note){
           return false;
         }
         return true;
