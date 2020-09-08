@@ -1,7 +1,8 @@
-import Package from "../../parserRep/package";
-import Connection from "../../parserRep/connection";
-import Class from "../../parserRep/class";
-import DiagramCreator from "../../../helper/diagramCreator";
+import Package from "../../../parserRep/package";
+import Connection from "../../../parserRep/connection";
+import Class from "../../../parserRep/class";
+import DiagramCreator from "../../../../helper/diagramCreator";
+import Note from "../../../parserRep/note";
 
 //This Class handles the Undo/Redo Change of values from Models, adds change to Diagram and removes old from Diagram
 export default class ValueChangeController{
@@ -25,8 +26,6 @@ export default class ValueChangeController{
           }
 
           else if(actualElementValue == null && previousElementValue instanceof Connection){        
-            console.log('this is the reason');
-                  
             DiagramCreator.diagram[DiagramCreator.activeIndex].removeConnection(previousElementValue);
           }
 
@@ -38,6 +37,11 @@ export default class ValueChangeController{
               let packageOFClass = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === actualPackage.package);
               packageOFClass?.AddPackageReference(actualPackage);
             }
+          }
+
+          else if(actualElementValue instanceof Note && previousElementValue instanceof Note){
+            DiagramCreator.diagram[DiagramCreator.activeIndex].removeNote(previousElementValue);
+            DiagramCreator.diagram[DiagramCreator.activeIndex].addNote(actualElementValue);         
           }
     }
 }

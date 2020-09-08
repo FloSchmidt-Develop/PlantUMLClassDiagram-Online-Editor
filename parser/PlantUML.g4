@@ -7,7 +7,45 @@ diagram:
     ;
 
 class_diagram
-    : (class_declaration | connection | package_section | NEWLINE)*
+    : (class_declaration | connection | package_section | comment_section | NEWLINE)*
+    ;
+
+
+comment_section:
+    (NOTE WHITESPACE? direction=comment_direction WHITESPACE? 'of' WHITESPACE? relatedTo=comment_relatedTo WHITESPACE? content=comment_content) 
+    | (NOTE WHITESPACE? content=comment_content WHITESPACE? 'as' name=comment_name)
+    | (NOTE WHITESPACE? 'as' name=comment_name NEWLINE content2=multiLine_content NEWLINE 'end note');
+
+comment_content:
+    (( ':' | '"') (comment_element (WHITESPACE comment_element)* ) '"'?)
+    ;
+
+comment_element:
+    (WORD 
+    | ('<' WORD '>' )
+    | ('</' WORD '>') 
+    | (WORD ('?' | ',' | '!' | ':' | '.' ))
+    )
+    ;
+
+comment_newLine:
+    NEWLINE
+    ;
+
+multiLine_content:
+    (comment_newLine? (comment_element (WHITESPACE comment_element)* ))*
+    ;
+
+comment_direction:
+    DIRECTION
+    ;
+
+comment_relatedTo:
+    WORD
+    ;
+
+comment_name:
+    WORD
     ;
 
 package_section:
@@ -16,8 +54,6 @@ package_section:
 	'}')?
 	;
 
-
-	
 package_name:
 	WORD (DOTDOT WHITESPACE? WORD)?
 	;
@@ -122,6 +158,7 @@ declaration_argument:
 	| INTEGER+
 	| ('[' WORD (',' WORD)* ']')
 	| ('[' INTEGER+ (',' INTEGER)* ']')
+    | (WORD (INTEGER+ WORD?))
     ;
 
 multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"INTEGER"' );
@@ -244,6 +281,8 @@ enum_declaration:
 CONNECTOR:
     '--'
     | '..'
+    | '<..'
+    | '..>'
     | '-->'
     | '<--'
     | '--*'
@@ -264,8 +303,6 @@ CONNECTOR:
     | '<-'
     | '-*'
     | '*-'
-    | '-o'
-    | 'o-'
     | '<|-'
     | '-|>'
     | '.|>'
@@ -286,6 +323,7 @@ CONNECTOR:
     | '<-' DIRECTION? '-'
     | '-' DIRECTION? '->'
     | '<-' DIRECTION? '->'
+    | '.' DIRECTION? '.'
     ;
 	
 DIRECTION:
@@ -293,13 +331,15 @@ DIRECTION:
 	| 'down'
 	| 'right'
 	| 'left'
+    | 'top'
+    | 'bottom'
     | 'r'
     | 'l'
     | 'u'
     | 'd')
 	;
-	
-	
+
+NOTE: 'note';
 CLASS: 'class';
 INTERFACE: 'interface';
 ABSTRACT: 'abstract';
@@ -313,13 +353,16 @@ NEWPAGE : 'newpage' -> channel(HIDDEN)
 
 NEWLINE  :   '\n\n' | '\n' ;
 
+
 ARRAY : NONDIGIT ( DIGIT | NONDIGIT )* '.'? '[]';
-INTEGER: DIGIT (DIGIT)*;
-FLOAT: DIGIT+ '.' DIGIT+;
+INTEGER: ('-' | '+')? DIGIT (DIGIT)*;
+FLOAT: ('-' | '+')? DIGIT+ '.' DIGIT+;
 WORD  : (NONDIGIT | DIGIT) ( DIGIT | NONDIGIT )*;
 ANYARRAY : '*[]';
 ANY   : '*';
 DOTDOT  : ':';
+SPEZIALS: (',' | '<' | '>' | '?' | '!' | '.');
+
 
 
 WHITESPACE  : (' ' | '\t' | '\r' | '\n')+ -> skip ;

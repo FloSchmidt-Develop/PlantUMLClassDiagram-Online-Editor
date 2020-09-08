@@ -1,6 +1,7 @@
 import IConnection from "../../../interfaces/connection";
 import IConnector, { Lines, Arrows } from "../../../interfaces/connector";
 import Connection from "../../parserRep/connection";
+import EdgeStyleCreator from "../cellLables/edgeStyle";
 
 export default class ConnectionInputCreator{
   graph: any;
@@ -330,47 +331,6 @@ export default class ConnectionInputCreator{
   }
  
 
-
-  private getUpdatedCellStyle(classToChange: IConnection): string{
-    return this.getLineStyle(classToChange.connector) +
-    this.getStartArrowStyle(classToChange.connector) +
-    this.getEndArrowStyle(classToChange.connector) +
-    "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;";
-  }
-
-  private getLineStyle(connector: IConnector): string {
-    if (connector.lineStyle === Lines.dotted) {
-      return "dashed=1;";
-    }
-    return "dashed=0;";
-  }
-
-  private getStartArrowStyle(connector: IConnector): string {
-    if (connector.startArrowSymbol === Arrows.diamond) {
-      return "startArrow=diamond;startFill=0;";
-    } else if (connector.startArrowSymbol === Arrows.big) {
-      return "startArrow=block;startFill=0;startSize=20;";
-    } else if (connector.startArrowSymbol === Arrows.diamondFilled) {
-      return "startArrow=diamond;startFill=1;";
-    } else if (connector.startArrowSymbol === Arrows.normal) {
-      return "startArrow=classic;startFill=1;";
-    }
-    return "startArrow=dash;";
-  }
-
-  private getEndArrowStyle(connector: IConnector): string {
-    if (connector.endArrowSymbol === Arrows.diamond) {
-      return "endArrow=diamond;endFill=0;";
-    } else if (connector.endArrowSymbol === Arrows.big) {
-      return "endArrow=block;endFill=0;endSize=20;";
-    } else if (connector.endArrowSymbol === Arrows.diamondFilled) {
-      return "endArrow=diamond;endFill=1;";
-    } else if (connector.endArrowSymbol === Arrows.normal) {
-      return "endArrow=classic;endFill=1;";
-    }
-    return "endArrow=dash;";
-  }
-
   private UpdateLine(sender: any, connectionToEdit: IConnection){
     this.graph.getModel().beginUpdate();
 
@@ -384,7 +344,7 @@ export default class ConnectionInputCreator{
 
     
     this.graph.model.setValue(sender.cells[0], connectionToEdit);
-    this.graph.model.setStyle(sender.cells[0], this.getUpdatedCellStyle(connectionToEdit));
+    this.graph.model.setStyle(sender.cells[0], EdgeStyleCreator.getStyle(connectionToEdit.connector));
 
     
     this.graph.getModel().endUpdate();

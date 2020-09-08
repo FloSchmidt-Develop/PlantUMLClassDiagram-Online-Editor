@@ -24,6 +24,54 @@ PlantUMLVisitor.prototype.visitClass_diagram = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#comment_section.
+PlantUMLVisitor.prototype.visitComment_section = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#comment_content.
+PlantUMLVisitor.prototype.visitComment_content = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#comment_element.
+PlantUMLVisitor.prototype.visitComment_element = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#comment_newLine.
+PlantUMLVisitor.prototype.visitComment_newLine = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#multiLine_content.
+PlantUMLVisitor.prototype.visitMultiLine_content = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#comment_direction.
+PlantUMLVisitor.prototype.visitComment_direction = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#comment_relatedTo.
+PlantUMLVisitor.prototype.visitComment_relatedTo = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
+// Visit a parse tree produced by PlantUMLParser#comment_name.
+PlantUMLVisitor.prototype.visitComment_name = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by PlantUMLParser#package_section.
 PlantUMLVisitor.prototype.visitPackage_section = function(ctx) {
   return this.visitChildren(ctx);

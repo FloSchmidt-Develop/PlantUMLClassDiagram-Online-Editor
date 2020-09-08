@@ -4,6 +4,7 @@ import VertexCellLabel from "./vertexCellLable";
 import Connection from "../../../interfaces/connection";
 import Package from "../../../interfaces/package";
 import Multiplicity from "../../../interfaces/multiplicity";
+import Note from "../../parserRep/note";
 
 export default class CellLabel{
     public static CreateCellLabel(cell: any): any
@@ -39,6 +40,11 @@ export default class CellLabel{
             
             let actualMultiplicity = (cell.value as Multiplicity);
             return actualMultiplicity.value;
+        }
+        //Note
+        else if((cell.value as Note) != null && (cell.value as Note).type === 'Note'){
+            let actualNote = (cell.value as Note);
+            return actualNote.content;
         }
 
     }

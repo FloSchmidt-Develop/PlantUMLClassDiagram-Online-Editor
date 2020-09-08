@@ -29,6 +29,78 @@ PlantUMLListener.prototype.exitClass_diagram = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#comment_section.
+PlantUMLListener.prototype.enterComment_section = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#comment_section.
+PlantUMLListener.prototype.exitComment_section = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#comment_content.
+PlantUMLListener.prototype.enterComment_content = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#comment_content.
+PlantUMLListener.prototype.exitComment_content = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#comment_element.
+PlantUMLListener.prototype.enterComment_element = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#comment_element.
+PlantUMLListener.prototype.exitComment_element = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#comment_newLine.
+PlantUMLListener.prototype.enterComment_newLine = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#comment_newLine.
+PlantUMLListener.prototype.exitComment_newLine = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#multiLine_content.
+PlantUMLListener.prototype.enterMultiLine_content = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#multiLine_content.
+PlantUMLListener.prototype.exitMultiLine_content = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#comment_direction.
+PlantUMLListener.prototype.enterComment_direction = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#comment_direction.
+PlantUMLListener.prototype.exitComment_direction = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#comment_relatedTo.
+PlantUMLListener.prototype.enterComment_relatedTo = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#comment_relatedTo.
+PlantUMLListener.prototype.exitComment_relatedTo = function(ctx) {
+};
+
+
+// Enter a parse tree produced by PlantUMLParser#comment_name.
+PlantUMLListener.prototype.enterComment_name = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#comment_name.
+PlantUMLListener.prototype.exitComment_name = function(ctx) {
+};
+
+
 // Enter a parse tree produced by PlantUMLParser#package_section.
 PlantUMLListener.prototype.enterPackage_section = function(ctx) {
 };

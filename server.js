@@ -12,6 +12,7 @@ var response = {};
 var requestBody = {};
 var addedClasses;
 var addedConnections;
+var addedNotes;
 //const bodyParser = require('body-parser');
 
 const app = express();
@@ -187,17 +188,19 @@ function createPUMLFile(requestData ){
     response = requestData;
     addedClasses = [];
     addedConnections = [];
+    addedNotes = [];
     
     var result = '';
     result += '@startuml';
     result += '\n \n';
-    result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData. connection_declarations);
+    result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData.connection_declarations);
     result += addPackages(requestData.package_declarations.filter(e => e.package === ''), requestData.connection_declarations);
     requestData.connection_declarations.filter(e => e.destinationElement.includes('(')).forEach(connection => {
         if(addedConnections.find(dstConnection => connection.destinationElement === dstConnection)){
             result += createConnections(connection);
         }
     })
+    result += createNotes(requestData.note_declarations, requestData.connection_declarations);
     result += '@enduml';
 
     return result;
@@ -246,6 +249,33 @@ function createClasses(classes, connections){
     return result;
 }
 
+
+function createNotes(notes, connections){
+    var result = '';
+    for (let index = 0; index < notes.length; index++) {
+        const note = notes[index];
+        result += 'note' + ' as ' + note.name + '\n';
+        result += note.content;
+        result += '\n';
+        result += 'end note \n\n';
+        addedClasses.push(note.name);
+
+        
+        let connectionsOfClass = connections.filter(e => e.sourceElement === note.name || e.destinationElement === note.name);
+        connectionsOfClass.forEach(connection => {
+
+            
+            if(addedClasses.find(srcCls => srcCls === connection.sourceElement) && addedClasses.find(dstCls => dstCls === connection.destinationElement)){
+        
+                result += createConnections(connection);
+            }
+
+        });
+        
+    }
+    return result;
+}
+
 function getStylingOfClass(cls){
     result = ''
     result += '\t\'' + 'width:' + cls.width + ';hight:' + cls.hight + ';x:' + cls.x + ';y:' + cls.y + ';\'\n';
@@ -291,6 +321,10 @@ function getConnection(connector,destination,sourceElement){
     result = '';
     let destinationClass = requestBody.class_declarations.find(e => e.name === destination);
     let sourceClass = requestBody.class_declarations.find(e => e.name === sourceElement);
+    if(destinationClass == null)
+        destinationClass = requestBody.note_declarations.find(e => e.name === destination);
+    if(sourceClass == null)
+        sourceClass = requestBody.note_declarations.find(e => e.name === sourceElement);
 
     switch(connector.endArrowSymbol){
         case 0: 

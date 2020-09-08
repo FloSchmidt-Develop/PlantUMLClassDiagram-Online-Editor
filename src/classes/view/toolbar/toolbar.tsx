@@ -16,6 +16,7 @@ import AbstractImg from "../../../images/ToolbarAbstract.png";
 import ObjectImg from "../../../images/ToolbarObject.png";
 import PackageImg from "../../../images/ToolbarPackage.png";
 import DiagramCreator from "../../../helper/diagramCreator";
+import Note from "../../parserRep/note";
 
 
 
@@ -46,17 +47,19 @@ export default class Toolbar{
             var abs = new Class('new Class', 'abstract');
             var obj = new MyObject('new Object', 'object');
             var pkg = new Package('new Package');
+            var note = new Note('Add Note');
     
             this.addVertex(graph,toolbar,pkg, PackageImg, 250, 100, 'shape=swimlane;startSize=20;');
             this.addVertex(graph,toolbar,cls, ClassImg, 250, 100, '');
             this.addVertex(graph,toolbar,itf, InterfaceImg, 270, 100, '');
             this.addVertex(graph,toolbar,obj, ObjectImg, 250, 80, '');
-            this.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, '');
+            this.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, 'fillColor=orange;');
+            this.addVertex(graph,toolbar,note, AbstractImg, 250, 100, 'fillColor=#FFF900;');
             //toolbar.addLine();
 
     }
 
-    private addVertex(graph, toolbar,type: IClass | IPackage, icon, w, h, style){
+    private addVertex(graph, toolbar,type: IClass | IPackage | Note, icon, w, h, style){
 
         var vertex = new mxCell(type, new mxGeometry(0, 0, w, h), style);
         
@@ -102,6 +105,9 @@ export default class Toolbar{
                 vertex.value = new Package('PackageName' + Toolbar.packageCounter);
                 //DiagramCreator.diagram[DiagramCreator.activeIndex].addPackage(vertex.value);
                 Toolbar.packageCounter++;
+            }
+            else if(vertex.value instanceof Note){
+                vertex.value = new Note('add Note');
             }
             
             

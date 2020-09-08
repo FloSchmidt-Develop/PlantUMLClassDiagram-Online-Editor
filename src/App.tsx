@@ -85,13 +85,24 @@ function App(){
     setIndex(index + 1);
     DiagramCreator.activeIndex = index;
     setValue(index);
+    console.log(temp);
+    
     
     //setDiagrams(temp);
   }
 
   const closeDiagram = () => {
-   //ToDO: need to be done
-   alert('not implemented jet')
+   let closeEditorIndex = DiagramCreator.activeIndex;
+   let closeEditorId = DiagramCreator.diagram[DiagramCreator.activeIndex].id;
+   let diagramIndex = diagrams.indexOf(closeEditorIndex);
+   diagrams.pop();
+   
+   let newIndex = diagrams[diagramIndex - 1];
+   DiagramCreator.diagram =  DiagramCreator.diagram.filter(e => e.id !== closeEditorId);
+   setDiagrams([...diagrams]);
+   setIndex(index - 1);
+   DiagramCreator.activeIndex = newIndex;
+   setValue(newIndex);
    
     
   }

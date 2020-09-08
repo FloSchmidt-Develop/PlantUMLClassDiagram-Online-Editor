@@ -11,6 +11,7 @@ import {
   mxPoint,
 } from "mxgraph-js";
 import IPackage from "../interfaces/package";
+import EdgeStyleCreator from "../classes/view/cellLables/edgeStyle";
 
 
 
@@ -54,6 +55,7 @@ export default class MxGraphCreator {
 
         element.x = element.x === 0 ? this.x : element.x ;
         element.y = element.y === 0 ? this.y : element.y ;
+        
         activeVertexes[element.alias] = this.graph.insertVertex(
           this.parentContainer,
           element.id,
@@ -93,12 +95,44 @@ export default class MxGraphCreator {
           element.x,
           element.y,
           element.getWidth(),
-          element.getHeight()
+          element.getHeight(),
         )
         index++
         this.x = this.x + 400;
       });
 
+
+      this.diagram?.note_declarations.forEach(note => {
+
+        if (index % 4 == 0) {
+          this.y = this.y + 150;
+          this.x = 200;
+        }
+
+        note.x = note.x === 0 ? this.x : note.x ;
+        note.y = note.y === 0 ? this.y : note.y ;
+
+        
+        
+        activeVertexes[note.getName()] = this.graph.insertVertex(
+          note.relatedTo === '' ? this.parentContainer : activeVertexes[note.relatedTo],
+          null,
+          note,
+          note.relatedTo === '' ? note.x : 1,
+          note.relatedTo === '' ? note.y : 1,
+          note.relatedTo === '' ? note.getWidth() : 0,
+          note.relatedTo === '' ? note.getHight() : 0,
+          note.relatedTo === '' ? 'fillColor=yellow;' : 'align=left;verticalAlign=top;;rounded=1;spacingLeft=4;spacingRight=4',
+          note.relatedTo === '' ? false : true
+        );
+        if(note.relatedTo !== ''){
+          activeVertexes[note.getName()].offset = new mxPoint(-8, -8);
+          this.graph.updateCellSize(test);
+        }
+
+        index++
+        this.x = this.x + 400;
+      });
 
     var edgeCount = this.diagram?.connection_declarations.length
       ? this.diagram?.connection_declarations.length
@@ -114,7 +148,7 @@ export default class MxGraphCreator {
           connection,
           activeEdges[connection.sourceElement],
           activeVertexes[connection.destinationElement],
-          this.getEdgeStyle(connection.connector)
+          EdgeStyleCreator.getStyle(connection.connector)
         );
         
       }
@@ -127,7 +161,7 @@ export default class MxGraphCreator {
           connection,
           activeVertexes[connection.sourceElement],
           activeEdges[connection.destinationElement],
-          this.getEdgeStyle(connection.connector)
+          EdgeStyleCreator.getStyle(connection.connector)
         );
       }
 
@@ -144,7 +178,7 @@ export default class MxGraphCreator {
           connection,
           activeVertexes[connection.sourceElement],
           activeVertexes[connection.destinationElement],
-          this.getEdgeStyle(connection.connector)
+          EdgeStyleCreator.getStyle(connection.connector)
         );
 
         
@@ -209,47 +243,6 @@ export default class MxGraphCreator {
       }
     }
     )
-  }
-
-
-  private getEdgeStyle(connector: IConnector): string{
-    return this.getLineStyle(connector) +
-    this.getStartArrowStyle(connector) +
-    this.getEndArrowStyle(connector) + 
-    "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;"
-  }
-
-  private getLineStyle(connector: IConnector): string {
-    if (connector.lineStyle === Lines.dotted) {
-      return "dashed=1;";
-    }
-    return "dashed=0;";
-  }
-
-  private getStartArrowStyle(connector: IConnector): string {
-    if (connector.startArrowSymbol === Arrows.diamond) {
-      return "startArrow=diamond;startFill=0;";
-    } else if (connector.startArrowSymbol === Arrows.big) {
-      return "startArrow=block;startFill=0;startSize=20;";
-    } else if (connector.startArrowSymbol === Arrows.diamondFilled) {
-      return "startArrow=diamond;startFill=1;";
-    } else if (connector.startArrowSymbol === Arrows.normal) {
-      return "startArrow=classic;startFill=1;";
-    }
-    return "startArrow=dash;";
-  }
-
-  private getEndArrowStyle(connector: IConnector): string {
-    if (connector.endArrowSymbol === Arrows.diamond) {
-      return "endArrow=diamond;endFill=0;";
-    } else if (connector.endArrowSymbol === Arrows.big) {
-      return "endArrow=block;endFill=0;endSize=20;";
-    } else if (connector.endArrowSymbol === Arrows.diamondFilled) {
-      return "endArrow=diamond;endFill=1;";
-    } else if (connector.endArrowSymbol === Arrows.normal) {
-      return "endArrow=classic;endFill=1;";
-    }
-    return "endArrow=dash;endFill=0;";
   }
 
 }

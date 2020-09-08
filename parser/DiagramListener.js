@@ -6,6 +6,7 @@ var actual_attribute = null;
 var actual_functionAttribute = null;
 var actual_package = null;
 var actual_declaration = null;
+var actual_note = null;
 
 
 var DiagramListener = function(res){
@@ -24,7 +25,47 @@ PlantUMLListener.prototype.enterClass_diagram = function(ctx) {
     this.Res.diagram.connection_declaration = new Array();
     this.Res.diagram.object_declaration = new Array();
     this.Res.diagram.package_declarations = new Array();
+    this.Res.diagram.note_declarations = new Array();
 };
+
+// Enter a parse tree produced by PlantUMLParser#comment_section.
+PlantUMLListener.prototype.enterComment_section = function(ctx) {
+    actual_note = {};
+    actual_note.content = '';
+    if(ctx.direction != null){
+        console.log('direction: ' + ctx.direction.getText()); 
+        actual_note.direction = ctx.direction.getText();
+    }
+    if(ctx.relatedTo != null){
+        console.log('relatedTo: ' + ctx.relatedTo.getText()); 
+        actual_note.relatedTo = ctx.relatedTo.getText();
+    }
+    if(ctx.name != null){
+        console.log('name: ' + ctx.name.getText()); 
+        actual_note.name = ctx.name.getText();
+    }
+
+    
+};
+
+PlantUMLListener.prototype.enterComment_element = function(ctx) {
+    if(actual_note != null){
+        if(actual_note.content !== '' && !actual_note.content.endsWith('\n'))
+            actual_note.content += ' '
+        actual_note.content += ctx.getText();
+    }
+    console.log(actual_note.content); 
+};
+
+PlantUMLListener.prototype.enterComment_newLine = function(ctx) {
+    if(actual_note != null){
+        if(actual_note.content !== '')
+        actual_note.content += '\n';
+    }
+    console.log('NewLine'); 
+};
+
+
 
 PlantUMLListener.prototype.enterPackage_section = function(ctx) {
 
@@ -38,6 +79,11 @@ PlantUMLListener.prototype.enterPackage_section = function(ctx) {
     }
 };
 
+PlantUMLListener.prototype.exitComment_section = function(ctx) {
+    let clone = JSON.parse(JSON.stringify(actual_note));
+    this.Res.diagram.note_declarations.push(clone);
+    actual_note = null;
+}
 
 PlantUMLListener.prototype.exitPackage_section = function(ctx) {
     let parentPackage;

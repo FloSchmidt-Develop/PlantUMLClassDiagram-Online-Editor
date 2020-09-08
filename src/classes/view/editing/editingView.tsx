@@ -7,6 +7,8 @@ import Package from "../../../interfaces/package";
 import PackageEditingView from "./ModelEditingViews/packageEditing";
 import Class from "../../parserRep/class";
 import MyObject from "../../parserRep/myObject";
+import Note from "../../parserRep/note";
+import NoteEditingView from "./ModelEditingViews/noteEditing";
 
 export default class EditingView{
 
@@ -54,6 +56,15 @@ export default class EditingView{
             PackageEditingView.CreatePackageEditingView(sender.cells[0].value as Package,sender,graph,view)
             
           }
+          //Note------------------------
+          else if(senderCell.value != null
+            && (sender.cells[0].value as Note) != null
+            && (sender.cells[0].value as Note).type === 'Note'){
+
+
+              NoteEditingView.CreateNoteEditingView(sender.cells[0].value as Note,sender,graph,view);
+
+          }
       }
       //Nothing selected------------------------
       else{
@@ -66,7 +77,12 @@ export default class EditingView{
       if (editPanel.current !== null) {
         var oldChild = editPanel.current.firstChild;
         if (oldChild !== null) {
-          editPanel.current?.removeChild(oldChild);
+          try {
+            editPanel.current.removeChild(oldChild);
+          } catch (error) {
+            alert('something went wrong')
+          }
+
         }
         editPanel.current?.appendChild(view);
       }

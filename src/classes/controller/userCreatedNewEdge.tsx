@@ -2,6 +2,9 @@ import Class from "../parserRep/class";
 import Connection from "../parserRep/connection";
 import DiagramCreator from "../../helper/diagramCreator";
 import Point from "../parserRep/point";
+import Note from "../parserRep/note";
+import ObserverSubject from "../parserRep/subject";
+import EdgeStyleCreator from "../view/cellLables/edgeStyle";
 
 export default class UserCreatedNewEdge{
     public static CreateNewEdgeFromCell(cell: any, graph: any): any{
@@ -45,6 +48,11 @@ export default class UserCreatedNewEdge{
                 (cell.source.value as Class).registerObserver(connection);
 
         }
+        else if(cell.target.value instanceof Note || cell.source.value instanceof Note){
+            connection = new Connection('..','','',cell.target.value.getName(),cell.source.value.getName(),''); 
+            (cell.target.value as ObserverSubject<string>).registerObserver(connection);
+            (cell.source.value as ObserverSubject<string>).registerObserver(connection);
+        }
         else{
             connection = new Connection('','','','','','');
         }
@@ -54,7 +62,7 @@ export default class UserCreatedNewEdge{
         graph.model.setValue(cell, connection);
         connection.points = cell.geometry.points?.reduce((acc,curr) => acc.push(new Point(curr.x,curr.y)),[]);
         
-        graph.model.setStyle(cell, "sourcePerimeterSpacing=0;shape=link;edgeStyle=orthogonalEdgeStyle;");
+        graph.model.setStyle(cell, EdgeStyleCreator.getStyle(connection.connector));
 
         var e21 = graph.insertVertex(cell, connection.id + 'L', connection.multiplicity_left, -0.9, 0, 0, 0,
         'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);

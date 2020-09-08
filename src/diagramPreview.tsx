@@ -2,6 +2,7 @@ import Observer from './interfaces/observer'
 import React from 'react';
 import ExportChangeContainer from './exportChangeContainer';
 import ExportProvider from './ExportProvider';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 class DiagramPreview extends React.Component implements Observer<ExportChangeContainer>{
 
@@ -18,7 +19,13 @@ class DiagramPreview extends React.Component implements Observer<ExportChangeCon
     }
 
     render(){
-        return <img className="preview-img" src={(this.state as stateOBJ).link} />
+        return (
+            <TransformWrapper>
+                <TransformComponent>
+                    <img className="preview-img" src={(this.state as stateOBJ).link} />
+                </TransformComponent>
+            </TransformWrapper>
+        )
     }
 
 }

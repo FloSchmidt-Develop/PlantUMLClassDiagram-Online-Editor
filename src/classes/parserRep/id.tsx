@@ -1,4 +1,4 @@
-export default class ID{
+export default abstract class ID{
 
     public id : string;
 

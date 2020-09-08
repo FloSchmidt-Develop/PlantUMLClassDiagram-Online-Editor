@@ -4,6 +4,7 @@ import IConnection from '../../interfaces/connection';
 import IPackage from '../../interfaces/package';
 import Package from './package';
 import ID from './id';
+import Note from './note';
 
 export default class Diagram extends ID implements IDiagram{
     public scale: number = 1;
@@ -11,6 +12,7 @@ export default class Diagram extends ID implements IDiagram{
     public class_declarations: IClass[] = [];
     public connection_declarations : IConnection[] = [];
     public package_declarations : IPackage [] = [];
+    public note_declarations: Note [] = [];
 
     constructor(name: string) {
         super();
@@ -28,6 +30,12 @@ export default class Diagram extends ID implements IDiagram{
             this.connection_declarations.push(newConnection);
         }
             
+    }
+
+    public addNote(note: Note){
+        if(this.note_declarations.find(e => e.id === note.id) == null){
+            this.note_declarations.push(note);
+        }
     }
 
     public addPackage(newPackage: IPackage): IPackage | null{
@@ -76,6 +84,12 @@ export default class Diagram extends ID implements IDiagram{
         packageOfClass?.RemovePackageReferences(packageToRemove,true);
 
 
+    }
+
+    public removeNote(noteToRemove: Note){
+        this.note_declarations = this.note_declarations.filter(
+            e => e.id !== noteToRemove.id
+        )
     }
 
 }

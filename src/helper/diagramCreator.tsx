@@ -12,6 +12,8 @@ import Declaration from '../classes/parserRep/declaration';
 import { EROFS } from 'constants';
 import Package from '../classes/parserRep/package';
 import Point from '../classes/parserRep/point';
+import Note from '../classes/parserRep/note';
+import { notDeepEqual } from 'assert';
 
 export default class DiagramCreator{
 
@@ -64,6 +66,9 @@ export default class DiagramCreator{
 
 
             }
+            if(jsonDiagram.note_declarations !== null){
+                this.addNotes(jsonDiagram.note_declarations, DiagramCreator.diagram[DiagramCreator.activeIndex]);
+            }
 
             if(jsonDiagram.class_declaration !== null){        
                this.addClasses(jsonDiagram.class_declaration, DiagramCreator.diagram[DiagramCreator.activeIndex]);    
@@ -102,6 +107,24 @@ export default class DiagramCreator{
                 diagram.addConnection(con);
             }
 
+            
+        }
+    }
+
+    private addNotes(jsonNotes: any, diagram: IDiagram) : void{
+        for (let index = 0; index < jsonNotes.length; index++) {
+            const jsonNote = jsonNotes[index];
+            let note = new Note(jsonNote.content);
+            if (jsonNote.direction != null) {
+                note.direction = jsonNote.direction;
+            }
+            if (jsonNote.name != null){
+                note.setName(jsonNote.name);
+            }
+            if (jsonNote.relatedTo != null){
+                note.relatedTo = jsonNote.relatedTo;
+            }
+            diagram.addNote(note);
             
         }
     }
