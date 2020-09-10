@@ -194,13 +194,13 @@ function createPUMLFile(requestData ){
     result += '@startuml';
     result += '\n \n';
     result += createClasses(requestData.class_declarations.filter(e => e.package === ''), requestData.connection_declarations);
+    result += createNotes(requestData.note_declarations.filter(e => e.package === ''), requestData.connection_declarations);
     result += addPackages(requestData.package_declarations.filter(e => e.package === ''), requestData.connection_declarations);
     requestData.connection_declarations.filter(e => e.destinationElement.includes('(')).forEach(connection => {
         if(addedConnections.find(dstConnection => connection.destinationElement === dstConnection)){
             result += createConnections(connection);
         }
     })
-    result += createNotes(requestData.note_declarations, requestData.connection_declarations);
     result += '@enduml';
 
     return result;
@@ -214,8 +214,10 @@ function addPackages(packages, connections){
         const pack = packages[index];
         result += 'package "' + pack.name + '" {\n'
         result += getStylingOfClass(pack) + '\n';
-        classes = pack.classReferences;
+        let classes = pack.classReferences;
         result += createClasses(classes, connections);
+        let notes = pack.noteReferences;
+        result += createNotes(notes,connections);
         let Childpackages = pack.packageReferences;
         result += addPackages(Childpackages,connections);
         result += '} \n \n'

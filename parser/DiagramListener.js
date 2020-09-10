@@ -45,6 +45,7 @@ PlantUMLListener.prototype.enterComment_section = function(ctx) {
         actual_note.name = ctx.name.getText();
     }
 
+
     
 };
 
@@ -54,7 +55,6 @@ PlantUMLListener.prototype.enterComment_element = function(ctx) {
             actual_note.content += ' '
         actual_note.content += ctx.getText();
     }
-    console.log(actual_note.content); 
 };
 
 PlantUMLListener.prototype.enterComment_newLine = function(ctx) {
@@ -62,7 +62,6 @@ PlantUMLListener.prototype.enterComment_newLine = function(ctx) {
         if(actual_note.content !== '')
         actual_note.content += '\n';
     }
-    console.log('NewLine'); 
 };
 
 
@@ -80,6 +79,11 @@ PlantUMLListener.prototype.enterPackage_section = function(ctx) {
 };
 
 PlantUMLListener.prototype.exitComment_section = function(ctx) {
+    if(actual_package != null){
+        actual_note.package = actual_package.name;
+    }
+    console.log(actual_note);
+    
     let clone = JSON.parse(JSON.stringify(actual_note));
     this.Res.diagram.note_declarations.push(clone);
     actual_note = null;
@@ -91,12 +95,6 @@ PlantUMLListener.prototype.exitPackage_section = function(ctx) {
         parentPackage = actual_package.package;
         actual_package.package = parentPackage.name;
     }
-    console.log('-----Package-----');
-    
-    console.log(actual_package);
-
-    console.log('------------------');
-    
     let clone = JSON.parse(JSON.stringify(actual_package));
     this.Res.diagram.package_declarations.push(clone);
     actual_package = parentPackage != null ? parentPackage : null;

@@ -121,8 +121,16 @@ export default class DiagramCreator{
             if (jsonNote.name != null){
                 note.setName(jsonNote.name);
             }
+            else{
+                note.setName(note.id.substring(0,6))
+            }
             if (jsonNote.relatedTo != null){
                 note.relatedTo = jsonNote.relatedTo;
+                let noteToElementConnection = new Connection('..','','',note.getName(),note.relatedTo,'');
+                diagram.addConnection(noteToElementConnection);
+            }
+            if(jsonNote.package != null){
+                note.package = jsonNote.package;
             }
             diagram.addNote(note);
             

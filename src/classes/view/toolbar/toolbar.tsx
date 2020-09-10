@@ -9,13 +9,12 @@ import MyObject from "../../parserRep/myObject";
 import IPackage from "../../../interfaces/package";
 import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
-import IDiagram from "../../../interfaces/diagram";
 import ClassImg from "../../../images/ToolbarClass.png";
 import InterfaceImg from "../../../images/ToolbarInterface.png";
 import AbstractImg from "../../../images/ToolbarAbstract.png";
 import ObjectImg from "../../../images/ToolbarObject.png";
 import PackageImg from "../../../images/ToolbarPackage.png";
-import DiagramCreator from "../../../helper/diagramCreator";
+import CommentImg from "../../../images/ToolbarComment.png";
 import Note from "../../parserRep/note";
 
 
@@ -53,8 +52,8 @@ export default class Toolbar{
             this.addVertex(graph,toolbar,cls, ClassImg, 250, 100, '');
             this.addVertex(graph,toolbar,itf, InterfaceImg, 270, 100, '');
             this.addVertex(graph,toolbar,obj, ObjectImg, 250, 80, '');
-            this.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, 'fillColor=orange;');
-            this.addVertex(graph,toolbar,note, AbstractImg, 250, 100, 'fillColor=#FFF900;');
+            this.addVertex(graph,toolbar,abs, AbstractImg, 250, 100, '');
+            this.addVertex(graph,toolbar,note, CommentImg, 110, 50, 'fillColor=#FFF900;');
             //toolbar.addLine();
 
     }
@@ -107,7 +106,7 @@ export default class Toolbar{
                 Toolbar.packageCounter++;
             }
             else if(vertex.value instanceof Note){
-                vertex.value = new Note('add Note');
+                vertex.value = new Note('<i>Enter your Comment</i>');
             }
             
             

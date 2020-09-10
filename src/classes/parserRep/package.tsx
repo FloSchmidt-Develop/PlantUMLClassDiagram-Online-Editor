@@ -2,6 +2,7 @@ import IClass from '../../interfaces/class';
 import IPackage from '../../interfaces/package';
 import ID from './id';
 import DiagramCreator from '../../helper/diagramCreator';
+import Note from './note';
 
 
 export default class Package extends ID implements IPackage{
@@ -12,6 +13,7 @@ export default class Package extends ID implements IPackage{
     private name: string;
     public classReferences: IClass[] = [];
     public packageReferences: IPackage[] = [];
+    public noteReferences: Note[] = [];
     public package = '';
     public readonly type = 'Package';
 
@@ -71,6 +73,22 @@ export default class Package extends ID implements IPackage{
         this.classReferences = this.classReferences.filter(e => e.id !== classToRemove.id);
         if(keepName == null || keepName === false){
             classToRemove.package = '';
+        }
+
+    }
+
+    public AddNoteReference(noteToAdd : Note){
+        if(this.noteReferences.find(e => e.id === noteToAdd.id) != null){
+            return;
+        }
+        noteToAdd.package = this.name;
+        this.noteReferences.push(noteToAdd);
+    }
+
+    public RemoveNoteReferences(noteToRemove: Note, keepName: boolean = false){
+        this.noteReferences = this.noteReferences.filter(e => e.id !== noteToRemove.id);
+        if(keepName == null || keepName === false){
+            noteToRemove.package = '';
         }
 
     }

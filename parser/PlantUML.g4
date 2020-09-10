@@ -12,12 +12,12 @@ class_diagram
 
 
 comment_section:
-    (NOTE WHITESPACE? direction=comment_direction WHITESPACE? 'of' WHITESPACE? relatedTo=comment_relatedTo WHITESPACE? content=comment_content) 
-    | (NOTE WHITESPACE? content=comment_content WHITESPACE? 'as' name=comment_name)
-    | (NOTE WHITESPACE? 'as' name=comment_name NEWLINE content2=multiLine_content NEWLINE 'end note');
+    (NOTE WHITESPACE? direction=comment_direction WHITESPACE? 'of' WHITESPACE? relatedTo=comment_relatedTo WHITESPACE? ':' WHITESPACE? comment_content) 
+    | (NOTE WHITESPACE? comment_content WHITESPACE? 'as' name=comment_name)
+    | (NOTE WHITESPACE? 'as' name=comment_name NEWLINE multiLine_content NEWLINE 'end note');
 
 comment_content:
-    (( ':' | '"') (comment_element (WHITESPACE comment_element)* ) '"'?)
+    ('"'? (comment_element (WHITESPACE comment_element)* )+ '"'?)
     ;
 
 comment_element:
@@ -50,7 +50,7 @@ comment_name:
 
 package_section:
 	PACKAGE WHITESPACE? QUOTATION package_name QUOTATION WHITESPACE? ('{'    
-	(class_declaration | connection | styling | package_section | NEWLINE)*
+	(class_declaration | connection | styling | package_section | comment_section | NEWLINE)*
 	'}')?
 	;
 

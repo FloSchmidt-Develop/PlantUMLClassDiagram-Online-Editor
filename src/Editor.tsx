@@ -87,19 +87,6 @@ const styles = theme => ({
   }
 });
 
-function CustomChange(this: any, model: any)
-{
-  this.model = model;
-  this.previous = model;
-  
-};
-
-CustomChange.prototype.execute = function()
-{
-  var tmp = this.model;
-  this.model = this.previous;
-  this.previous = tmp;
-};
 
 const Editor = (props) => {
   const { classes } = props;
@@ -114,11 +101,11 @@ const Editor = (props) => {
   const undoManager = new mxUndoManager();
   var keyHandler;
   var rubberBand;
-  var isDown : Boolean[] = [];
   
 
   const diagramCreator = new DiagramCreator();
 
+//======Start From Data
   const onChange = (e: any) => {
     if(e.target.files[0] != null){
       setFile(e.target.files[0]);
@@ -144,8 +131,7 @@ const Editor = (props) => {
       diagramCreator.createDiagram(res.data,filename);
       
       setDiagram(DiagramCreator.diagram[DiagramCreator.activeIndex]);
-      setChange(true);
-      
+      setChange(true);     
       
     } catch (err) {
       
@@ -153,40 +139,32 @@ const Editor = (props) => {
       
     }
   };
+  //===========End From Data
 
   //this is called evertime one of the states is changed
   useEffect(() => {
       
-    if (graph != null) {
+    if (graph != null ) {
       graph.getModel().clear();
       if (!mxClient.isBrowserSupported()) {
         mxUtils.error("Browser is not supported!", 200, false);
       } 
       else {
           setUpEditor(graph);
-
-      
-
-        if (typeof diagram !== "undefined") {
-          
-          var mxGraphCreator = new MxGraphCreator(graph, diagram, editPanel);
-
-          graph.getModel().beginUpdate();
-          mxGraphCreator.start();
-          graph.getModel().endUpdate();
+          if (diagram != null) {          
+            var mxGraphCreator = new MxGraphCreator(graph, diagram, editPanel);
+            graph.getModel().beginUpdate();
+            mxGraphCreator.start();
+            graph.getModel().endUpdate();
           
         }
         graph.getModel().endUpdate();
-        //setChange(false);
       }
     }
     else{
-
-      
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null, 'New Diagram');
       setUpEditor(graph);
-      
       setGraph(graph);
       setDiagram(diag);
     }
@@ -336,16 +314,12 @@ const Editor = (props) => {
         ChangeInteraction.ModelChange(sender,evt);
       });
 
-
-
-      //Controller -- Handel moving of Classes Packages Connections
-
+      //is called when selection in mxGraph Change
       graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
-      {
-        console.log(DiagramCreator.diagram);
+      {        
+        console.log(DiagramCreator.diagram[DiagramCreator.activeIndex]);
         
-        EditingView.CreateEditingView(sender,graph,editPanel);
-             
+        EditingView.CreateEditingView(sender,graph,editPanel);       
       });
 
 
@@ -355,18 +329,17 @@ const Editor = (props) => {
   }
 
   return (
-    <Fragment>
+    <div key={props.key}>
       <form onSubmit={onSubmit}>
         <div className="upload-section">
           <input 
             accept=".puml,.json" 
             className={classes.input} 
-            id="raised-button-file" 
-            multiple 
+            id="raised-button-file"  
             type="file" 
             onChange={onChange}
             /> 
-            <label htmlFor="raised-button-file"> 
+          <label htmlFor="raised-button-file"> 
             <Button startIcon={<FolderOpenIcon/>} variant="contained" color="primary" component="span" className={classes.button}> 
               Open File 
             </Button> 
@@ -382,7 +355,10 @@ const Editor = (props) => {
       </form>
       <Grid container className={classes.grid} spacing={2}>
         <Grid xs={1} item>
-          <Paper id="toolBar">Hallo</Paper>
+          <Paper>
+          <Typography>Toolbar</Typography>
+          <div id="toolBar">Toolbar</div>
+          </Paper>
         </Grid>
         <Grid xs={isVisible ? 6 : 9} item>
               <Paper className="graph-container" ref={divGraph} id="divGraph"></Paper>
@@ -404,8 +380,6 @@ const Editor = (props) => {
           </Paper>
         </Grid>
       </Grid>
-
-
       <div id='zoomButtons'>
         <IconButton onClick={zoomIn} >
           <ZoomInSharpIcon/>
@@ -425,7 +399,7 @@ const Editor = (props) => {
 
         
       </div>
-    </Fragment>
+    </div>
   );
 };
 

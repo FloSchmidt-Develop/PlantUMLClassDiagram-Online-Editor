@@ -1,5 +1,6 @@
 import ID from "./id";
 import ObserverSubject from "./subject";
+import DiagramCreator from "../../helper/diagramCreator";
 
 export default class Note extends ObserverSubject<string>{
     content: string;
@@ -11,6 +12,7 @@ export default class Note extends ObserverSubject<string>{
     private width = 0;
     private hight = 0;
     readonly type: string = 'Note';
+    public package: string = '';
     
     
     constructor(content: string) {
@@ -43,9 +45,10 @@ export default class Note extends ObserverSubject<string>{
     }
 
     public getHight(): number{
-        if(this.hight > 30)
+        if(this.hight > this.content.split(/\r\n|\r|\n/).length * 20)
             return this.hight;
-        return 30;
+        this.hight = this.content.split(/\r\n|\r|\n/).length * 20;
+        return this.hight;
     }
 
     public cloneModel(): Note{
@@ -57,6 +60,11 @@ export default class Note extends ObserverSubject<string>{
         newNote.x = this.x;
         newNote.y = this.y;
         newNote.observers = this.observers;
+        if(this.package !== ''){
+            let parentPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === this.package);
+            parentPackage?.RemoveNoteReferences(this,true);
+            parentPackage?.AddNoteReference(newNote);
+        }
         return newNote;
     }
 

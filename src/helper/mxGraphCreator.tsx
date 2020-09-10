@@ -43,7 +43,7 @@ export default class MxGraphCreator {
 
       //HINT: Set Default start position --- find better solution here
 
-      //Add Classes
+      //Add Classes without package
       let elements = this.diagram?.class_declarations.filter(e => e.package === '');
       //console.log(element);
       elements.forEach(element => {
@@ -68,6 +68,39 @@ export default class MxGraphCreator {
         index++
         this.x = this.x + 400;
       });
+
+      //add Notes without packages
+      this.diagram?.note_declarations.filter(e => e.package === '').forEach(note => {
+
+        if (index % 4 == 0) {
+          this.y = this.y + 150;
+          this.x = 200;
+        }
+
+        note.x = note.x === 0 ? this.x : note.x ;
+        note.y = note.y === 0 ? this.y : note.y ;
+
+        
+        
+        activeVertexes[note.getName()] = this.graph.insertVertex(
+          this.parentContainer,
+          null,
+          note,
+          note.x,
+          note.y,
+          note.getWidth(),
+          note.getHight(),
+          'fillColor=yellow;',
+          false
+        );
+        if(note.relatedTo !== ''){
+          activeVertexes[note.getName()].offset = new mxPoint(-8, -8);
+          this.graph.updateCellSize(activeVertexes[note.getName()]);
+        }
+
+        index++
+        this.x = this.x + 400;
+      });
     
 
       //console.log(activeVertexes[element.alias]);
@@ -77,7 +110,7 @@ export default class MxGraphCreator {
       let topLevelPackages = this.diagram?.package_declarations.filter(e => e.package === '');
       this.addPackages(topLevelPackages, activePackages)
 
-      
+      //add classes inside Packages
       elements = this.diagram?.class_declarations.filter(e => e.package !== '');
       elements.forEach(element => {
 
@@ -101,35 +134,28 @@ export default class MxGraphCreator {
         this.x = this.x + 400;
       });
 
-
-      this.diagram?.note_declarations.forEach(note => {
+      //add notes inside Packages
+      let notes = this.diagram?.note_declarations.filter(e => e.package !== '');
+      notes.forEach(element => {
 
         if (index % 4 == 0) {
           this.y = this.y + 150;
           this.x = 200;
         }
 
-        note.x = note.x === 0 ? this.x : note.x ;
-        note.y = note.y === 0 ? this.y : note.y ;
-
-        
-        
-        activeVertexes[note.getName()] = this.graph.insertVertex(
-          note.relatedTo === '' ? this.parentContainer : activeVertexes[note.relatedTo],
-          null,
-          note,
-          note.relatedTo === '' ? note.x : 1,
-          note.relatedTo === '' ? note.y : 1,
-          note.relatedTo === '' ? note.getWidth() : 0,
-          note.relatedTo === '' ? note.getHight() : 0,
-          note.relatedTo === '' ? 'fillColor=yellow;' : 'align=left;verticalAlign=top;;rounded=1;spacingLeft=4;spacingRight=4',
-          note.relatedTo === '' ? false : true
-        );
-        if(note.relatedTo !== ''){
-          activeVertexes[note.getName()].offset = new mxPoint(-8, -8);
-          this.graph.updateCellSize(test);
-        }
-
+        element.x = element.x === 0 ? this.x : element.x ;
+        element.y = element.y === 0 ? this.y : element.y ;
+        activeVertexes[element.getName()] = this.graph.insertVertex(
+          activePackages[element.package],
+          element.id,
+          element,
+          element.x,
+          element.y,
+          element.getWidth(),
+          element.getHight(),
+          'fillColor=yellow;',
+          false
+        )
         index++
         this.x = this.x + 400;
       });

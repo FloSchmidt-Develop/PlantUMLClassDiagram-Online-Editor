@@ -70,25 +70,36 @@ const useStyles = makeStyles((theme) => ({
 
 function App(){
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [actualShownIndex, setActualShownIndex] = React.useState(0);
   const [diagrams, setDiagrams] = React.useState([0]);
-  const [index,setIndex] = React.useState(1);
+  const [numberOfDiagrams,setNumberOfDiagrams] = React.useState(1);
+  const [nameChanged, setNameChange] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     DiagramCreator.activeIndex = newValue;
-    setValue(newValue);
+    setActualShownIndex(newValue);
   };
 
   const addDiagram = () => {
-    let temp = [...diagrams, index];
+    let temp = [...diagrams, numberOfDiagrams];
     setDiagrams(temp);
-    setIndex(index + 1);
-    DiagramCreator.activeIndex = index;
-    setValue(index);
+    setNumberOfDiagrams(numberOfDiagrams + 1);
+    DiagramCreator.activeIndex = numberOfDiagrams;
+    setActualShownIndex(numberOfDiagrams);
     console.log(temp);
     
     
     //setDiagrams(temp);
+  }
+
+  const showNameChanging = (number) => {
+    let newName = prompt('Change name of Diagram');
+    if(newName != null && DiagramCreator.diagram[number] != null){
+      DiagramCreator.diagram[number].name = newName;
+      setNameChange(!nameChanged);
+    }
+
+    
   }
 
   const closeDiagram = () => {
@@ -100,9 +111,9 @@ function App(){
    let newIndex = diagrams[diagramIndex - 1];
    DiagramCreator.diagram =  DiagramCreator.diagram.filter(e => e.id !== closeEditorId);
    setDiagrams([...diagrams]);
-   setIndex(index - 1);
+   setNumberOfDiagrams(numberOfDiagrams - 1);
    DiagramCreator.activeIndex = newIndex;
-   setValue(newIndex);
+   setActualShownIndex(newIndex);
    
     
   }
@@ -110,21 +121,23 @@ function App(){
   return (
      <div className={classes.root}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          {diagrams.map( (number) =>   
-            <Tab value={number}
-            label={DiagramCreator.diagram[number]?.name != null 
-              ? DiagramCreator.diagram[number]?.name : 'new Diagram' }
-               {...a11yProps(number)} />
+        <Tabs value={actualShownIndex} onChange={handleChange} aria-label="simple tabs example">
+          {diagrams.map( (indexOfDiagram) =>   
+            <Tab value={indexOfDiagram}
+            key={indexOfDiagram}
+            onDoubleClick={ () => showNameChanging(indexOfDiagram) }
+            label={DiagramCreator.diagram[indexOfDiagram]?.name != null 
+              ? DiagramCreator.diagram[indexOfDiagram]?.name : 'new Diagram' }
+               {...a11yProps(indexOfDiagram)} />
           )};
           <IconButton className={classes.button} onClick={addDiagram}>
             <AddCircleOutlineSharpIcon/>
           </IconButton>
         </Tabs>
       </AppBar>
-      {diagrams.map((number) => 
-        <TabPanel value={value} index={number}>
-          <Editor index={number}/>
+      {diagrams.map((indexOfDiagram) => 
+        <TabPanel value={actualShownIndex} index={indexOfDiagram} key={indexOfDiagram}>
+          <Editor index={indexOfDiagram} key={indexOfDiagram}/>
           <Button variant="contained" color="secondary" className={classes.closeButton} onClick={closeDiagram}>X</Button>
         </TabPanel>
       )}
