@@ -375,17 +375,17 @@ function getLayoutInfo(destinationClass,sourceClass){
     delta = 100;
     if(destinationClass){
         if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
-            result = 'l';
+            result = ''; //l
         }
         else{
-            result = 'r';
+            result = ''; //r
         }
     
         if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
-            result = 'up';
+            result = ''; //up
         }
         else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
-            result = 'down';
+            result = ''; //down
         }
     }
 

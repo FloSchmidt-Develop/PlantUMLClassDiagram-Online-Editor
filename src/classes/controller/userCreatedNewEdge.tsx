@@ -49,7 +49,20 @@ export default class UserCreatedNewEdge{
 
         }
         else if(cell.target.value instanceof Note || cell.source.value instanceof Note){
-            connection = new Connection('..','','',cell.target.value.getName(),cell.source.value.getName(),''); 
+            connection = new Connection('<--','','','','','');  
+            if(cell.target.value instanceof Connection){
+                let targetConnectionName = 
+                '(' + (cell.target.value as Connection).destinationElement + ',' + (cell.target.value as Connection).sourceElement + ')';
+                connection = new Connection('..','','',targetConnectionName, cell.source.value.getName(),''); 
+            }
+            else if(cell.source.value instanceof Connection){
+                let sourceConnectionName =
+                '(' + (cell.source.value as Connection).destinationElement + ',' + (cell.source.value as Connection).sourceElement + ')';
+                connection = new Connection('..','','',cell.target.value.getName(),sourceConnectionName,''); 
+            }
+            else{
+                connection = new Connection('<--','','',cell.target.value.getName(),cell.source.value.getName(),'');  
+            }
             (cell.target.value as ObserverSubject<string>).registerObserver(connection);
             (cell.source.value as ObserverSubject<string>).registerObserver(connection);
         }

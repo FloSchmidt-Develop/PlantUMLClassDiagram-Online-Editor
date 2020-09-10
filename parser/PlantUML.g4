@@ -25,6 +25,7 @@ comment_element:
     | ('<' WORD '>' )
     | ('</' WORD '>') 
     | (WORD ('?' | ',' | '!' | ':' | '.' ))
+    | NOTE
     )
     ;
 

@@ -395,7 +395,7 @@ const Editor = (props) => {
         <Button variant="contained" color="primary" startIcon={<FileCopyIcon/>}  onClick={paste} >paste</Button>
         <Button variant="contained" color="secondary" startIcon={<DeleteForeverSharpIcon/>} onClick={remove} >Delete</Button>
         <SaveAs/>
-        <Button color="primary" onClick={toggleView} >Toggle Preview</Button>
+        <Button color="primary" variant="contained" onClick={toggleView} >{isVisible ? 'Hide Preview' : 'show Preview'}</Button>
 
         
       </div>
