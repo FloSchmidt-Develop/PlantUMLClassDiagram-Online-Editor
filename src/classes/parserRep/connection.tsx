@@ -67,7 +67,7 @@ export default class Connection extends ObserverSubject<string> implements IConn
         this.stereoType = stereoType;
     }
 
-    public cloneModel(newSourceElement: string, newDestinationElement: string): IConnection{
+    public cloneModel(newSourceElement: string, newDestinationElement: string): Connection{
         let newConnection = new Connection(
             '',
             this.multiplicity_left.value,

@@ -7,6 +7,8 @@ import NameSelectCreator from '../nameInputCreator';
 import AttributeInputCreator from '../attributeInputCreator';
 import MethodInputCreator from '../methodInputCreator';
 import ClassUpdateController from '../../../controller/classUpdateController';
+import ClassController from '../../../controller/modelController/classConntroller';
+import NameChangeController from '../../../controller/modelController/nameController';
 
 
 
@@ -17,40 +19,30 @@ export default class ClassEditingView{
 
 
           let table = document.createElement("table");
+          let controller = new ClassController(selectedClass,sender.cells[0], graph);
+          let nameController = new NameChangeController(selectedClass,sender.cells[0], graph);
 
           //type
-          let typeSelectCreator = new TypeSelectCreator(graph);
-          let type_tr = typeSelectCreator.createTypeSeclectDiv(selectedClass, sender);
+          let typeSelectCreator = new TypeSelectCreator(controller);
+          let type_tr = typeSelectCreator.createTypeSelectDiv(selectedClass);
           table.appendChild(type_tr);
 
           //name
-          let nameInputCreator = new NameSelectCreator(graph);
-          let name_tr = nameInputCreator.createNameInputDiv(selectedClass, sender);
+          let nameInputCreator = new NameSelectCreator(nameController);
+          let name_tr = nameInputCreator.createNameInputDiv(selectedClass);
           table.appendChild(name_tr);
           view.appendChild(table);
 
           //attribute
-          let attributeInputCreator = new AttributeInputCreator(graph);
-          let attribute_div = attributeInputCreator.createNameInputDiv(selectedClass, sender);
+          let attributeInputCreator = new AttributeInputCreator(controller);
+          let attribute_div = attributeInputCreator.createNameInputDiv(selectedClass);
           let attributeHeader = document.createElement('h3');
           attributeHeader.innerText = 'Attributes';
 
           let newAttributeButton = document.createElement('button');
           newAttributeButton.innerText = '+ Attribute';
           newAttributeButton.onclick = () =>{
-            let newClass = selectedClass.cloneModel();
-            if (selectedClass != null){
-              newClass.attributes.push(new Attribute('name','dataType',Visibility.public,Modifiers.none));
-              
-              graph.getModel().beginUpdate();
-              ClassUpdateController.updateClassValues(graph,sender.cells[0], newClass);
-              graph.getModel().endUpdate();
-
-              let tempSelectedCell = sender.cells[0];
-              graph.getSelectionModel().clear();
-              graph.getSelectionModel().addCell(tempSelectedCell);
-            }
-            
+            controller.addAttribute(new Attribute('name','dataType',Visibility.public,Modifiers.none));
           }
 
           view.appendChild(attributeHeader);
@@ -58,27 +50,15 @@ export default class ClassEditingView{
           view.appendChild(newAttributeButton);
 
           //method
-          let methodInputCreator = new MethodInputCreator(graph);
-          let methode_div = methodInputCreator.createNameInputDiv(selectedClass, sender);
+          let methodInputCreator = new MethodInputCreator(controller);
+          let methode_div = methodInputCreator.createNameInputDiv(selectedClass);
           let methodHeader = document.createElement('h3');
           methodHeader.innerText = 'Methods';
 
           let newMethodButton = document.createElement('button');
           newMethodButton.innerText = '+ Method';
           newMethodButton.onclick = () =>{
-            let newClass = selectedClass.cloneModel();
-            if (newClass != null){
-              newClass.methods.push(new Method('name',Visibility.public,Modifiers.none));
-
-              graph.getModel().beginUpdate();
-              ClassUpdateController.updateClassValues(graph,sender.cells[0], newClass);
-              graph.getModel().endUpdate();
-
-              let tempSelectedCell = sender.cells[0];
-              graph.getSelectionModel().clear();
-              graph.getSelectionModel().addCell(tempSelectedCell);
-
-            }
+            controller.addMethod(new Method('name',Visibility.public,Modifiers.none));
           }
 
           view.appendChild(methodHeader);

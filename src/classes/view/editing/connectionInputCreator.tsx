@@ -1,19 +1,16 @@
-import IConnection from "../../../interfaces/connection";
-import IConnector, { Lines, Arrows } from "../../../interfaces/connector";
+
 import Connection from "../../parserRep/connection";
-import EdgeStyleCreator from "../cellLables/edgeStyle";
+import ConnectionController from "../../controller/modelController/connectionController";
+import { Lines, Arrows } from "../../../interfaces/connector";
 
 export default class ConnectionInputCreator{
-  graph: any;
+  controller: ConnectionController;
 
-  constructor(graph: any) {
-    this.graph = graph;
+  constructor(controller: ConnectionController) {
+    this.controller = controller;
   }
 
-  public createTypeSeclectDiv(
-    selectedConnection: IConnection,
-    sender: any
-  ): HTMLTableRowElement[] {
+  public createTypeSeclectDiv(selectedConnection: Connection): HTMLTableRowElement[] {
 
     //Line Label----------------------------------------------------------------------
     let lineLabelRow = document.createElement("tr");
@@ -29,12 +26,7 @@ export default class ConnectionInputCreator{
     labelInput.value = selectedConnection.stereoType != null ? selectedConnection.stereoType : "<Label>";
 
     labelInput.onchange = () => {
-      if (selectedConnection !== null) {
-        selectedConnection.setStereoType(labelInput.value);
-      }
-      
-
-      this.UpdateLine(sender,selectedConnection);
+      this.controller.updateLineLabel(labelInput.value);
     };
 
     labelTextBoxContainer.appendChild(labelInput);
@@ -74,17 +66,8 @@ export default class ConnectionInputCreator{
         ? 1
         : 0;
 
-        select_line.onchange = () => {
-      let newConnection = selectedConnection.cloneModel(selectedConnection.sourceElement,selectedConnection.destinationElement);
-      if (newConnection !== null) {
-        if (select_line.selectedIndex === 1 )
-        newConnection.connector.setLineStyle_direct(Lines.normal);
-        else if(select_line.selectedIndex === 0)
-        newConnection.connector.setLineStyle_direct(Lines.dotted);
-        
-      this.UpdateLine(sender, newConnection);
-      }
-
+      select_line.onchange = () => {
+        this.controller.updateLineStyle(select_line.selectedIndex);
     };
 
     td2.appendChild(select_line);
@@ -148,33 +131,8 @@ export default class ConnectionInputCreator{
             : selectedConnection.connector.startArrowSymbol === Arrows.none
             ? 4 : 0;
     
-            select_startArrow.onchange = () => {
-          
-          let newConnection = selectedConnection.cloneModel(selectedConnection.sourceElement,selectedConnection.destinationElement);
-          if (newConnection !== null) {
-            switch(select_startArrow.selectedIndex){
-              case 0:
-                newConnection.connector.setStartConnector_direct(Arrows.normal);
-                break;
-              case 1:
-                newConnection.connector.setStartConnector_direct(Arrows.diamond);
-                break;
-              case 2:
-                newConnection.connector.setStartConnector_direct(Arrows.diamondFilled);
-                break;
-              case 3:
-                newConnection.connector.setStartConnector_direct(Arrows.big);
-                break;
-              case 4:
-                newConnection.connector.setStartConnector_direct(Arrows.none);
-                break;
-              default:
-                newConnection.connector.setStartConnector_direct(Arrows.none);
-                break;
-            }
-          }
-
-          this.UpdateLine(sender,newConnection)
+        select_startArrow.onchange = () => {
+          this.controller.updateStartArrow(select_startArrow.selectedIndex);
         };
     
         td2_2.appendChild(select_startArrow);
@@ -239,31 +197,7 @@ export default class ConnectionInputCreator{
             ? 4 : 0;
     
         select_EndArrow.onchange = () => {
-          let newConnection = selectedConnection.cloneModel(selectedConnection.sourceElement,selectedConnection.destinationElement);
-          if (newConnection !== null) {
-            switch(select_EndArrow.selectedIndex){
-              case 0:
-                newConnection.connector.setEndConnector_direct(Arrows.normal);
-                break;
-              case 1:
-                newConnection.connector.setEndConnector_direct(Arrows.diamond);
-                break;
-              case 2:
-                newConnection.connector.setEndConnector_direct(Arrows.diamondFilled);
-                break;
-              case 3:
-                newConnection.connector.setEndConnector_direct(Arrows.big);
-                break;
-              case 4:
-                newConnection.connector.setEndConnector_direct(Arrows.none);
-                break;
-              default:
-                newConnection.connector.setEndConnector_direct(Arrows.none);
-                break;
-            }
-          }
-
-          this.UpdateLine(sender,newConnection)
+          this.controller.updateEndArrow(select_EndArrow.selectedIndex);
         };
         
 
@@ -285,13 +219,7 @@ export default class ConnectionInputCreator{
         startMultiplicityInput.value = selectedConnection.multiplicity_left.value != null ? selectedConnection.multiplicity_left.value : "";
     
         startMultiplicityInput.onchange = () => {
-          let newConnection = selectedConnection.cloneModel(selectedConnection.sourceElement,selectedConnection.destinationElement);
-          if (selectedConnection !== null) {
-            newConnection.setStartMultiplicity(startMultiplicityInput.value);
-          }
-          
-    
-          this.UpdateLine(sender,newConnection);
+          this.controller.updateStartMultiplicity(startMultiplicityInput.value);
         };
     
         startMultiplicityTextBoxContainer.appendChild(startMultiplicityInput);
@@ -313,13 +241,7 @@ export default class ConnectionInputCreator{
         endMultiplicityInput.value = selectedConnection.multiplicity_right.value != null ? selectedConnection.multiplicity_right.value : "";
     
         endMultiplicityInput.onchange = () => {
-          let newConnection = selectedConnection.cloneModel(selectedConnection.sourceElement,selectedConnection.destinationElement);
-          if (newConnection !== null) {
-            newConnection.setEndMultiplicity(endMultiplicityInput.value);
-          }
-          
-    
-          this.UpdateLine(sender,newConnection);
+          this.controller.updateEndMultiplicity(endMultiplicityInput.value);
         };
     
         endMultiplicityTextBoxContainer.appendChild(endMultiplicityInput);
@@ -329,31 +251,5 @@ export default class ConnectionInputCreator{
 
     return [lineLabelRow, lineTypeRow, startArrowRow, endArrowRow, startMultiplicityRow, endMultiplicityRow];
   }
- 
-
-  private UpdateLine(sender: any, connectionToEdit: IConnection){
-    this.graph.getModel().beginUpdate();
-
-    var vertexL = connectionToEdit.multiplicity_left.vertex;
-    var vertexR = connectionToEdit.multiplicity_right.vertex;
-
-    this.graph.model.setValue(vertexL,  connectionToEdit.multiplicity_left);
-    this.graph.model.setValue(vertexR,  connectionToEdit.multiplicity_right);
-    
-
-
-    
-    this.graph.model.setValue(sender.cells[0], connectionToEdit);
-    this.graph.model.setStyle(sender.cells[0], EdgeStyleCreator.getStyle(connectionToEdit.connector));
-
-    
-    this.graph.getModel().endUpdate();
-
-    let tempSelectedCell = sender.cells[0];
-    this.graph.getSelectionModel().clear();
-    this.graph.getSelectionModel().addCell(tempSelectedCell);
-
-  }
-
 
 }

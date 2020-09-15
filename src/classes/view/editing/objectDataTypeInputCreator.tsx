@@ -2,18 +2,16 @@ import IClass from "../../../interfaces/class";
 import ClassUpdateController from '../../controller/classUpdateController';
 import DiagramCreator from "../../../helper/diagramCreator";
 import Declaration from "../../parserRep/declaration";
+import ClassController from "../../controller/modelController/classConntroller";
 
 export default class {
-  graph: any;
+  controller: ClassController
 
-  constructor(graph: any) {
-    this.graph = graph;
+  constructor(controller: ClassController) {
+    this.controller = controller;
   }
 
-  public createTypeSeclectDiv(
-    elementToChange: IClass,
-    sender: any
-  ): HTMLTableRowElement {
+  public createTypeSeclectDiv(elementToChange: IClass): HTMLTableRowElement {
 
 
     //TODO Check IClass for undefined !! 
@@ -48,27 +46,7 @@ export default class {
     
 
     input.onchange = () => {
-        let newElement = elementToChange.cloneModel();
-        newElement.dataType = input.value;
-        let cls = DiagramCreator.diagram.map(e => e.class_declarations.filter(cls => cls.getName() === newElement.dataType)).flat(1);
-      
-        if (cls != null && cls.length > 0) {
-            let atrs = cls[0].attributes;
-            for (let index = 0; index < atrs.length; index++) {
-                const atr = atrs[index];
-                if(!newElement.declarations.find(e => e.getName() === atr.getName()))
-                newElement.declarations.push(new Declaration(atr.getName(),''));
-                
-            }
-        }
-        else{
-          alert('Class with name: ' + input.value + ' can not be found!!!');
-        }
-
-      //Update Cell
-      this.graph.getModel().beginUpdate();
-      ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement);
-      this.graph.getModel().endUpdate();
+      this.controller.UpdateObjectDataType(input.value);
     }
 
     td2.appendChild(input);

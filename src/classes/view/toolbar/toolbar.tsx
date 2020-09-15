@@ -72,7 +72,7 @@ export default class Toolbar{
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
-        var funct = function(graph, evt, cell)
+        var onDrop = function(graph, evt, cell)
         {
             graph.stopEditing(false);
             
@@ -120,7 +120,7 @@ export default class Toolbar{
 
 
         // Creates the image which is used as the drag icon (preview)
-        var img = toolbar.addMode(null, image, funct);
-        mxUtils.makeDraggable(img, graph, funct);
+        var img = toolbar.addMode(null, image, onDrop);
+        mxUtils.makeDraggable(img, graph, onDrop);
     }
 }

@@ -2,18 +2,16 @@ import IClass from "../../../interfaces/class";
 import ClassUpdateController from '../../controller/classUpdateController';
 import Clonable from "../../../interfaces/cloneable";
 import Class from "../../../interfaces/class";
+import ClassController from "../../controller/modelController/classConntroller";
 
 export default class {
-  graph: any;
+  controller: ClassController
 
-  constructor(graph: any) {
-    this.graph = graph;
+  constructor(controller: ClassController) {
+    this.controller = controller
   }
 
-  public createTypeSeclectDiv(
-    elementToChange: IClass,
-    sender: any
-  ): HTMLTableRowElement {
+  public createTypeSelectDiv(elementToChange: IClass): HTMLTableRowElement {
 
 
     //TODO Check IClass for undefined !! 
@@ -66,22 +64,7 @@ export default class {
         : 0;
 
     select.onchange = () => {
-      var newElement: Class;
-      if (elementToChange !== null) {
-
-        newElement = (elementToChange as Class).cloneModel();
-        newElement.setType(
-          (document.getElementById("type-select") as HTMLSelectElement).value
-        );
-
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-        ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement);
-        this.graph.getModel().endUpdate();
-      }
-
-
-     
+      this.controller.updateClassType(select.value);
     };
 
     td2.appendChild(select);

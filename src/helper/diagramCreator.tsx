@@ -207,7 +207,7 @@ export default class DiagramCreator{
             let modifiers = this.getModifiersFromString(jsonAttribute.modifiers)
 
             let attr = new Attribute(jsonAttribute.name, jsonAttribute.dataType, visibility, modifiers);
-            tempClass.AddAttribute(attr);
+            tempClass.attributes.push(attr);
             
         }
     }
@@ -279,7 +279,7 @@ export default class DiagramCreator{
             }
 
 
-            tempClass.AddMethods(meth)
+            tempClass.methods.push(meth)
             
         }
     }

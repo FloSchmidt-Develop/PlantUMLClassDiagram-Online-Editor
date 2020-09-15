@@ -1,18 +1,15 @@
 import IClass from "../../../interfaces/class";
-import ClassUpdateController from '../../controller/classUpdateController';
+import ClassController from "../../controller/modelController/classConntroller";
 
 
 export default class DeclarationInputCreator {
-  graph: any;
+  controller: ClassController;
 
-  constructor(graph: any) {
-    this.graph = graph;
+  constructor(controller: ClassController) {
+    this.controller = controller;
   }
 
-  public createNameInputDiv(
-    elementToChange: IClass,
-    sender: any
-  ): HTMLDivElement {
+  public createNameInputDiv(elementToChange: IClass): HTMLDivElement {
     let container_div = document.createElement("div");
 
     if(elementToChange !== null && elementToChange.declarations !== null && typeof elementToChange.declarations !== 'undefined'){
@@ -30,10 +27,7 @@ export default class DeclarationInputCreator {
       moveUpDeclarationButton.disabled = index === 0 ? true : false;
 
       moveUpDeclarationButton.onclick = () => {
-        let newElement = elementToChange.cloneModel();
-        newElement.ChangeDeclarationPosition(declaration,true);  
-        
-        this.UpdateClass(sender,newElement);
+        this.controller.ChangeDeclarationPosition(declaration,true);
     }
 
       row_div.appendChild(moveUpDeclarationButton);
@@ -46,11 +40,8 @@ export default class DeclarationInputCreator {
 
 
         deleteMethodButton.onclick = () => {
-          let newElement = elementToChange.cloneModel();
-          newElement.DeleteDeclaration(declaration);  
-
-          this.UpdateClass(sender,newElement);
-          }
+          this.controller.DeleteDeclaration(declaration)
+        }
 
 
 
@@ -69,23 +60,7 @@ export default class DeclarationInputCreator {
       row_div.appendChild(input_name);
 
       input_name.onchange = () => {
-
-        if (elementToChange !== null) {
-          console.log('clone Object');
-          
-          let newElement = (elementToChange as IClass).cloneModel();
-          newElement.setName( elementToChange.getName());
-          newElement.dataType = elementToChange.dataType;
-          if(this.validateName(input_name.value)){
-            alert('Name shouldn´t contain special Characters');
-            return;
-          }
-          
-          
-          newElement.declarations[index].setName(input_name.value);
-
-          this.UpdateClass(sender,newElement);
-        }
+        this.controller.updateDeclarationName(index,input_name.value);
       };
 
       row_div.appendChild(document.createElement('br'));
@@ -101,15 +76,7 @@ export default class DeclarationInputCreator {
       input_type.value = declaration.declaration_value
 
       input_type.onchange = () => {
-        if (elementToChange !== null) {
-          let newElement = elementToChange.cloneModel();
-
-          newElement.declarations[index].setDeclarationValue(input_type.value);
-
-        this.UpdateClass(sender,newElement);
-        }
-
-        
+       this.controller.updateDeclarationValue(index,input_type.value);
       };
       row_div.appendChild(input_type);
 
@@ -120,10 +87,7 @@ export default class DeclarationInputCreator {
       moveDownDeclarationButton.disabled = index >= elementToChange.declarations.length - 1 ? true : false;
 
       moveDownDeclarationButton.onclick = () => {
-        let newElement = elementToChange.cloneModel();
-        newElement.ChangeDeclarationPosition(declaration,false);  
-        
-        this.UpdateClass(sender,newElement);
+        this.controller.ChangeDeclarationPosition(declaration,false);
     }
 
       row_div.appendChild(moveDownDeclarationButton);
@@ -138,20 +102,4 @@ export default class DeclarationInputCreator {
     return container_div;
   }
 
-  private UpdateClass(sender,elementToChange: IClass){
-    
-    this.graph.getModel().beginUpdate();
-    ClassUpdateController.updateClassValues(this.graph,sender.cells[0], elementToChange);
-    this.graph.getModel().endUpdate();
-
-    let tempSelectedCell = sender.cells[0];
-    this.graph.getSelectionModel().clear();
-    this.graph.getSelectionModel().addCell(tempSelectedCell);
-  }
-
-  
-  private validateName(name: string): boolean{
-    var format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
-    return format.test(name);
-  }
 }

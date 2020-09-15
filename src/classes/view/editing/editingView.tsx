@@ -1,7 +1,6 @@
 
 import ClassEditingView from "./ModelEditingViews/classEditing";
 import ObjectEditingView from "./ModelEditingViews/objectEditing";
-import Connection from "../../../interfaces/connection";
 import ConnectionEditingView from "./ModelEditingViews/connectionEditing";
 import Package from "../../../interfaces/package";
 import PackageEditingView from "./ModelEditingViews/packageEditing";
@@ -9,6 +8,7 @@ import Class from "../../parserRep/class";
 import MyObject from "../../parserRep/myObject";
 import Note from "../../parserRep/note";
 import NoteEditingView from "./ModelEditingViews/noteEditing";
+import Connection from "../../parserRep/connection";
 
 export default class EditingView{
 

@@ -15,7 +15,7 @@ import DiagramCreator from './helper/diagramCreator';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 import axios from "axios";
-import { Link } from '@material-ui/core';
+import { Link, Paper } from '@material-ui/core';
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -63,7 +63,7 @@ export default function ExportPreviewDialog() {
   const [open, setOpen] = React.useState(false);
   const [shownText, setShownText] = React.useState('');
   const [link, setLink] = React.useState('');
-  const [state, setState] = React.useState({source: ''});
+  const [isVisible, setIsVisible] = React.useState(false);
 
   function replacer(key,value)
   {
@@ -76,12 +76,11 @@ export default function ExportPreviewDialog() {
     var obj = JSON.parse(jsonObj);
     
     const res = await axios.post("/export",obj);
-    console.log(res);
-    
-    const linkContainer = await axios.post("/png",obj);
-    console.log(linkContainer.data);
+    if(isVisible){
+      const linkContainer = await axios.post("/png",obj);
+      setLink(linkContainer.data);
+    }
 
-    setLink(linkContainer.data);
     setShownText(res.data)
     setOpen(true);
   };
@@ -94,6 +93,16 @@ export default function ExportPreviewDialog() {
     element.download = DiagramCreator.diagram[DiagramCreator.activeIndex].name + '.puml';
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
+  }
+
+  const showPreview = async () => {
+    setIsVisible(!isVisible);
+    if(!isVisible){
+      var jsonObj = JSON.stringify(DiagramCreator.diagram[DiagramCreator.activeIndex],replacer);
+      var obj = JSON.parse(jsonObj);
+      const linkContainer = await axios.post("/png",obj);
+      setLink(linkContainer.data);
+    }
   }
 
   const handleClose = () => {
@@ -113,11 +122,24 @@ export default function ExportPreviewDialog() {
           <Typography gutterBottom style={{whiteSpace: 'pre-line'}}>
             {shownText}
           </Typography>
-          <img 
+          <Button id='showButton' variant="contained" color="primary" onClick={showPreview}>{!isVisible ? 'Show Diagram Preview' : 'Hide Diagram Preview'}</Button>
+          <label htmlFor='showButton'>This will send your Diagram to PlantUML Server</label>
+          <div hidden={!isVisible}>
+            <Paper>
+            <img 
           src={link}
           alt={link}
           />
+            </Paper>
+
+          <Typography>
+            This Link will lead you to the Image
+          </Typography>
+          <Typography>
           <a href={link} target="_blank">{link} </a>
+          </Typography>
+
+          </div>
         </DialogContent>
         <DialogActions>
           <Button autoFocus variant="contained" color="secondary" onClick={downloadTxtFile}>

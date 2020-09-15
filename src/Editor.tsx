@@ -98,7 +98,8 @@ const Editor = (props) => {
   const [isVisible, setIsVisible] = useState(false);
   const divGraph = React.useRef<HTMLDivElement>(null);
   const editPanel = React.useRef<HTMLDivElement>(null);
-  const undoManager = new mxUndoManager();
+  const [undoManager, setUndoManager] = React.useState(new mxUndoManager());
+  new mxUndoManager();
   var keyHandler;
   var rubberBand;
   
@@ -150,9 +151,9 @@ const Editor = (props) => {
         mxUtils.error("Browser is not supported!", 200, false);
       } 
       else {
-          setUpEditor(graph);
+          setUpEditor();
           if (diagram != null) {          
-            var mxGraphCreator = new MxGraphCreator(graph, diagram, editPanel);
+            var mxGraphCreator = new MxGraphCreator(graph, diagram);
             graph.getModel().beginUpdate();
             mxGraphCreator.start();
             graph.getModel().endUpdate();
@@ -164,9 +165,10 @@ const Editor = (props) => {
     else{
       let graph = new mxGraph(divGraph.current)
       let diag = diagramCreator.createDiagram(null, 'New Diagram');
-      setUpEditor(graph);
       setGraph(graph);
+      setUndoManager(new mxUndoManager());
       setDiagram(diag);
+      setUpEditor();
     }
 
   });
@@ -199,8 +201,9 @@ const Editor = (props) => {
     setIsVisible(!isVisible);
   }
 
-  const setUpEditor = (graph: any): void => {
-
+  const setUpEditor = (): void => {
+    if(graph == null)
+      return;
     var vertexStyle  = graph.getStylesheet().getDefaultVertexStyle();
       vertexStyle[mxConstants.STYLE_OVERFLOW] = 'width';
 
@@ -281,7 +284,7 @@ const Editor = (props) => {
           if(cell.edge && cell.target != null && cell.source != null)
           {
             
-            return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
+             return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
           }
           else{
             return cell.value;   
@@ -355,13 +358,10 @@ const Editor = (props) => {
       </form>
       <Grid container className={classes.grid} spacing={2}>
         <Grid xs={1} item>
-          <Paper>
-          <Typography>Toolbar</Typography>
-          <div id="toolBar">Toolbar</div>
-          </Paper>
+          <Paper id="toolBar">Toolbar</Paper>
         </Grid>
         <Grid xs={isVisible ? 6 : 9} item>
-              <Paper className="graph-container" ref={divGraph} id="divGraph"></Paper>
+          <Paper className="graph-container" ref={divGraph} id="divGraph"></Paper>
         </Grid>
         <Grid hidden={!isVisible} xs={3} item className="graph-preview">
           <Paper className="preview-img-container">
@@ -371,13 +371,10 @@ const Editor = (props) => {
             <PumlPreview/>
           </Paper>
         </Grid>
-
         <Grid xs={2} item className={classes.edit}>
-          <Paper className="edit-container">
-            <div ref={editPanel} id="editPanel">
+            <Paper ref={editPanel} id="editPanel" className="edit-container">
               <h3>no Element Selected</h3>
-            </div>
-          </Paper>
+            </Paper>
         </Grid>
       </Grid>
       <div id='zoomButtons'>

@@ -4,23 +4,21 @@ import ElementUpdateController from '../../controller/elementUpdateController';
 import Class from '../../parserRep/class';
 import DiagramCreator from "../../../helper/diagramCreator";
 import Package from "../../parserRep/package";
+import NameChangeController from "../../controller/modelController/nameController";
 
 
 
 
 
 export default class NameInputCreator {
-  graph: any;
+  controller: NameChangeController
 
-  constructor(graph: any) {
-    this.graph = graph;
+  constructor(controller: NameChangeController) {
+    this.controller = controller;
   }
 
-  public createNameInputDiv(
-    selectedElement: IName,
-    sender: any
-  ): HTMLTableRowElement {
-    
+  public createNameInputDiv(selectedElement: IName): HTMLTableRowElement {
+
     let tr1 = document.createElement("tr");
     let td1 = document.createElement("td");
     let td2 = document.createElement("td");
@@ -34,51 +32,7 @@ export default class NameInputCreator {
     input2.value = selectedElement.getName();
 
     input2.onchange = () => {
-      var elementToChange = selectedElement;
-      var newElement: IName;
-      if (elementToChange !== null) {
-        if(this.validateName(input2.value)){
-          alert('Name shouldn´t contain special Characters');
-          return;
-        }
-        if(selectedElement instanceof Class && DiagramCreator.diagram[DiagramCreator.activeIndex]
-          .class_declarations.find(e => e.getName() === input2.value)){
-          alert('Class Name: ' + input2.value + ' should be unique');
-          return;
-        }
-        if(selectedElement instanceof Package && DiagramCreator.diagram[DiagramCreator.activeIndex]
-          .package_declarations.find(e => e.getName() === input2.value)){
-          alert('Package Name: ' + input2.value + ' should be unique');
-          return;
-        }
-        //Check for unique name
-        newElement = (elementToChange as IName).cloneModel();
-        newElement.setName(input2.value);
-        console.log('name Change');
-        console.log(newElement);
-        
-
-        //this.graph.model.execute(new NameChanger(elementToChange,input2.value));
-
-        //Update Cell
-        this.graph.getModel().beginUpdate();
-
-        //Update Cell size if selected element is Class
-        if(newElement instanceof Class){
-          ClassUpdateController.updateClassValues(this.graph,sender.cells[0], newElement as Class);
-        }
-        //otherwise Only update Element
-        else{
-          ElementUpdateController.updateElement(this.graph,sender.cells[0],newElement);
-        }
-        this.graph.getModel().endUpdate();
-        
-      }
-      
-
-
-
-
+      this.controller.updateName(input2.value);
     };
 
     td2.appendChild(input2);
@@ -89,9 +43,6 @@ export default class NameInputCreator {
     
   }
 
-  public validateName(name: string): boolean{
-    var format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
-    return format.test(name);
-  }
+
 
 }

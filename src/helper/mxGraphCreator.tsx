@@ -19,13 +19,11 @@ export default class MxGraphCreator {
   graph: any;
   parentContainer: any;
   diagram: IDiagram;
-  editPanel: React.RefObject<HTMLDivElement>;
   x = 100;
   y = 100;
 
-  constructor(graph: any, diagram: IDiagram, editPanel: React.RefObject<HTMLDivElement>) {
+  constructor(graph: any, diagram: IDiagram) {
     this.graph = graph;
-    this.editPanel = editPanel;
     this.parentContainer = graph.getDefaultParent();
     this.diagram = diagram;
   }

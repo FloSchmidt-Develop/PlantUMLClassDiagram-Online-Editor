@@ -50,8 +50,8 @@ export default class VertexAttributeLabel{
         attribute_div.appendChild(name);
         attribute_div.appendChild(dataType);
 
-        name.style.textDecoration = attribute.modifiers === Modifiers.static ? 'underline' : 'none';
-        name.style.fontStyle = attribute.modifiers === Modifiers.abstract ? 'italic' : 'none';
+        attribute_div.style.textDecoration = attribute.modifiers === Modifiers.static ? 'underline' : 'none';
+        attribute_div.style.fontStyle = attribute.modifiers === Modifiers.abstract ? 'italic' : 'none';
         
 
         //attribute_container_div.appendChild(icon);
