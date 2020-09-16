@@ -26,7 +26,7 @@ export default class ObjectEditingView{
           let table = document.createElement("table");
 
           //type
-          let typeSelectCreator = new TypeSelectCreator(graph);
+          let typeSelectCreator = new TypeSelectCreator(controller);
           let type_tr = typeSelectCreator.createTypeSelectDiv(selectedClass);
           table.appendChild(type_tr);
 
@@ -37,7 +37,7 @@ export default class ObjectEditingView{
           view.appendChild(table);
 
         //dataType
-        let dataTypeInputCreator = new ObjectDataTypeInputCreator(graph);
+        let dataTypeInputCreator = new ObjectDataTypeInputCreator(controller);
         let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as IClass);
 
         //declarations

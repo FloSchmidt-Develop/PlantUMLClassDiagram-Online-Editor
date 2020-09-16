@@ -4,6 +4,8 @@ import {
 import Class from "../classes/parserRep/class";
 import DiagramCreator from "./diagramCreator";
 import Package from "../classes/parserRep/package";
+import Connection from "../classes/parserRep/connection";
+import EdgeStyleCreator from "../classes/view/cellLables/edgeStyle";
 
 export default class MxClipboardHelper{
 
@@ -29,14 +31,15 @@ export default class MxClipboardHelper{
         {
           
           var cells = graph.getImportableCells(mxClipboard.getCells());
-          var delta = mxClipboard.insertCount * mxClipboard.STEPSIZE;
+          var delta = mxClipboard.insertCount * (mxClipboard.STEPSIZE + 50);
           var parent = graph.getDefaultParent();
-          console.log(cells);
+          //console.log(cells);
           
 
           graph.model.beginUpdate();
           try
           {
+            let addedClasses = [];
             for (var i = 0; i < cells.length; i++)
             {
               var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[i])) ?
@@ -54,7 +57,11 @@ export default class MxClipboardHelper{
                 newCls.setName(newCls.getName() + 'Copy');
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
                 cells[i].value = newCls;
-                cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+                addedClasses[newCls.getName()] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+              }
+              if(tempObj instanceof Connection){
+                console.log(tempObj);
+                
               }
               //import package
               else if(tempObj instanceof Package){
@@ -67,6 +74,43 @@ export default class MxClipboardHelper{
                 cells[i].value = newPackage;
 
                 cells[i] = graph.importCells([cells[i]], delta, delta, tmp)[0];
+              }
+            }
+            //add Copied Connection to Copied Classes
+            for(var j = 0; j < cells.length; j++){
+              console.log(cells);
+              
+              var tmp = (mxClipboard.parents != null && graph.model.contains(mxClipboard.parents[j])) ?
+                  mxClipboard.parents[j] : parent;
+              var tempObj = cells[j].value;
+
+              if(tempObj instanceof Connection){
+                let newConn = (tempObj as Connection).cloneModel(tempObj.sourceElement + 'Copy',tempObj.destinationElement + 'Copy');
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(newConn);
+                cells[j].children = null;
+
+                let addedCell = graph.insertEdge(
+                  graph.getDefaultParent(),
+                  null,
+                  newConn,
+                  addedClasses[newConn.sourceElement],
+                  addedClasses[newConn.destinationElement],
+                  EdgeStyleCreator.getStyle(newConn.connector)
+                );
+
+                let left = graph.insertVertex(addedCell, null, newConn.multiplicity_left, -0.9, 0, 0, 0,
+                'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);        
+                graph.updateCellSize(left);
+                newConn.multiplicity_left.vertex = left;
+                left.isConnectable = () => false;
+
+                let right = graph.insertVertex(addedCell, null, newConn.multiplicity_right, 0.9, 0, 0, 0,
+                'fontSize=14;fontColor=#000000;fillColor=#ffffff;strokeOpacity=0;fillOpacity=0;strokeWidth=0;', true);        
+                graph.updateCellSize(right);
+                newConn.multiplicity_left.vertex = right;
+                right.isConnectable = () => false;
+                
+                
               }
             }
             
