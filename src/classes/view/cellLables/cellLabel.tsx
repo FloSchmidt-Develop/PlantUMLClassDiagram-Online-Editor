@@ -1,10 +1,10 @@
-import MyObject from "../../parserRep/myObject";
+import MyObject from "../../model/myObject";
 import VertexCellLabel from "./vertexCellLable";
-import Note from "../../parserRep/note";
-import Package from "../../parserRep/package";
-import Multiplicity from "../../parserRep/multiplicity";
-import Connection from "../../parserRep/connection";
-import Class from "../../parserRep/class";
+import Note from "../../model/note";
+import Package from "../../model/package";
+import Multiplicity from "../../model/multiplicity";
+import Connection from "../../model/connection";
+import Class from "../../model/class";
 
 export default class CellLabel{
     public static CreateCellLabel(cell: any): any

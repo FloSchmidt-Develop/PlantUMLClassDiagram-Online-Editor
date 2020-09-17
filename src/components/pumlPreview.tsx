@@ -1,8 +1,8 @@
-import Observer from './interfaces/observer'
+import Observer from '../interfaces/observer'
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
 import ExportChangeContainer from './exportChangeContainer';
 import ExportProvider from './ExportProvider';
-import Typography from '@material-ui/core/Typography';
 
 class PumlPreview extends React.Component implements Observer<ExportChangeContainer>{
 

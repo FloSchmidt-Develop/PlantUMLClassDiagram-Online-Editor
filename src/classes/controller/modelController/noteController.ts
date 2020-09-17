@@ -1,4 +1,4 @@
-import Note from "../../parserRep/note";
+import Note from "../../model/note";
 import ElementUpdateController from "../elementUpdateController";
 import DiagramCreator from "../../../helper/diagramCreator";
 

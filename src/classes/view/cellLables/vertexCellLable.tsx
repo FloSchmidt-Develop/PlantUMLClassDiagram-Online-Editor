@@ -1,4 +1,4 @@
-import MyObject from '../../parserRep/myObject';
+import MyObject from '../../model/myObject';
 
 
 
@@ -6,7 +6,7 @@ import VertexHeaderLabel from "./vertexHeaderLabel";
 import VertexAttributeLabel from './vertexAttributeLabel'
 import VertexMethodLabel from "./vertexMethodLabel";
 import VertexDeclarationLabel from "./vertexDeclarationLabel";
-import Class from '../../parserRep/class';
+import Class from '../../model/class';
 
 
 export default class VertexCellLabel{

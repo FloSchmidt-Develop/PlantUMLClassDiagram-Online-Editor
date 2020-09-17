@@ -1,8 +1,8 @@
-import Observer from './interfaces/observer'
+import Observer from '../interfaces/observer'
 import React from 'react';
-import ExportChangeContainer from './exportChangeContainer';
 import ExportProvider from './ExportProvider';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import ExportChangeContainer from './exportChangeContainer';
 
 class DiagramPreview extends React.Component implements Observer<ExportChangeContainer>{
 

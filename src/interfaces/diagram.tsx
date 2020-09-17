@@ -1,9 +1,9 @@
 
 import ID from './id';
-import Note from '../classes/parserRep/note';
-import Class from '../classes/parserRep/class';
-import Connection from '../classes/parserRep/connection';
-import Package from '../classes/parserRep/package';
+import Note from '../classes/model/note';
+import Class from '../classes/model/class';
+import Connection from '../classes/model/connection';
+import Package from '../classes/model/package';
 
 
 export default interface Diagram extends ID {

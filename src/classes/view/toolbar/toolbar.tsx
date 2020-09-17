@@ -4,16 +4,16 @@ import {
     mxGeometry,
     mxUtils
   } from "mxgraph-js";
-import Class from "../../parserRep/class";
-import MyObject from "../../parserRep/myObject";
-import Package from "../../parserRep/package";
+import Class from "../../model/class";
+import MyObject from "../../model/myObject";
+import Package from "../../model/package";
 import ClassImg from "../../../images/ToolbarClass.png";
 import InterfaceImg from "../../../images/ToolbarInterface.png";
 import AbstractImg from "../../../images/ToolbarAbstract.png";
 import ObjectImg from "../../../images/ToolbarObject.png";
 import PackageImg from "../../../images/ToolbarPackage.png";
 import CommentImg from "../../../images/ToolbarComment.png";
-import Note from "../../parserRep/note";
+import Note from "../../model/note";
 
 
 

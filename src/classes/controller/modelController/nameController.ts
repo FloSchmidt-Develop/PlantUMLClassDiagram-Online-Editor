@@ -1,8 +1,8 @@
 import INamed from "../../../interfaces/named";
 import ElementUpdateController from "../elementUpdateController";
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 import DiagramCreator from "../../../helper/diagramCreator";
-import Package from "../../parserRep/package";
+import Package from "../../model/package";
 
 export default class NameChangeController{
     namedElementToChange: INamed;

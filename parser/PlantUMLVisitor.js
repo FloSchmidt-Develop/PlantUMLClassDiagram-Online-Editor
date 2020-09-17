@@ -330,6 +330,12 @@ PlantUMLVisitor.prototype.visitStereotype = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#stereotype_value.
+PlantUMLVisitor.prototype.visitStereotype_value = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by PlantUMLParser#template_type.
 PlantUMLVisitor.prototype.visitTemplate_type = function(ctx) {
   return this.visitChildren(ctx);

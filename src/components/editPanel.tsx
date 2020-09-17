@@ -1,6 +1,6 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import Class from '../classes/parserRep/class';
+import Class from '../classes/model/class';
 
 
 const EditPanel = (props) => {

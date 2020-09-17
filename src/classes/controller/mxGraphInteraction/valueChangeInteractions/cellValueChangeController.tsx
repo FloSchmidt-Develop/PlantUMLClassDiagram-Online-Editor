@@ -1,8 +1,8 @@
-import Package from "../../../parserRep/package";
-import Connection from "../../../parserRep/connection";
-import Class from "../../../parserRep/class";
+import Package from "../../../model/package";
+import Connection from "../../../model/connection";
+import Class from "../../../model/class";
 import DiagramCreator from "../../../../helper/diagramCreator";
-import Note from "../../../parserRep/note";
+import Note from "../../../model/note";
 
 //This Class handles the Undo/Redo Change of values from Models, adds change to Diagram and removes old from Diagram
 export default class ValueChangeController{

@@ -1,10 +1,10 @@
 import {
     mxClipboard
   } from "mxgraph-js";
-import Class from "../classes/parserRep/class";
+import Class from "../classes/model/class";
 import DiagramCreator from "./diagramCreator";
-import Package from "../classes/parserRep/package";
-import Connection from "../classes/parserRep/connection";
+import Package from "../classes/model/package";
+import Connection from "../classes/model/connection";
 import EdgeStyleCreator from "../classes/view/cellLables/edgeStyle";
 
 export default class MxClipboardHelper{

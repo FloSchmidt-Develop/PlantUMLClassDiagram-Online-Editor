@@ -4,7 +4,7 @@ import PrivateMethode from '../../../images/PrivateMethode.png'
 import ProtectedMethode from '../../../images/ProtectedMethode.png'
 import PackageMethode from '../../../images/PackageMethode.png'
 import PublicMethode from '../../../images/PublicMethode.png'
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 
 export default class VertexMethodLabel{
 

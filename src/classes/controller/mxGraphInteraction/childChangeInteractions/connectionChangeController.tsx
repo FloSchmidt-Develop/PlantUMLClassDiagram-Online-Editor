@@ -1,7 +1,7 @@
 
 import DiagramCreator from "../../../../helper/diagramCreator";
-import Package from "../../../parserRep/package";
-import Connection from "../../../parserRep/connection";
+import Package from "../../../model/package";
+import Connection from "../../../model/connection";
 
 export default class ConnectionChangeController{
 

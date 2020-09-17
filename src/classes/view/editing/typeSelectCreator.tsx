@@ -3,7 +3,7 @@ import ClassUpdateController from '../../controller/classUpdateController';
 import Clonable from "../../../interfaces/cloneable";
 
 import ClassController from "../../controller/modelController/classConntroller";
-import Class from '../../parserRep/class';
+import Class from '../../model/class';
 
 export default class {
   controller: ClassController

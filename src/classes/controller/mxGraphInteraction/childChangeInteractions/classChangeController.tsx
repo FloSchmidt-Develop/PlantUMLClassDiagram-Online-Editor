@@ -1,6 +1,6 @@
 import DiagramCreator from "../../../../helper/diagramCreator";
-import Package from "../../../parserRep/package";
-import Class from "../../../parserRep/class";
+import Package from "../../../model/package";
+import Class from "../../../model/class";
 
 export default class ClassChangeController{
 

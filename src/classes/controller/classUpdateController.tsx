@@ -1,7 +1,7 @@
 
 import ElementUpdateController from './elementUpdateController';
 import { mxGeometry} from "mxgraph-js";
-import Class from '../parserRep/class';
+import Class from '../model/class';
 
 
 export default class ClassUpdateController extends ElementUpdateController{

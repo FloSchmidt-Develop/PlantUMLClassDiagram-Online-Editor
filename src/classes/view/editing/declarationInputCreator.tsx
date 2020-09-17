@@ -1,5 +1,5 @@
 import ClassController from "../../controller/modelController/classConntroller";
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 
 
 export default class DeclarationInputCreator {

@@ -1,6 +1,6 @@
-import Connection from "../../../parserRep/connection";
-import Class from "../../../parserRep/class";
-import Note from "../../../parserRep/note";
+import Connection from "../../../model/connection";
+import Class from "../../../model/class";
+import Note from "../../../model/note";
 
 
 export default class TerminalChangeController{

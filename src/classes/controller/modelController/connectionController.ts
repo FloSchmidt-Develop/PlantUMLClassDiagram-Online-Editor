@@ -1,4 +1,4 @@
-import Connection from "../../parserRep/connection";
+import Connection from "../../model/connection";
 import EdgeStyleCreator from "../../view/cellLables/edgeStyle";
 import { Lines, Arrows } from "../../../interfaces/connector";
 import ElementUpdateController from "../elementUpdateController";

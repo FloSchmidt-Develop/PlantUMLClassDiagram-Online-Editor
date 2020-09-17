@@ -1,11 +1,11 @@
 
 import { Modifiers, Visibility } from "../../../interfaces/class";
 import ClassUpdateController from "../classUpdateController";
-import Attribute from "../../parserRep/attribute";
-import Method from "../../parserRep/method";
-import Declaration from "../../parserRep/declaration";
+import Attribute from "../../model/attribute";
+import Method from "../../model/method";
+import Declaration from "../../model/declaration";
 import DiagramCreator from "../../../helper/diagramCreator";
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 
 
 export default class ClassController{

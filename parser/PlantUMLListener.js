@@ -488,6 +488,15 @@ PlantUMLListener.prototype.exitStereotype = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#stereotype_value.
+PlantUMLListener.prototype.enterStereotype_value = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#stereotype_value.
+PlantUMLListener.prototype.exitStereotype_value = function(ctx) {
+};
+
+
 // Enter a parse tree produced by PlantUMLParser#template_type.
 PlantUMLListener.prototype.enterTemplate_type = function(ctx) {
 };

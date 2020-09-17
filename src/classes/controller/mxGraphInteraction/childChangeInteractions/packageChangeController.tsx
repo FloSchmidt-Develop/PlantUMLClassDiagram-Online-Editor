@@ -1,4 +1,4 @@
-import Package from "../../../parserRep/package";
+import Package from "../../../model/package";
 import DiagramCreator from "../../../../helper/diagramCreator";
 
 export default class PackageChangeController {

@@ -1,5 +1,5 @@
 import { Arrows, Lines } from "../../../interfaces/connector";
-import Connector from "../../parserRep/connector";
+import Connector from "../../model/connector";
 
 export default class EdgeStyleCreator{
 

@@ -1,5 +1,5 @@
 
-import Connection from "../../parserRep/connection";
+import Connection from "../../model/connection";
 import ConnectionController from "../../controller/modelController/connectionController";
 import { Lines, Arrows } from "../../../interfaces/connector";
 

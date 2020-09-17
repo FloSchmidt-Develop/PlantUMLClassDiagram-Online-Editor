@@ -1,5 +1,5 @@
 import { Visibility, Modifiers } from "../../../interfaces/class";
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 import ClassController from "../../controller/modelController/classConntroller";
 
 

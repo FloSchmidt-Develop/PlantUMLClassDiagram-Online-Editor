@@ -1,5 +1,5 @@
 import { Component } from "react";
-import ObserverSubject from './classes/parserRep/subject'
+import ObserverSubject from '../classes/model/subject'
 import ExportChangeContainer from './exportChangeContainer'
 
 
@@ -23,9 +23,6 @@ export default class ExportProvider extends ObserverSubject<ExportChangeContaine
 
         ExportProvider.link = link;
         ExportProvider.puml = puml;
-
-        console.log(link);
-        console.log(puml);
     }
     
 

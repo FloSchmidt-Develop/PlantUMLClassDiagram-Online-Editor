@@ -4,7 +4,7 @@ import NameSelectCreator from '../nameInputCreator';
 
 
 import NameChangeController from "../../../controller/modelController/nameController";
-import Package from '../../../parserRep/package';
+import Package from '../../../model/package';
 
 
 

@@ -1,5 +1,5 @@
 import { mxUtils} from "mxgraph-js";
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 
 export default class VertexDeclarationLabel{
 

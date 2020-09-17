@@ -1,8 +1,8 @@
-import Class from "../../../parserRep/class";
-import Connection from "../../../parserRep/connection";
-import Point from "../../../parserRep/point";
-import Package from "../../../parserRep/package";
-import Note from "../../../parserRep/note";
+import Class from "../../../model/class";
+import Connection from "../../../model/connection";
+import Point from "../../../model/point";
+import Package from "../../../model/package";
+import Note from "../../../model/note";
 
 
 export default class GeometryChangeController{

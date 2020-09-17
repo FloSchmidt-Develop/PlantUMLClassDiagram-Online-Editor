@@ -1,16 +1,16 @@
-import Diagram from '../classes/parserRep/diagram';
+import Diagram from '../classes/model/diagram';
 import IDiagram from '../interfaces/diagram';
 
 
-import Class from '../classes/parserRep/class';
-import MyObject from '../classes/parserRep/myObject';
-import Attribute from '../classes/parserRep/attribute';
-import Method from '../classes/parserRep/method';
-import Connection from '../classes/parserRep/connection';
-import Declaration from '../classes/parserRep/declaration';
-import Package from '../classes/parserRep/package';
-import Point from '../classes/parserRep/point';
-import Note from '../classes/parserRep/note';
+import Class from '../classes/model/class';
+import MyObject from '../classes/model/myObject';
+import Attribute from '../classes/model/attribute';
+import Method from '../classes/model/method';
+import Connection from '../classes/model/connection';
+import Declaration from '../classes/model/declaration';
+import Package from '../classes/model/package';
+import Point from '../classes/model/point';
+import Note from '../classes/model/note';
 import { Visibility, Modifiers } from '../interfaces/class';
 
 export default class DiagramCreator{

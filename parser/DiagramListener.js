@@ -227,10 +227,25 @@ PlantUMLListener.prototype.enterVariable_name = function(ctx) {
 };
 
 PlantUMLListener.prototype.enterNested_argument_type = function(ctx) {
+    console.log('=======nested Type=======');
+    console.log(ctx.getText());
+    console.log('actual Attribute');
+    console.log(actual_functionAttribute);
+    console.log('===========================');
+    
+    
+    
     actual_functionAttribute.dataType = ctx.getText();
 };
 
 PlantUMLListener.prototype.enterFunction_argument_attribute_type = function(ctx) {
+    console.log('=======not nested Type========');
+    console.log(ctx.getText());
+    console.log('actual Attribute');
+    console.log(actual_functionAttribute);
+    console.log('===========================');
+    
+
     actual_functionAttribute.dataType = ctx.getText();
 };
 

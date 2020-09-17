@@ -118,7 +118,7 @@ attribute_name:
     ;
 
 attribute_type:
-    attribute_data_type | ARRAY | ANY | ANYARRAY
+    attribute_data_type | ARRAY | ANY | ANYARRAY | nested_argument_type
     ;
 
 function_argument_attribute_type:
@@ -162,7 +162,7 @@ declaration_argument:
     | (WORD (INTEGER+ WORD?))
     ;
 
-multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"INTEGER"' );
+multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"' INTEGER '"' );
 
 connection_left:
     instance=connection_name WHITESPACE? (mult=multiplicity)?
@@ -213,7 +213,7 @@ function_argument:
     ;
 
 nested_argument_type:
-    function_argument_attribute_type ('.' function_argument_attribute_type )+
+    (attribute_data_type | ARRAY | ANY | ANYARRAY) ('.' (attribute_data_type | ARRAY | ANY | ANYARRAY) )+
     ;
 
 function_argument_list:
@@ -247,6 +247,7 @@ data_type:
 
 variable_name:
     WORD*
+    | ( WORD* '.')
     ;
 	
 connection_name:
@@ -260,7 +261,13 @@ modifiers:
     ;
 
 stereotype:
-    QUOTATION ( ident ('(' args+=ident ')')? '/'? )*  (DOTDOT WORD)? QUOTATION
+    QUOTATION ( ident ('(' args+=ident? ')')? '/'? )*  (DOTDOT stereotype_value)? QUOTATION
+    ;
+
+stereotype_value:
+    WORD
+    | WORD '.' 
+    | (WORD ('.' WORD)+) 
     ;
 
 type_declaration:
@@ -304,6 +311,8 @@ CONNECTOR:
     | '<-'
     | '-*'
     | '*-'
+    | 'o-'
+    | '-o'
     | '<|-'
     | '-|>'
     | '.|>'

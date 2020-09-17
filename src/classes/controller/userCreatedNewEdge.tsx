@@ -1,9 +1,9 @@
-import Class from "../parserRep/class";
-import Connection from "../parserRep/connection";
+import Class from "../model/class";
+import Connection from "../model/connection";
 import DiagramCreator from "../../helper/diagramCreator";
-import Point from "../parserRep/point";
-import Note from "../parserRep/note";
-import ObserverSubject from "../parserRep/subject";
+import Point from "../model/point";
+import Note from "../model/note";
+import ObserverSubject from "../model/subject";
 import EdgeStyleCreator from "../view/cellLables/edgeStyle";
 
 export default class UserCreatedNewEdge{

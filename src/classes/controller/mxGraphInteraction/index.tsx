@@ -5,7 +5,7 @@ import GeometryChangeController from "./geometryChangeInteraction.tsx";
 import DiagramCreator from "../../../helper/diagramCreator";
 
 import axios from "axios";
-import ExportProvider from "../../../ExportProvider";
+import ExportProvider from "../../../components/ExportProvider";
 
 export default class ChangeInteraction{
 

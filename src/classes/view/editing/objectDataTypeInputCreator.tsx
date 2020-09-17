@@ -1,8 +1,8 @@
 import ClassUpdateController from '../../controller/classUpdateController';
 import DiagramCreator from "../../../helper/diagramCreator";
-import Declaration from "../../parserRep/declaration";
+import Declaration from "../../model/declaration";
 import ClassController from "../../controller/modelController/classConntroller";
-import Class from '../../parserRep/class';
+import Class from '../../model/class';
 
 export default class {
   controller: ClassController

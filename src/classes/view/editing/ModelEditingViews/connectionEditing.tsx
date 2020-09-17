@@ -1,6 +1,6 @@
 import ConnectionInputCreator from '../connectionInputCreator';
 import ConnectionController from '../../../controller/modelController/connectionController';
-import Connection from '../../../parserRep/connection';
+import Connection from '../../../model/connection';
 
 
 

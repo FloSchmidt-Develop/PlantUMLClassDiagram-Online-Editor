@@ -3,12 +3,12 @@ import ClassEditingView from "./ModelEditingViews/classEditing";
 import ObjectEditingView from "./ModelEditingViews/objectEditing";
 import ConnectionEditingView from "./ModelEditingViews/connectionEditing";
 import PackageEditingView from "./ModelEditingViews/packageEditing";
-import Class from "../../parserRep/class";
-import MyObject from "../../parserRep/myObject";
-import Note from "../../parserRep/note";
+import Class from "../../model/class";
+import MyObject from "../../model/myObject";
+import Note from "../../model/note";
 import NoteEditingView from "./ModelEditingViews/noteEditing";
-import Connection from "../../parserRep/connection";
-import Package from "../../parserRep/package";
+import Connection from "../../model/connection";
+import Package from "../../model/package";
 
 export default class EditingView{
 

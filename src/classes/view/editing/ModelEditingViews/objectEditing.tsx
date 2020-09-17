@@ -5,13 +5,13 @@ import NameSelectCreator from '../nameInputCreator';
 import ObjectDataTypeInputCreator from '../objectDataTypeInputCreator';
 import DeclarationInputCreator from '../declarationInputCreator';
 
-import Declaration from '../../../parserRep/declaration';
-import MyObject from '../../../parserRep/myObject';
+import Declaration from '../../../model/declaration';
+import MyObject from '../../../model/myObject';
 import ElementUpdateController from '../../../controller/elementUpdateController';
 import ClassUpdateController from '../../../controller/classUpdateController';
 import ClassController from '../../../controller/modelController/classConntroller';
 import NameChangeController from '../../../controller/modelController/nameController';
-import Class from '../../../parserRep/class';
+import Class from '../../../model/class';
 
 
 

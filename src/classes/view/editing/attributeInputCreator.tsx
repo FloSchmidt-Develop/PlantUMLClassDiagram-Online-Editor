@@ -1,7 +1,7 @@
 import { Visibility, Modifiers } from "../../../interfaces/class";
 
 import ClassController from "../../controller/modelController/classConntroller";
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 
 
 export default class AttributeInputCreator {

@@ -1,6 +1,6 @@
 import { Visibility, Modifiers } from '../../../../interfaces/class';
-import Attribute from "../../../parserRep/attribute";
-import Method from "../../../parserRep/method";
+import Attribute from "../../../model/attribute";
+import Method from "../../../model/method";
 
 import TypeSelectCreator from '../typeSelectCreator';
 import NameSelectCreator from '../nameInputCreator';
@@ -9,7 +9,7 @@ import MethodInputCreator from '../methodInputCreator';
 import ClassUpdateController from '../../../controller/classUpdateController';
 import ClassController from '../../../controller/modelController/classConntroller';
 import NameChangeController from '../../../controller/modelController/nameController';
-import Class from '../../../parserRep/class';
+import Class from '../../../model/class';
 
 
 

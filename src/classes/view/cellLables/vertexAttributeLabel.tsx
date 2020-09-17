@@ -4,7 +4,7 @@ import PrivateAttribute from '../../../images/PrivateAttribute.png'
 import ProtectedAttribute from '../../../images/ProtectedAttribute.png'
 import PackageAttribute from '../../../images/PackageAttribute.png'
 import PublicAttribute from '../../../images/PublicAttribute.png'
-import Class from "../../parserRep/class";
+import Class from "../../model/class";
 
 
 export default class VertexAttributeLabel{

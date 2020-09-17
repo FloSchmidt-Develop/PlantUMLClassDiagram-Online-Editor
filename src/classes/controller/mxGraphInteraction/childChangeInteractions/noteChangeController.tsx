@@ -1,6 +1,6 @@
-import Note from "../../../parserRep/note";
+import Note from "../../../model/note";
 import DiagramCreator from "../../../../helper/diagramCreator";
-import Package from "../../../parserRep/package";
+import Package from "../../../model/package";
 
 export default class NoteChangeController{
     public static ChangeNote(change: any, note: Note){
