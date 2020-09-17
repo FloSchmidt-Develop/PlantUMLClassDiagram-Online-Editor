@@ -1,8 +1,8 @@
-import IDeclaration from '../../interfaces/declaration'
 import ID from './id';
+import Clonable from '../../interfaces/cloneable';
 
 
-export default class Declaration extends ID implements IDeclaration{
+export default class Declaration extends ID implements Clonable{
     private name: string;
     declaration_value: string;
 
@@ -28,7 +28,7 @@ export default class Declaration extends ID implements IDeclaration{
         return (this.name.length + this.declaration_value.length) * 10;
     }
 
-    public cloneModel(): IDeclaration{
+    public cloneModel(): Declaration{
         let newDeclaration = new Declaration(this.name,this.declaration_value);
         newDeclaration.id = this.id;
         return newDeclaration;

@@ -1,13 +1,11 @@
 
-import Class, { Modifiers, Visibility } from "../../../interfaces/class";
+import { Modifiers, Visibility } from "../../../interfaces/class";
 import ClassUpdateController from "../classUpdateController";
-import IAttribute from "../../../interfaces/attribute";
 import Attribute from "../../parserRep/attribute";
-import IMethod from "../../../interfaces/methode";
 import Method from "../../parserRep/method";
-import IDeclaration from "../../../interfaces/declaration";
 import Declaration from "../../parserRep/declaration";
 import DiagramCreator from "../../../helper/diagramCreator";
+import Class from "../../parserRep/class";
 
 
 export default class ClassController{
@@ -51,7 +49,7 @@ export default class ClassController{
         this.updateGraphElement(newElement);
     }
 
-    public ChangeAttributePosition(attribute: IAttribute, up: boolean){
+    public ChangeAttributePosition(attribute: Attribute, up: boolean){
         let newElement = this.cloneModel(this.classToChange);
         let attributeToChangePosition = newElement.attributes.find(e => e.id === attribute.id);
         if(attributeToChangePosition != null){
@@ -69,14 +67,14 @@ export default class ClassController{
         this.updateGraphElement(newElement);
     }
 
-    public deleteAttribute(attribute: IAttribute){
+    public deleteAttribute(attribute: Attribute){
         let newElement = this.cloneModel(this.classToChange);
         newElement.attributes = newElement.attributes.filter(e => e.id != attribute.id);
         newElement.setHight(newElement.getHeight() - 11);
         this.updateGraphElement(newElement);
     }
 
-    public addAttribute(attribute: IAttribute){
+    public addAttribute(attribute: Attribute){
         let newElement = this.cloneModel(this.classToChange);
         newElement.attributes.push(attribute);
         this.updateGraphElement(newElement);
@@ -111,7 +109,7 @@ export default class ClassController{
         this.updateGraphElement(newElement);
     }
 
-    public ChangeMethodPosition(attribute: IMethod, up: boolean){
+    public ChangeMethodPosition(attribute: Method, up: boolean){
         let newElement = this.cloneModel(this.classToChange);
         let attributeToChangePosition = newElement.methods.find(e => e.id === attribute.id);
         if(attributeToChangePosition != null){
@@ -129,20 +127,20 @@ export default class ClassController{
         this.updateGraphElement(newElement);
     }
 
-    public deleteMethod(method: IMethod){
+    public deleteMethod(method: Method){
         let newElement = this.cloneModel(this.classToChange);
         newElement.methods = newElement.methods.filter(e => e.id != method.id);
         newElement.setHight(newElement.getHeight() - 11);
         this.updateGraphElement(newElement);
     }
 
-    public addMethod(method: IMethod){
+    public addMethod(method: Method){
         let newElement = this.cloneModel(this.classToChange);
         newElement.methods.push(method);
         this.updateGraphElement(newElement);
     }
 
-    public addNewFunctionArgumentToMethod(method: IMethod){
+    public addNewFunctionArgumentToMethod(method: Method){
         let newElement = this.cloneModel(this.classToChange);
         let newMethod = newElement.methods.find(e => e.id === method.id);
           
@@ -152,7 +150,7 @@ export default class ClassController{
         }
     }
 
-    public deleteFunctionArgumentFromMethod(method: IMethod, argument: IAttribute){
+    public deleteFunctionArgumentFromMethod(method: Method, argument: Attribute){
         let newElement = this.cloneModel(this.classToChange);
         let newMethod = newElement.methods.find(e => e.id === method.id);
         if(newMethod != null){
@@ -161,7 +159,7 @@ export default class ClassController{
         }
     }
 
-    public changeFunctionArgumentNameFromMethod(method: IMethod, argument: IAttribute, value: string){
+    public changeFunctionArgumentNameFromMethod(method: Method, argument: Attribute, value: string){
         let newElement = this.cloneModel(this.classToChange);
         let newMethod = newElement.methods.find(e => e.id === method.id);
             
@@ -179,7 +177,7 @@ export default class ClassController{
         }
     }
 
-    public changeFunctionArgumentDataTypeFromMethod(method: IMethod, argument: IAttribute, value: string){
+    public changeFunctionArgumentDataTypeFromMethod(method: Method, argument: Attribute, value: string){
         let newElement = this.cloneModel(this.classToChange);
         let newMethod = newElement.methods.find(e => e.id === method.id);
             
@@ -206,7 +204,7 @@ export default class ClassController{
         this.updateGraphElement(newElement);
     }
 
-    public ChangeDeclarationPosition(declaration: IDeclaration, up: boolean){
+    public ChangeDeclarationPosition(declaration: Declaration, up: boolean){
         let newElement = this.cloneModel(this.classToChange);
         let declarationToChangePosition = newElement.declarations.find(e => e.id === declaration.id);
         if(declarationToChangePosition != null){
@@ -224,13 +222,13 @@ export default class ClassController{
         this.updateGraphElement(newElement);
     }
 
-    public AddDeclaration(declaration: IDeclaration){
+    public AddDeclaration(declaration: Declaration){
         let newElement = this.cloneModel(this.classToChange);
         newElement.declarations.push(declaration);
         this.updateGraphElement(newElement);
     }
 
-    public DeleteDeclaration(declaration: IDeclaration){
+    public DeleteDeclaration(declaration: Declaration){
         let newElement = this.cloneModel(this.classToChange);
         newElement.declarations = this.classToChange.declarations.filter(e => e.id != declaration.id);
         newElement.setHight(newElement.getHeight() - 11);

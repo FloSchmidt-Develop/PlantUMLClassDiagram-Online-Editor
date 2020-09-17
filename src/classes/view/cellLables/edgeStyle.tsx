@@ -1,22 +1,23 @@
-import IConnector, { Arrows, Lines } from "../../../interfaces/connector";
+import { Arrows, Lines } from "../../../interfaces/connector";
+import Connector from "../../parserRep/connector";
 
 export default class EdgeStyleCreator{
 
-    public static getStyle(connector: IConnector): string{
+    public static getStyle(connector: Connector): string{
         return this.getLineStyle(connector) +
         this.getStartArrowStyle(connector) +
         this.getEndArrowStyle(connector) + 
         "sourcePerimeterSpacing=0;shape=link;"
     }
 
-    private static getLineStyle(connector: IConnector): string {
+    private static getLineStyle(connector: Connector): string {
         if (connector.lineStyle === Lines.dotted) {
           return "dashed=1;";
         }
         return "dashed=0;";
     }
     
-    private static getStartArrowStyle(connector: IConnector): string {
+    private static getStartArrowStyle(connector: Connector): string {
         if (connector.startArrowSymbol === Arrows.diamond) {
           return "startArrow=diamond;startFill=0;";
         } else if (connector.startArrowSymbol === Arrows.big) {
@@ -29,7 +30,7 @@ export default class EdgeStyleCreator{
         return "startArrow=dash;";
     }
     
-    private static getEndArrowStyle(connector: IConnector): string {
+    private static getEndArrowStyle(connector: Connector): string {
         if (connector.endArrowSymbol === Arrows.diamond) {
           return "endArrow=diamond;endFill=0;";
         } else if (connector.endArrowSymbol === Arrows.big) {

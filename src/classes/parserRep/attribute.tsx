@@ -1,10 +1,9 @@
-import IAttribute from '../../interfaces/attribute'
 import IName from '../../interfaces/named'
 import ID from './id';
 import { Visibility, Modifiers } from '../../interfaces/class';
 
 
-export default class Attribute extends ID implements IName, IAttribute {
+export default class Attribute extends ID implements IName {
     private name: string;
     public dataType: string;
     public visibility: Visibility;
@@ -42,7 +41,7 @@ export default class Attribute extends ID implements IName, IAttribute {
         return ((this.name.length + this.dataType.length + 1 + 2) * 10);
     }
 
-    public cloneModel(): IAttribute{
+    public cloneModel(): Attribute{
         let newAttribute = new Attribute(this.name,this.dataType,this.visibility,this.modifiers);
         newAttribute.id = this.id;
         return newAttribute;

@@ -1,12 +1,12 @@
-import IMethod from '../../interfaces/methode';
-import IAttribute from '../../interfaces/attribute';
 import ID from './id';
 import { Modifiers, Visibility } from '../../interfaces/class';
+import Clonable from '../../interfaces/cloneable';
+import Attribute from './attribute';
 
-export default class Method extends ID implements IMethod{
+export default class Method extends ID implements Clonable{
     private name: string;
     dataType: string = '';
-    attributeList: IAttribute[] = [];
+    attributeList: Attribute[] = [];
     modifiers: Modifiers;
     visibility: Visibility;
 
@@ -28,7 +28,7 @@ export default class Method extends ID implements IMethod{
         return result;
     }
 
-    public DeleteAttribute(attribute: IAttribute){
+    public DeleteAttribute(attribute: Attribute){
         this.attributeList = this.attributeList.filter(e => e.id != attribute.id)
     }
 
@@ -56,7 +56,7 @@ export default class Method extends ID implements IMethod{
         return ((this.name.length + this.dataType.length  +  1 + this.getAttributeListAsString().length) * 10 )* 0.60;
     }
 
-    public cloneModel(): IMethod{
+    public cloneModel(): Method{
         let newMethode = new Method(this.name,this.visibility,this.modifiers);
         newMethode.setDataType(this.dataType);
         for (let index = 0; index < this.attributeList.length; index++) {

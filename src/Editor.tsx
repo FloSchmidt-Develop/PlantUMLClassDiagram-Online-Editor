@@ -1,6 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import GridLayout from 'react-grid-layout';
+import React, { useState, useEffect } from "react";
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
@@ -30,44 +28,28 @@ import {
   mxUtils,
   mxEvent,
   mxKeyHandler,
-  mxXmlCanvas2D,
   mxClipboard,
   mxRubberband,
   mxUndoManager,
-  mxConnectionHandler,
   mxConstants,
   mxEdgeStyle,
   mxGraphHandler,
   mxEdgeHandler,
-  mxUndoableEdit,
-  mxCodec,
-  mxEventObject
 } from "mxgraph-js";
 
 import Class from "./classes/parserRep/class";
 import Connection from "./classes/parserRep/connection";
-import ClassUpdateController from "./classes/controller/classUpdateController";
 import Package from "./classes/parserRep/package";
-import Point from "./classes/parserRep/point";
 import { Typography } from "@material-ui/core";
-import NameChanger from "./classes/controller/nameChanger";
-import Named from "./interfaces/named";
 import Multiplicity from "./classes/parserRep/multiplicity";
 import EditingView from "./classes/view/editing/editingView";
 import UserCreatedNewEdge from "./classes/controller/userCreatedNewEdge";
 import CellLabel from "./classes/view/cellLables/cellLabel";
-import MyObject from "./classes/parserRep/myObject";
-import Observer from "./interfaces/observer";
-import ValueChangeController from "./classes/controller/mxGraphInteraction/valueChangeInteractions/cellValueChangeController";
 import MxClipboardHelper from "./helper/mxClipboardHelper";
 import SaveAs from "./components/saveAs";
-import ExportProvider from "./ExportProvider";
 import DiagramPreview from "./diagramPreview";
 import PumlPreview from "./pumlPreview";
 import Note from "./classes/parserRep/note";
-import childChangeController from "./classes/controller/mxGraphInteraction/childChangeInteractions";
-import TerminalChangeController from "./classes/controller/mxGraphInteraction/terminalChangeInteractions";
-import GeometryChangeController from "./classes/controller/mxGraphInteraction/geometryChangeInteraction.tsx";
 import ChangeInteraction from "./classes/controller/mxGraphInteraction";
 
 
@@ -302,7 +284,7 @@ const Editor = (props) => {
         MxClipboardHelper.Paste(graph);
       };
 
-
+      //======Undo=======
       var listener = function(sender, evt)
       {        
         undoManager.undoableEditHappened(evt.getProperty('edit'));

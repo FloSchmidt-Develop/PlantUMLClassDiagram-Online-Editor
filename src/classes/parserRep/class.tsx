@@ -1,19 +1,16 @@
-import IClass, { Visibility, Modifiers } from '../../interfaces/class'
-import IAttribute from '../../interfaces/attribute'
-import IMethod from '../../interfaces/methode'
-import IDeclaration from '../../interfaces/declaration'
 import Attribute from './attribute';
 import Method from './method';
 import ObserverSubject from './subject'
 import Declaration from './declaration';
 import DiagramCreator from '../../helper/diagramCreator';
+import INamed from '../../interfaces/named';
 
 
 
-export default class Class extends ObserverSubject<string> implements IClass  {
-    public attributes: IAttribute[] = [];
-    public methods: IMethod[] = [];
-    public declarations: IDeclaration[] = [];
+export default class Class extends ObserverSubject<string> implements INamed  {
+    public attributes: Attribute[] = [];
+    public methods: Method[] = [];
+    public declarations: Declaration[] = [];
     protected name: string;
     public package: string = '';
     public type: string;
@@ -105,7 +102,7 @@ export default class Class extends ObserverSubject<string> implements IClass  {
         return result;
     }
 
-    public cloneModel(): IClass{
+    public cloneModel(): Class{
         let newClass = new Class(this.name, this.type);
         
         newClass.attributes = this.attributes.map( e => e.cloneModel() );

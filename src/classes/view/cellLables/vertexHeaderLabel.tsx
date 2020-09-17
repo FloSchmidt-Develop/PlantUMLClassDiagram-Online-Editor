@@ -1,10 +1,10 @@
-import Class from "../../../interfaces/class";
 import MyObject from "../../parserRep/myObject";
 
 import ClassIcon from '../../../images/Class.png'
 import AbstractClassIcon from '../../../images/AbstractClass.png'
 import InterfaceIcon from '../../../images/Interface.png'
 import ObjectIcon from '../../../images/Object.png'
+import Class from "../../parserRep/class";
 
 export default class VertexHeaderLabel{
 

@@ -1,6 +1,5 @@
 import IDiagram from "../interfaces/diagram";
-import IClass from "../interfaces/class";
-import IConnector, {Arrows, Lines, LayoutProperty} from '../interfaces/connector'
+import {Arrows, Lines, LayoutProperty} from '../interfaces/connector'
 
 import Class from "../classes/parserRep/class";
 import MyObject from '../classes/parserRep/myObject';
@@ -10,8 +9,9 @@ import Connection from "../classes/parserRep/connection";
 import {
   mxPoint,
 } from "mxgraph-js";
-import IPackage from "../interfaces/package";
 import EdgeStyleCreator from "../classes/view/cellLables/edgeStyle";
+import Note from "../classes/parserRep/note";
+import Package from "../classes/parserRep/package";
 
 
 
@@ -21,6 +21,7 @@ export default class MxGraphCreator {
   diagram: IDiagram;
   x = 100;
   y = 100;
+  index = 0;
 
   constructor(graph: any, diagram: IDiagram) {
     this.graph = graph;
@@ -33,130 +34,22 @@ export default class MxGraphCreator {
     this.graph.getModel().beginUpdate();
 
     var activeVertexes: { [id: string]: any } = {};
-    var activePackages: { [id: string]: any } = {};
+    var addedPackageCells: { [id: string]: any } = {};
     var activeEdges: {[id: string]: any } = {};
 
-    //classes
-    let index = 0;
-
       //HINT: Set Default start position --- find better solution here
-
-      //Add Classes without package
-      let elements = this.diagram?.class_declarations.filter(e => e.package === '');
-      //console.log(element);
-      elements.forEach(element => {
-
-        if (index % 4 == 0) {
-          this.y = this.y + 150;
-          this.x = 200;
-        }
-
-        element.x = element.x === 0 ? this.x : element.x ;
-        element.y = element.y === 0 ? this.y : element.y ;
-        
-        activeVertexes[element.alias] = this.graph.insertVertex(
-          this.parentContainer,
-          element.id,
-          element,
-          element.x,
-          element.y,
-          element.getWidth(),
-          element.getHeight()
-        )
-        index++
-        this.x = this.x + 400;
-      });
-
-      //add Notes without packages
-      this.diagram?.note_declarations.filter(e => e.package === '').forEach(note => {
-
-        if (index % 4 == 0) {
-          this.y = this.y + 150;
-          this.x = 200;
-        }
-
-        note.x = note.x === 0 ? this.x : note.x ;
-        note.y = note.y === 0 ? this.y : note.y ;
-
-        
-        
-        activeVertexes[note.getName()] = this.graph.insertVertex(
-          this.parentContainer,
-          null,
-          note,
-          note.x,
-          note.y,
-          note.getWidth(),
-          note.getHight(),
-          'fillColor=yellow;',
-          false
-        );
-        if(note.relatedTo !== ''){
-          activeVertexes[note.getName()].offset = new mxPoint(-8, -8);
-          this.graph.updateCellSize(activeVertexes[note.getName()]);
-        }
-
-        index++
-        this.x = this.x + 400;
-      });
-    
-
-      //console.log(activeVertexes[element.alias]);
-
       
       //Packages without package
       let topLevelPackages = this.diagram?.package_declarations.filter(e => e.package === '');
-      this.addPackages(topLevelPackages, activePackages)
+      this.addPackages(topLevelPackages, addedPackageCells)
 
-      //add classes inside Packages
-      elements = this.diagram?.class_declarations.filter(e => e.package !== '');
-      elements.forEach(element => {
+      //add classes
+      let classes = this.diagram?.class_declarations;
+      this.addClasses(classes,activeVertexes,addedPackageCells)
 
-        if (index % 4 == 0) {
-          this.y = this.y + 150;
-          this.x = 200;
-        }
-
-        element.x = element.x === 0 ? this.x : element.x ;
-        element.y = element.y === 0 ? this.y : element.y ;
-        activeVertexes[element.alias] = this.graph.insertVertex(
-          activePackages[element.package],
-          element.id,
-          element,
-          element.x,
-          element.y,
-          element.getWidth(),
-          element.getHeight(),
-        )
-        index++
-        this.x = this.x + 400;
-      });
-
-      //add notes inside Packages
-      let notes = this.diagram?.note_declarations.filter(e => e.package !== '');
-      notes.forEach(element => {
-
-        if (index % 4 == 0) {
-          this.y = this.y + 150;
-          this.x = 200;
-        }
-
-        element.x = element.x === 0 ? this.x : element.x ;
-        element.y = element.y === 0 ? this.y : element.y ;
-        activeVertexes[element.getName()] = this.graph.insertVertex(
-          activePackages[element.package],
-          element.id,
-          element,
-          element.x,
-          element.y,
-          element.getWidth(),
-          element.getHight(),
-          'fillColor=yellow;',
-          false
-        )
-        index++
-        this.x = this.x + 400;
-      });
+      //add notes
+      let notes = this.diagram?.note_declarations;
+      this.addNotes(notes,activeVertexes,addedPackageCells)
 
     var edgeCount = this.diagram?.connection_declarations.length
       ? this.diagram?.connection_declarations.length
@@ -236,7 +129,59 @@ export default class MxGraphCreator {
     }
   }
 
-  private addPackages(packages: IPackage[], activePackages: any){
+
+  private addClasses(classes: Class[], addedVertexes: any, addedPackageCells: any ){
+    classes.forEach(cls => {
+
+      if (this.index % 4 == 0) {
+        this.y = this.y + 150;
+        this.x = 200;
+      }
+
+      cls.x = cls.x === 0 ? this.x : cls.x ;
+      cls.y = cls.y === 0 ? this.y : cls.y ;
+      addedVertexes[cls.alias] = this.graph.insertVertex(
+        cls.package !== '' ? addedPackageCells[cls.package] : this.parentContainer,
+        cls.id,
+        cls,
+        cls.x,
+        cls.y,
+        cls.getWidth(),
+        cls.getHeight(),
+      )
+      this.index++;
+      this.x = this.x + 400;
+    });
+
+  }
+
+  private addNotes(notes: Note[], addedVertexes: any, addedPackageCells: any){
+    notes.forEach(note => {
+
+      if (this.index % 4 == 0) {
+        this.y = this.y + 150;
+        this.x = 200;
+      }
+
+      note.x = note.x === 0 ? this.x : note.x ;
+      note.y = note.y === 0 ? this.y : note.y ;
+      addedVertexes[note.getName()] = this.graph.insertVertex(
+        note.package !== '' ? addedPackageCells[note.package] : this.parentContainer,
+        note.id,
+        note,
+        note.x,
+        note.y,
+        note.getWidth(),
+        note.getHight(),
+        'fillColor=yellow;',
+        false
+      )
+      this.index++;
+      this.x = this.x + 400;
+    });
+  }
+
+  private addPackages(packages: Package[], addedPackageCells: any){
     
     this.y = this.y + 150;
     this.x = 200;
@@ -248,11 +193,9 @@ export default class MxGraphCreator {
         activePackage.x = this.x;
       if (activePackage.y === 0)
         activePackage.y = this.y;
-      
-      console.log(activePackage);
-      
-      activePackages[activePackage.getName()] = this.graph.insertVertex(
-        activePackage.package !== '' ? activePackages[activePackage.package] : this.parentContainer,
+
+      addedPackageCells[activePackage.getName()] = this.graph.insertVertex(
+        activePackage.package !== '' ? addedPackageCells[activePackage.package] : this.parentContainer,
         null,
         activePackage,
         activePackage.x,
@@ -263,7 +206,7 @@ export default class MxGraphCreator {
       )
 
       if(activePackage.packageReferences.length > 0){
-        this.addPackages(activePackage.packageReferences,activePackages);
+        this.addPackages(activePackage.packageReferences,addedPackageCells);
       }
     }
     )

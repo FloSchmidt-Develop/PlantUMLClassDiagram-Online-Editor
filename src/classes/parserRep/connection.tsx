@@ -1,5 +1,3 @@
-import IConnection from '../../interfaces/connection';
-import IConnector from '../../interfaces/connector';
 import Connector from './connector';
 import Multiplicity from './multiplicity';
 import Point from './point'
@@ -8,9 +6,10 @@ import Observer from '../../interfaces/observer';
 import ObserverSubject from './subject';
 import DiagramCreator from '../../helper/diagramCreator';
 import Class from './class';
+import Clonable from '../../interfaces/cloneable';
 
-export default class Connection extends ObserverSubject<string> implements IConnection, Observer<string>{
-    public connector: IConnector;
+export default class Connection extends ObserverSubject<string> implements Clonable, Observer<string>{
+    public connector: Connector;
     public multiplicity_left: Multiplicity;
     public multiplicity_right: Multiplicity;
     public destinationElement: string;
@@ -67,13 +66,14 @@ export default class Connection extends ObserverSubject<string> implements IConn
         this.stereoType = stereoType;
     }
 
-    public cloneModel(newSourceElement: string, newDestinationElement: string): Connection{
+
+    public cloneModel(newSourceElement?: string, newDestinationElement?: string): Connection{
         let newConnection = new Connection(
             '',
             this.multiplicity_left.value,
             this.multiplicity_right.value,
-            newDestinationElement,
-            newSourceElement,
+            newDestinationElement ? newDestinationElement : this.destinationElement,
+            newSourceElement ? newSourceElement : this.sourceElement,
             this.stereoType);
         newConnection.points = this.points;
         newConnection.multiplicity_left = this.multiplicity_left.cloneModel();

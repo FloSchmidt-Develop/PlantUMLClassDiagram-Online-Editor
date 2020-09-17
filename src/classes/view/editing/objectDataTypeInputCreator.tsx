@@ -1,8 +1,8 @@
-import IClass from "../../../interfaces/class";
 import ClassUpdateController from '../../controller/classUpdateController';
 import DiagramCreator from "../../../helper/diagramCreator";
 import Declaration from "../../parserRep/declaration";
 import ClassController from "../../controller/modelController/classConntroller";
+import Class from '../../parserRep/class';
 
 export default class {
   controller: ClassController
@@ -11,7 +11,7 @@ export default class {
     this.controller = controller;
   }
 
-  public createTypeSeclectDiv(elementToChange: IClass): HTMLTableRowElement {
+  public createTypeSeclectDiv(elementToChange: Class): HTMLTableRowElement {
 
 
     //TODO Check IClass for undefined !! 
@@ -25,7 +25,7 @@ export default class {
 
     let input = document.createElement("input");
     input.style.width = "200px";
-    input.value = (elementToChange as IClass).dataType;
+    input.value = (elementToChange as Class).dataType;
     let datalist = document.createElement("dataList");
     datalist.id = "datalist";
     input.setAttribute('list','datalist');

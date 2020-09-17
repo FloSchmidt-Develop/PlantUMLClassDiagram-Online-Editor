@@ -1,16 +1,16 @@
-import IClass from "../../../interfaces/class";
 import MyObject from "../../parserRep/myObject";
 import VertexCellLabel from "./vertexCellLable";
-import Connection from "../../../interfaces/connection";
-import Package from "../../../interfaces/package";
-import Multiplicity from "../../../interfaces/multiplicity";
 import Note from "../../parserRep/note";
+import Package from "../../parserRep/package";
+import Multiplicity from "../../parserRep/multiplicity";
+import Connection from "../../parserRep/connection";
+import Class from "../../parserRep/class";
 
 export default class CellLabel{
     public static CreateCellLabel(cell: any): any
     {
 
-        var actual_class: IClass | MyObject = cell.value;
+        var actual_class: Class | MyObject = cell.value;
 
         if(actual_class !== null && typeof actual_class !== 'undefined' 
         && (actual_class.type === 'interface' || actual_class.type === 'abstractclass'

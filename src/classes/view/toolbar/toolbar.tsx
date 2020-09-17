@@ -6,8 +6,6 @@ import {
   } from "mxgraph-js";
 import Class from "../../parserRep/class";
 import MyObject from "../../parserRep/myObject";
-import IPackage from "../../../interfaces/package";
-import IClass from "../../../interfaces/class";
 import Package from "../../parserRep/package";
 import ClassImg from "../../../images/ToolbarClass.png";
 import InterfaceImg from "../../../images/ToolbarInterface.png";
@@ -58,7 +56,7 @@ export default class Toolbar{
 
     }
 
-    private addVertex(graph, toolbar,type: IClass | IPackage | Note, icon, w, h, style){
+    private addVertex(graph, toolbar,type: Class | Package | Note, icon, w, h, style){
 
         var vertex = new mxCell(type, new mxGeometry(0, 0, w, h), style);
         

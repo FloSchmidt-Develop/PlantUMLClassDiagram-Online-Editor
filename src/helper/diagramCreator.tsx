@@ -1,7 +1,6 @@
 import Diagram from '../classes/parserRep/diagram';
 import IDiagram from '../interfaces/diagram';
-import IClass, { Visibility, Modifiers } from '../interfaces/class';
-import IConnection from '../interfaces/connection';
+
 
 import Class from '../classes/parserRep/class';
 import MyObject from '../classes/parserRep/myObject';
@@ -9,11 +8,10 @@ import Attribute from '../classes/parserRep/attribute';
 import Method from '../classes/parserRep/method';
 import Connection from '../classes/parserRep/connection';
 import Declaration from '../classes/parserRep/declaration';
-import { EROFS } from 'constants';
 import Package from '../classes/parserRep/package';
 import Point from '../classes/parserRep/point';
 import Note from '../classes/parserRep/note';
-import { notDeepEqual } from 'assert';
+import { Visibility, Modifiers } from '../interfaces/class';
 
 export default class DiagramCreator{
 
@@ -200,7 +198,7 @@ export default class DiagramCreator{
      * @param jsonAttributes 
      * @param tempClass 
      */
-    private addAttributes(jsonAttributes: any, tempClass : IClass): void{
+    private addAttributes(jsonAttributes: any, tempClass : Class): void{
         for (let index = 0; index < jsonAttributes.length; index++) {
             let jsonAttribute = jsonAttributes[index];
             let visibility = this.getVisibilityFromSymbol(jsonAttribute.visibility);
@@ -238,7 +236,7 @@ export default class DiagramCreator{
         }
     }
 
-    private addDeclarations(jsonDeclarations: any, tempClass : IClass): void{
+    private addDeclarations(jsonDeclarations: any, tempClass : Class): void{
 
             for (let index = 0; index < jsonDeclarations.length; index++) {
                 if(tempClass.type === 'object'){
@@ -255,7 +253,7 @@ export default class DiagramCreator{
             }
     }
 
-    private addMethods(jsonMethods: any, tempClass : IClass) : void{
+    private addMethods(jsonMethods: any, tempClass : Class) : void{
         for (let index = 0; index < jsonMethods.length; index++) {
             let jsonMethod = jsonMethods[index];
 

@@ -1,18 +1,19 @@
-import IClass from '../../interfaces/class';
-import IPackage from '../../interfaces/package';
 import ID from './id';
 import DiagramCreator from '../../helper/diagramCreator';
 import Note from './note';
+import Clonable from '../../interfaces/cloneable';
+import Typed from '../../interfaces/typed';
+import Class from './class';
 
 
-export default class Package extends ID implements IPackage{
+export default class Package extends ID implements Clonable, Typed{
     y: number = 0;
     x: number = 0;
     private width: number = 50;
     private hight: number = 400;
     private name: string;
-    public classReferences: IClass[] = [];
-    public packageReferences: IPackage[] = [];
+    public classReferences: Class[] = [];
+    public packageReferences: Package[] = [];
     public noteReferences: Note[] = [];
     public package = '';
     public readonly type = 'Package';
@@ -61,7 +62,7 @@ export default class Package extends ID implements IPackage{
         return this.name;
     }
 
-    public AddClassReference(classToAdd : IClass){
+    public AddClassReference(classToAdd : Class){
         if(this.classReferences.find(e => e.id === classToAdd.id) != null){
             return;
         }
@@ -69,7 +70,7 @@ export default class Package extends ID implements IPackage{
         this.classReferences.push(classToAdd);
     }
 
-    public RemoveClassReference(classToRemove: IClass, keepName: boolean = false){
+    public RemoveClassReference(classToRemove: Class, keepName: boolean = false){
         this.classReferences = this.classReferences.filter(e => e.id !== classToRemove.id);
         if(keepName == null || keepName === false){
             classToRemove.package = '';
@@ -93,7 +94,7 @@ export default class Package extends ID implements IPackage{
 
     }
 
-    public AddPackageReference(packageToAd : IPackage){
+    public AddPackageReference(packageToAd : Package){
         if(this.packageReferences.find(e => e.id === packageToAd.id) != null){
             return;
         }
@@ -101,13 +102,13 @@ export default class Package extends ID implements IPackage{
         this.packageReferences.push(packageToAd);
     }
 
-    public RemovePackageReferences(packageToRemove: IPackage, keepName: boolean = false){
+    public RemovePackageReferences(packageToRemove: Package, keepName: boolean = false){
         this.packageReferences = this.packageReferences.filter(e => e.id !== packageToRemove.id);
         if(!keepName)
             packageToRemove.package = '';
     }
 
-    public cloneModel(): IPackage{
+    public cloneModel(): Package{
         let newPackage = new Package(this.name); 
         newPackage.x = this.x;
         newPackage.y = this.y;

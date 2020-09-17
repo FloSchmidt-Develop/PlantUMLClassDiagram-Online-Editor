@@ -1,4 +1,3 @@
-import IClass from "../../../interfaces/class";
 import MyObject from '../../parserRep/myObject';
 
 
@@ -7,11 +6,12 @@ import VertexHeaderLabel from "./vertexHeaderLabel";
 import VertexAttributeLabel from './vertexAttributeLabel'
 import VertexMethodLabel from "./vertexMethodLabel";
 import VertexDeclarationLabel from "./vertexDeclarationLabel";
+import Class from '../../parserRep/class';
 
 
 export default class VertexCellLabel{
 
-    public static CreateVertexCellLabel(actualClass: IClass | MyObject): HTMLTableElement
+    public static CreateVertexCellLabel(actualClass: Class | MyObject): HTMLTableElement
     {
         var table = document.createElement("table");
         

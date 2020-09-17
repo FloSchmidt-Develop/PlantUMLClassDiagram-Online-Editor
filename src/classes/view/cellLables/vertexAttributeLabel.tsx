@@ -1,11 +1,11 @@
-import Class, { Visibility, Modifiers } from "../../../interfaces/class";
+import { Visibility, Modifiers } from "../../../interfaces/class";
 
 import PrivateAttribute from '../../../images/PrivateAttribute.png'
 import ProtectedAttribute from '../../../images/ProtectedAttribute.png'
 import PackageAttribute from '../../../images/PackageAttribute.png'
 import PublicAttribute from '../../../images/PublicAttribute.png'
+import Class from "../../parserRep/class";
 
-import { mxUtils} from "mxgraph-js";
 
 export default class VertexAttributeLabel{
 

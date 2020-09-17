@@ -1,8 +1,7 @@
-import IClass, { Visibility, Modifiers } from "../../../interfaces/class";
-import ClassUpdateController from '../../controller/classUpdateController';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import { Visibility, Modifiers } from "../../../interfaces/class";
+
 import ClassController from "../../controller/modelController/classConntroller";
-import { TouchableNativeFeedbackBase } from "react-native";
+import Class from "../../parserRep/class";
 
 
 export default class AttributeInputCreator {
@@ -12,7 +11,7 @@ export default class AttributeInputCreator {
     this.controller = controller;
   }
 
-  public createNameInputDiv(elementToChange: IClass): HTMLDivElement {
+  public createNameInputDiv(elementToChange: Class): HTMLDivElement {
     let container_div = document.createElement("div");
     
 

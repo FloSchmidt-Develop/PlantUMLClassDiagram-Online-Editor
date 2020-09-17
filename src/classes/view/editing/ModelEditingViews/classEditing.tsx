@@ -1,4 +1,4 @@
-import IClass, { Visibility, Modifiers } from '../../../../interfaces/class';
+import { Visibility, Modifiers } from '../../../../interfaces/class';
 import Attribute from "../../../parserRep/attribute";
 import Method from "../../../parserRep/method";
 
@@ -9,13 +9,14 @@ import MethodInputCreator from '../methodInputCreator';
 import ClassUpdateController from '../../../controller/classUpdateController';
 import ClassController from '../../../controller/modelController/classConntroller';
 import NameChangeController from '../../../controller/modelController/nameController';
+import Class from '../../../parserRep/class';
 
 
 
 
 export default class ClassEditingView{
 
-    public static CreateClassEditingView(selectedClass: IClass, sender : any, graph: any, view: HTMLDivElement): HTMLDivElement{
+    public static CreateClassEditingView(selectedClass: Class, sender : any, graph: any, view: HTMLDivElement): HTMLDivElement{
 
 
           let table = document.createElement("table");

@@ -1,25 +1,26 @@
-import IClass from './class';
-import IConnection from './connection';
-import IPackage from './package';
+
 import ID from './id';
 import Note from '../classes/parserRep/note';
+import Class from '../classes/parserRep/class';
+import Connection from '../classes/parserRep/connection';
+import Package from '../classes/parserRep/package';
 
 
 export default interface Diagram extends ID {
     scale: number;
     name: string;
-    class_declarations: IClass[];
-    connection_declarations: IConnection[];
-    package_declarations : IPackage [];
+    class_declarations: Class[];
+    connection_declarations: Connection[];
+    package_declarations : Package [];
     note_declarations: Note [];
 
-    addClass(newClass : IClass);
-    addConnection(newConnection: IConnection);
-    addPackage(NewPackage: IPackage);
+    addClass(newClass : Class);
+    addConnection(newConnection: Connection);
+    addPackage(NewPackage: Package);
     addNote(note: Note);
 
-    removeClass(classToRemove: IClass, keepConnections?: boolean);
-    removeConnection(connectionToRemove: IConnection);
-    removePackage(packageToRemove: IPackage, removeClasses: boolean);
+    removeClass(classToRemove: Class, keepConnections?: boolean);
+    removeConnection(connectionToRemove: Connection);
+    removePackage(packageToRemove: Package, removeClasses: boolean);
     removeNote(noteToRemove: Note);
 }

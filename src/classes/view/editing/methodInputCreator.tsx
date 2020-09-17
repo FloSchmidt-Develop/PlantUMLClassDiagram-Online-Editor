@@ -1,8 +1,5 @@
-import IClass, { Visibility, Modifiers } from "../../../interfaces/class";
-import ClassUpdateController from '../../controller/classUpdateController';
-import Attribute from "../../parserRep/attribute";
+import { Visibility, Modifiers } from "../../../interfaces/class";
 import Class from "../../parserRep/class";
-import DiagramCreator from "../../../helper/diagramCreator";
 import ClassController from "../../controller/modelController/classConntroller";
 
 
@@ -13,7 +10,7 @@ export default class MethodInputCreator {
     this.controller = controller;
   }
 
-  public createNameInputDiv(elementToChange: IClass): HTMLDivElement {
+  public createNameInputDiv(elementToChange: Class): HTMLDivElement {
     let container_div = document.createElement("div");
 
     if(elementToChange !== null && elementToChange.methods !== null && typeof elementToChange.methods !== 'undefined'){

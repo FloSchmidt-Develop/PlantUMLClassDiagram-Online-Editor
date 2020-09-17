@@ -1,9 +1,4 @@
 import IName from "../../../interfaces/named";
-import ClassUpdateController from '../../controller/classUpdateController';
-import ElementUpdateController from '../../controller/elementUpdateController';
-import Class from '../../parserRep/class';
-import DiagramCreator from "../../../helper/diagramCreator";
-import Package from "../../parserRep/package";
 import NameChangeController from "../../controller/modelController/nameController";
 
 

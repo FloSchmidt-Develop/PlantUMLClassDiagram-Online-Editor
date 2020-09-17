@@ -89,6 +89,9 @@ export default class MxClipboardHelper{
                 DiagramCreator.diagram[DiagramCreator.activeIndex].addConnection(newConn);
                 cells[j].children = null;
 
+                console.log(cells[j]);
+                
+
                 let addedCell = graph.insertEdge(
                   graph.getDefaultParent(),
                   null,

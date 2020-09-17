@@ -1,5 +1,5 @@
-import IClass from "../../../interfaces/class";
 import ClassController from "../../controller/modelController/classConntroller";
+import Class from "../../parserRep/class";
 
 
 export default class DeclarationInputCreator {
@@ -9,7 +9,7 @@ export default class DeclarationInputCreator {
     this.controller = controller;
   }
 
-  public createNameInputDiv(elementToChange: IClass): HTMLDivElement {
+  public createNameInputDiv(elementToChange: Class): HTMLDivElement {
     let container_div = document.createElement("div");
 
     if(elementToChange !== null && elementToChange.declarations !== null && typeof elementToChange.declarations !== 'undefined'){

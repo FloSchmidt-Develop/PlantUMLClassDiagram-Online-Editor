@@ -8,10 +8,10 @@ import DeclarationInputCreator from '../declarationInputCreator';
 import Declaration from '../../../parserRep/declaration';
 import MyObject from '../../../parserRep/myObject';
 import ElementUpdateController from '../../../controller/elementUpdateController';
-import IClass from '../../../../interfaces/class';
 import ClassUpdateController from '../../../controller/classUpdateController';
 import ClassController from '../../../controller/modelController/classConntroller';
 import NameChangeController from '../../../controller/modelController/nameController';
+import Class from '../../../parserRep/class';
 
 
 
@@ -32,17 +32,17 @@ export default class ObjectEditingView{
 
           //name
           let nameInputCreator = new NameSelectCreator(nameController);
-          let name_tr = nameInputCreator.createNameInputDiv(selectedClass as IClass);
+          let name_tr = nameInputCreator.createNameInputDiv(selectedClass as Class);
           table.appendChild(name_tr);
           view.appendChild(table);
 
         //dataType
         let dataTypeInputCreator = new ObjectDataTypeInputCreator(controller);
-        let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as IClass);
+        let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as Class);
 
         //declarations
         let declarationInputCreator = new DeclarationInputCreator(graph);
-        let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as IClass);
+        let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as Class);
         let declarationHeader = document.createElement('h3');
         declarationHeader.innerText = 'Declarations';
 

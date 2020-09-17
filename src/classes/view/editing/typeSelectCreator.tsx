@@ -1,8 +1,9 @@
-import IClass from "../../../interfaces/class";
+
 import ClassUpdateController from '../../controller/classUpdateController';
 import Clonable from "../../../interfaces/cloneable";
-import Class from "../../../interfaces/class";
+
 import ClassController from "../../controller/modelController/classConntroller";
+import Class from '../../parserRep/class';
 
 export default class {
   controller: ClassController
@@ -11,7 +12,7 @@ export default class {
     this.controller = controller
   }
 
-  public createTypeSelectDiv(elementToChange: IClass): HTMLTableRowElement {
+  public createTypeSelectDiv(elementToChange: Class): HTMLTableRowElement {
 
 
     //TODO Check IClass for undefined !! 

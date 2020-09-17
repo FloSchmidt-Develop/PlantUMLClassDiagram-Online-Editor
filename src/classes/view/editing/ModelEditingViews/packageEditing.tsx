@@ -1,21 +1,17 @@
 
-import Attribute from "../../../parserRep/attribute";
-import Method from "../../../parserRep/method";
 
-import TypeSelectCreator from '../typeSelectCreator';
 import NameSelectCreator from '../nameInputCreator';
-import AttributeInputCreator from '../attributeInputCreator';
-import MethodInputCreator from '../methodInputCreator';
-import ClassUpdateController from '../../../controller/classUpdateController';
-import IPackage from '../../../../interfaces/package';
+
+
 import NameChangeController from "../../../controller/modelController/nameController";
+import Package from '../../../parserRep/package';
 
 
 
 
 export default class PackageEditingView{
 
-    public static CreatePackageEditingView(selectedPackage: IPackage, sender : any, graph: any, view: HTMLDivElement): HTMLDivElement{
+    public static CreatePackageEditingView(selectedPackage: Package, sender : any, graph: any, view: HTMLDivElement): HTMLDivElement{
 
 
           let table = document.createElement("table");

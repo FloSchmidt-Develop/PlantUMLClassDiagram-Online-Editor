@@ -1,11 +1,10 @@
-import Class, { Visibility, Modifiers } from "../../../interfaces/class";
+import { Visibility, Modifiers } from "../../../interfaces/class";
 
 import PrivateMethode from '../../../images/PrivateMethode.png'
 import ProtectedMethode from '../../../images/ProtectedMethode.png'
 import PackageMethode from '../../../images/PackageMethode.png'
 import PublicMethode from '../../../images/PublicMethode.png'
-
-import { mxUtils} from "mxgraph-js";
+import Class from "../../parserRep/class";
 
 export default class VertexMethodLabel{
 

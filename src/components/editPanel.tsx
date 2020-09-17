@@ -1,10 +1,10 @@
 import React from 'react';
-
 import TextField from '@material-ui/core/TextField';
-import IClass from '../interfaces/class';
+import Class from '../classes/parserRep/class';
+
 
 const EditPanel = (props) => {
-    let selectedClass = props?.selectedCell?.value as IClass
+    let selectedClass = props?.selectedCell?.value as Class
     let graph = props.graph;
 
 

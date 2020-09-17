@@ -1,4 +1,3 @@
-import ID from "./id";
 import ObserverSubject from "./subject";
 import DiagramCreator from "../../helper/diagramCreator";
 

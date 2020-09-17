@@ -1,6 +1,7 @@
-import Connection from "../../../../interfaces/connection";
+
 import DiagramCreator from "../../../../helper/diagramCreator";
 import Package from "../../../parserRep/package";
+import Connection from "../../../parserRep/connection";
 
 export default class ConnectionChangeController{
 

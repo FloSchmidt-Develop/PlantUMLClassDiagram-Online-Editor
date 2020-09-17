@@ -1,11 +1,12 @@
-import IClass from '../../interfaces/class';
+
 import ElementUpdateController from './elementUpdateController';
 import { mxGeometry} from "mxgraph-js";
+import Class from '../parserRep/class';
 
 
 export default class ClassUpdateController extends ElementUpdateController{
 
-    public static updateClassValues(graph, mxCellToUpdate, classToUpdate: IClass){
+    public static updateClassValues(graph, mxCellToUpdate, classToUpdate: Class){
         
         super.updateElement(graph,mxCellToUpdate,classToUpdate);
 

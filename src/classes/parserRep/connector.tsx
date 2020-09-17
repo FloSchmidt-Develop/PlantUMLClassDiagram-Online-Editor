@@ -1,8 +1,9 @@
-import IConnector, {Arrows, Lines, LayoutProperty }from '../../interfaces/connector';
+import {Arrows, Lines, LayoutProperty }from '../../interfaces/connector';
 import ID from './id';
+import Clonable from '../../interfaces/cloneable';
 
 
-export default class Connector extends ID implements IConnector{
+export default class Connector extends ID implements Clonable{
     startArrowSymbol: Arrows = Arrows.none;
     endArrowSymbol: Arrows = Arrows.none;
     lineStyle: Lines = Lines.normal;
@@ -98,7 +99,7 @@ export default class Connector extends ID implements IConnector{
         this.setLineStyle(connector);
     }
 
-    private getStartConnector(): string{
+    public getStartConnector(): string{
         if(this.startArrowSymbol === Arrows.diamond){
             return 'o';
         }
@@ -116,7 +117,7 @@ export default class Connector extends ID implements IConnector{
         }
     }
 
-    private getLineStyle(): string{
+    public getLineStyle(): string{
         if(this.lineStyle = Lines.dotted){
             return '..';
         }
@@ -125,7 +126,7 @@ export default class Connector extends ID implements IConnector{
         }
     }
 
-    private getEndConnector(): string{
+    public getEndConnector(): string{
         if(this.endArrowSymbol === Arrows.diamond){
             return 'o';
         }
