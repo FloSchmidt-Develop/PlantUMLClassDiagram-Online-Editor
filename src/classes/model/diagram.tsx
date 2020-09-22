@@ -18,9 +18,17 @@ export default class Diagram extends ID implements IDiagram{
         this.name = name;
     }
 
-    public addClass(newClass : Class) :void{
-        if(this.class_declarations.find(e => e.id === newClass.id) == null)
+    public addClass(newClass : Class): boolean{
+        if(this.class_declarations.find(e => e.id === newClass.id) == null){
+            let name_exists = this.class_declarations.find(e => e.getName() === newClass.getName());
+            if(name_exists != null){
+                alert('Two identical Named Objects Found rename one of them and try again');
+                return false;
+            }
             this.class_declarations.push(newClass);
+            return true
+        }
+        return false;
     }
 
     public addConnection(newConnection : Connection): void{

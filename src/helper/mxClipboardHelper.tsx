@@ -6,6 +6,7 @@ import DiagramCreator from "./diagramCreator";
 import Package from "../classes/model/package";
 import Connection from "../classes/model/connection";
 import EdgeStyleCreator from "../classes/view/cellLables/edgeStyle";
+import Note from "../classes/model/note";
 
 export default class MxClipboardHelper{
 
@@ -33,7 +34,7 @@ export default class MxClipboardHelper{
           var cells = graph.getImportableCells(mxClipboard.getCells());
           var delta = mxClipboard.insertCount * (mxClipboard.STEPSIZE + 50);
           var parent = graph.getDefaultParent();
-          //console.log(cells);
+          console.log(cells);
           
 
           graph.model.beginUpdate();
@@ -52,17 +53,25 @@ export default class MxClipboardHelper{
                 let newCls = (tempObj as Class).cloneModel();
                 (newCls as Class).observers = [];
 
-                
-                
                 newCls.setName(newCls.getName() + 'Copy');
-                DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
+                let wasValid =DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
+                if(!wasValid)
+                  return;
                 cells[i].value = newCls;
                 addedClasses[newCls.getName()] = graph.importCells([cells[i]], delta, delta, tmp)[0];
               }
-              if(tempObj instanceof Connection){
-                console.log(tempObj);
+
+              if(tempObj instanceof Note){         
+
+                let newCls = (tempObj as Note).cloneModel(true);
+                (newCls as Note).observers = [];
                 
+                newCls.setName(newCls.getName() + 'Copy');
+                DiagramCreator.diagram[DiagramCreator.activeIndex].addNote(newCls);
+                cells[i].value = newCls;
+                addedClasses[newCls.getName()] = graph.importCells([cells[i]], delta, delta, tmp)[0];
               }
+
               //import package
               else if(tempObj instanceof Package){
                 const newPackage = (tempObj as Package).cloneModel();

@@ -50,9 +50,9 @@ export default class Note extends ObserverSubject<string>{
         return this.hight;
     }
 
-    public cloneModel(): Note{
+    public cloneModel(changeId?: boolean): Note{
         let newNote = new Note(this.content);
-        newNote.id = this.id;
+        newNote.id = changeId ? newNote.id : this.id;
         newNote.direction = this.direction;
         newNote.relatedTo = this.relatedTo;
         newNote.name = this.name;

@@ -35,6 +35,7 @@ import {
   mxEdgeStyle,
   mxGraphHandler,
   mxEdgeHandler,
+  mxConnectionHandler
 } from "mxgraph-js";
 
 import Class from "./classes/model/class";
@@ -51,6 +52,7 @@ import DiagramPreview from "./components/diagramPreview";
 import PumlPreview from "./components/pumlPreview";
 import Note from "./classes/model/note";
 import ChangeInteraction from "./classes/controller/mxGraphInteraction";
+import GraphConfiguration from "./classes/controller/graphConfigurator";
 
 
 
@@ -81,7 +83,6 @@ const Editor = (props) => {
   const divGraph = React.useRef<HTMLDivElement>(null);
   const editPanel = React.useRef<HTMLDivElement>(null);
   const [undoManager, setUndoManager] = React.useState(new mxUndoManager());
-  new mxUndoManager();
   var keyHandler;
   var rubberBand;
   
@@ -186,13 +187,8 @@ const Editor = (props) => {
   const setUpEditor = (): void => {
     if(graph == null)
       return;
-    var vertexStyle  = graph.getStylesheet().getDefaultVertexStyle();
-      vertexStyle[mxConstants.STYLE_OVERFLOW] = 'width';
 
-      var style = graph.getStylesheet().getDefaultEdgeStyle();
-      style[mxConstants.STYLE_ROUNDED] = true;
-      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-      graph.alternateEdgeStyle = 'elbow=vertical';
+      GraphConfiguration.configureGraph(graph);
       
       if(keyHandler == null) 
         keyHandler = new mxKeyHandler(graph);
@@ -200,114 +196,23 @@ const Editor = (props) => {
       if(rubberBand == null)
         rubberBand = new mxRubberband(graph);
 
-      mxGraphHandler.prototype.guidesEnabled = true;
-      mxEdgeHandler.prototype.snapToTerminals = true;
-      mxGraphHandler.prototype.cloneEnabled = false;
 
-      graph.setConnectableEdges(true);
-      graph.setAllowDanglingEdges(false);
-      graph.setConnectable(true);
-      graph.setHtmlLabels(true);
-      graph.setCellsResizable(true);
-      graph.setResizeContainer(false);
-      graph.isDropEnabled  = () => true;
-      graph.isEscapeEnabled  = () => true;
-      graph.isExtendParentsOnMove = () => true;
-      graph.isExtendParentsOnAdd = () => true;
-      graph.isCellEditable = () => false;
-      graph.allowNegativeCoordinates = false;
-      graph.cloneInvalidEdges = false;
-      graph.zoomTo( DiagramCreator.diagram[DiagramCreator.activeIndex].scale); 
-
-      graph.isValidDropTarget = (cell,cells,evt) => {
-        if(cell.value instanceof Class || cell.value instanceof Multiplicity || cell.value instanceof Note){
-          return false;
-        }
-        return true;
-      }
-
-      graph.isValidTarget  = (cell) => {
-        if(cell.value instanceof Package || cell.value instanceof Multiplicity)
-          return false;
-        return true;
-        
-      }
-      graph.isValidSource = (cell) => {
-        if(cell.value instanceof Connection 
-          || cell.value instanceof Package
-          || cell.value instanceof Multiplicity)
-          return false;
-        return true;
-      }
-
-      graph.isValidConnection = (source,target) => {  
-        if(source.value instanceof Connection && target.value instanceof Connection)
-          return false;
-        else if(target.value instanceof Connection && (target.value as Connection).destinationElement.includes('('))
-          return false;
-        return true;
-      }
-
-      graph.getLabel = function (cell) {
-
-        //Cell with known value
-        if(cell.value instanceof Class 
-        || cell.value instanceof Connection 
-        || cell.value instanceof Package 
-        || cell.value instanceof Multiplicity
-        || cell.value instanceof Note)
-        {        
-          return CellLabel.CreateCellLabel(cell);
-        }
   
-        //Cell with not known value this is a Edge created by the User
-        else
-        {  
-          if(cell.edge && cell.target != null && cell.source != null)
-          {
-            
-             return UserCreatedNewEdge.CreateNewEdgeFromCell(cell,graph);
-          }
-          else{
-            return cell.value;   
-          }
-        }
-      }
+        //======Undo=======
+        var listener = function(sender, evt)
+        {        
+          undoManager.undoableEditHappened(evt.getProperty('edit'));
+        };
+  
+        graph.getModel().addListener(mxEvent.UNDO, listener);
+        graph.getView().addListener(mxEvent.UNDO, listener);
 
-      mxClipboard.copy = function(graph, cells)
-      {
-        return MxClipboardHelper.Copy(graph,cells);
-      };
-
-      mxClipboard.paste = function(graph)
-      {
-        MxClipboardHelper.Paste(graph);
-      };
-
-      //======Undo=======
-      var listener = function(sender, evt)
-      {        
-        undoManager.undoableEditHappened(evt.getProperty('edit'));
-      };
-
-      graph.getModel().addListener(mxEvent.UNDO, listener);
-      graph.getView().addListener(mxEvent.UNDO, listener);
-
-      //Delete/Add Classes Packages Connections On Add/Remove/Undo/Redo/Copy
-      graph.getModel().addListener(mxEvent.CHANGE, function(sender, evt)
-      {
-        ChangeInteraction.ModelChange(sender,evt);
-      });
-
-      //is called when selection in mxGraph Change
-      graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
-      {        
-        console.log(DiagramCreator.diagram[DiagramCreator.activeIndex]);
-        
-        EditingView.CreateEditingView(sender,graph,editPanel);       
-      });
-
-
+  
+        //is called when selection in mxGraph Change
+        graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
+        {        
+          EditingView.CreateEditingView(sender,graph,editPanel);       
+        });
 
       let toolbar = new Toolbar();
       toolbar.getCreateToolbarContainer(graph);

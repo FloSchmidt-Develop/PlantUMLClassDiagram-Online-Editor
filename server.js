@@ -5,7 +5,6 @@ var DiagramListener = require('./parser/DiagramListener').DiagramListener;
 
 const express = require('./node_modules/express');
 const fileUpload = require('./node_modules/express-fileupload');
-var plantuml = require('node-plantuml');
 var plantumlEncoder = require('plantuml-encoder');
 const cors = require('cors');
 var response = {};
@@ -16,11 +15,10 @@ var addedNotes;
 //const bodyParser = require('body-parser');
 
 const app = express();
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({limit: '10mb'}));
 
 app.use(fileUpload());
 app.use(cors());
-plantuml.useNailgun(); 
 
 app.post('/upload', (req, res) => {
     if(req.file === null){
