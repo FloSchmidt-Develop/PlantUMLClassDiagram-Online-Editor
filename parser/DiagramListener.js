@@ -20,6 +20,8 @@ DiagramListener.prototype.constructor = DiagramListener;
 
 // Enter a parse tree produced by PlantUMLParser#diagram.
 PlantUMLListener.prototype.enterClass_diagram = function(ctx) {
+    console.log(ctx.getText());
+    
     this.Res.diagram = {};
     this.Res.diagram.class_declaration = new Array();
     this.Res.diagram.connection_declaration = new Array();

@@ -63,6 +63,7 @@ app.post('/upload', (req, res) => {
 
 app.post('/export', (req, res) => {
     requestBody = req.body;
+
     let result = createPUMLFile(req.body);
 
 

@@ -104,24 +104,24 @@ const Editor = (props) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    try {
-      const res = await axios.post("/upload", formData, {
+
+      axios.post("/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+      })
+      .then(function (response){
+        console.log(response.data);
+      
+        diagramCreator.createDiagram(response.data,filename);
+        
+        setDiagram(DiagramCreator.diagram[DiagramCreator.activeIndex]);
+        setChange(true); 
+      })
+      .catch(function(error){
+        alert('server ist not available: '+ error);
       });
-      console.log(res.data);
-      
-      diagramCreator.createDiagram(res.data,filename);
-      
-      setDiagram(DiagramCreator.diagram[DiagramCreator.activeIndex]);
-      setChange(true);     
-      
-    } catch (err) {
-      
-        alert('server ist not available: '+ err);
-      
-    }
+
   };
   //===========End From Data
 
