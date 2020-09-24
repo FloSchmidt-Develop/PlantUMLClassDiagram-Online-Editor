@@ -41,7 +41,7 @@ export default class ObjectEditingView{
         let dataTypediv = dataTypeInputCreator.createTypeSeclectDiv(sender.cells[0].value as Class);
 
         //declarations
-        let declarationInputCreator = new DeclarationInputCreator(graph);
+        let declarationInputCreator = new DeclarationInputCreator(controller);
         let declaration_div = declarationInputCreator.createNameInputDiv(sender.cells[0].value as Class);
         let declarationHeader = document.createElement('h3');
         declarationHeader.innerText = 'Declarations';
