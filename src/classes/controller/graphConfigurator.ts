@@ -54,9 +54,10 @@ export default class GraphConfiguration{
         graph.setEscapeEnabled(true);
         graph.setExtendParentsOnMove(true);
         graph.setExtendParentsOnAdd(true);
-        graph.isCellEditable = () => true;
+        graph.isCellEditable = () => false;
         graph.allowNegativeCoordinates = false;
         graph.cloneInvalidEdges = false;
+        graph.allowLoops = true;
         graph.zoomTo( DiagramCreator.diagram[DiagramCreator.activeIndex].scale); 
 
         graph.isValidDropTarget = (cell,cells,evt) => {
@@ -70,9 +71,10 @@ export default class GraphConfiguration{
         if(cell.value instanceof Package || cell.value instanceof Multiplicity)
             return false;
         return true;
-        
         }
+
         graph.isValidSource = (cell) => {
+
         if(cell.value instanceof Connection 
             || cell.value instanceof Package
             || cell.value instanceof Multiplicity)
@@ -130,6 +132,13 @@ export default class GraphConfiguration{
               }
             }
           }
+
+          var keyHandler = new mxKeyHandler(graph);
+          keyHandler.bindKey(46, function(evt)
+          {
+            graph.removeCells();
+          });
+  
   
     }
 }

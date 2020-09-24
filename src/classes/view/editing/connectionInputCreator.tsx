@@ -48,7 +48,7 @@ export default class ConnectionInputCreator{
 
     let option_normal = document.createElement("option");
     option_normal.value = "normal";
-    let normal_text = document.createTextNode(".. dotted Line");
+    let normal_text = document.createTextNode(".. dashed Line");
     option_normal.appendChild(normal_text);
 
     let option_dotted = document.createElement("option");
@@ -89,7 +89,7 @@ export default class ConnectionInputCreator{
     
         let startArrow_option_normal = document.createElement("option");
         startArrow_option_normal.value = "normal-1";
-        let startArrow_option_normal_text = document.createTextNode("<- unidirectional association ");
+        let startArrow_option_normal_text = document.createTextNode("<- association ");
         startArrow_option_normal.appendChild(startArrow_option_normal_text);
     
         let startArrow_option_diamond = document.createElement("option");
@@ -110,7 +110,7 @@ export default class ConnectionInputCreator{
 
         let startArrow_option_none = document.createElement("option");
         startArrow_option_none.value = "none";
-        let startArrow_option_none_text = document.createTextNode("- bidirectional association");
+        let startArrow_option_none_text = document.createTextNode("- none");
         startArrow_option_none.appendChild(startArrow_option_none_text);
     
         select_startArrow.appendChild(startArrow_option_normal);
@@ -155,27 +155,27 @@ export default class ConnectionInputCreator{
     
         let endArrow_option_normal = document.createElement("option");
         endArrow_option_normal.value = "normal";
-        let endArrow_option_normal_text = document.createTextNode("<-");
+        let endArrow_option_normal_text = document.createTextNode("<- association");
         endArrow_option_normal.appendChild(endArrow_option_normal_text);
     
         let endArrow_option_diamond = document.createElement("option");
         endArrow_option_diamond.value = "diamond";
-        let endArrow_option_diamond_text = document.createTextNode("o-");
+        let endArrow_option_diamond_text = document.createTextNode("o- aggregation");
         endArrow_option_diamond.appendChild(endArrow_option_diamond_text);
 
         let endArrow_option_diamond_filled = document.createElement("option");
         endArrow_option_diamond_filled.value = "diamond_filled";
-        let endArrow_option_diamond_filled_text = document.createTextNode("*-");
+        let endArrow_option_diamond_filled_text = document.createTextNode("*- composition");
         endArrow_option_diamond_filled.appendChild(endArrow_option_diamond_filled_text);
 
         let endArrow_option_big = document.createElement("option");
         endArrow_option_big.value = "diamond";
-        let endArrow_option_big_text = document.createTextNode("<|-");
+        let endArrow_option_big_text = document.createTextNode("<|- inheritance");
         endArrow_option_big.appendChild(endArrow_option_big_text);
 
         let endArrow_option_none = document.createElement("option");
         endArrow_option_none.value = "none";
-        let endArrow_option_none_text = document.createTextNode("-");
+        let endArrow_option_none_text = document.createTextNode("- none");
         endArrow_option_none.appendChild(endArrow_option_none_text);
     
         select_EndArrow.appendChild(endArrow_option_normal);

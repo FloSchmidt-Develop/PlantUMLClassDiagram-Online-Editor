@@ -115,6 +115,7 @@ attribute:
 
 attribute_name:
     WORD+
+    | ARRAY
     ;
 
 attribute_type:
@@ -152,6 +153,7 @@ declaration:
 
 declaration_name:
     WORD+
+    | ARRAY
     ;
 
 declaration_argument:

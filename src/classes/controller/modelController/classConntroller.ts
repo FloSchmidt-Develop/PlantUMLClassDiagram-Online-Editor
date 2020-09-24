@@ -273,7 +273,7 @@ export default class ClassController{
     }
 
     private validateName(name: string): boolean{
-        var format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+        var format = /[ `!@#$%^&*()+\-={};':"\\|,.<>\/?~]/;
         return format.test(name);
     }
 }
