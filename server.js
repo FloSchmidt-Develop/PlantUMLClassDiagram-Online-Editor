@@ -26,7 +26,7 @@ app.post('/upload', (req, res) => {
     }
 
     const file = req.files.file;
-    console.log(file.mimetype);
+    //console.log(file.mimetype);
     if(file.mimetype === "application/json")
     {
 
@@ -102,7 +102,7 @@ function createJSONFile(requestObject){
         package_declarations: []
      }};
     let diagram = resultObj.Res.diagram;
-    console.log(requestObject);
+    //console.log(requestObject);
     
     diagram.class_declaration = requestObject.class_declarations.map(cls => ({
         alias: cls.alias,
@@ -228,16 +228,16 @@ function createClasses(classes, connections){
     var result = '';
     for (let index = 0; index < classes.length; index++) {
         const cls = classes[index];
-        result += cls.type + ' "' + (cls.type === 'object' ? cls.name + ': ' + cls.dataType : cls.name) + '" as ' + cls.alias + '{ \n';
+        result += cls.type + ' "' + (cls.type === 'object' && cls.dataType !== '' ? cls.name + ': ' + cls.dataType : cls.name) + '" as ' + cls.alias + '{ \n';
         result += getStylingOfClass(cls);
         result += getAttributesOfClass(cls);
         result += getMethodsOfClass(cls);
         result += getDeclarationsOfObject(cls);
         result += '}\n \n';
-        addedClasses.push(cls.name);
+        addedClasses.push(cls.alias);
 
         
-        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.name || e.destinationElement === cls.name);
+        let connectionsOfClass = connections.filter(e => e.sourceElement === cls.alias || e.destinationElement === cls.alias);
         connectionsOfClass.forEach(connection => {
             if(addedClasses.find(srcCls => srcCls === connection.sourceElement) && addedClasses.find(dstCls => dstCls === connection.destinationElement)){
                 result += createConnections(connection);
@@ -291,9 +291,9 @@ function createConnections(connections){
     result += '\'{"points": [' + getConnectionPoints(connection.points) + ']}\'\n';
     result += connection.destinationElement
     result += ' '
-    + (connection.multiplicity_left.value !== '' ? ('"' + (connection.multiplicity_left.value) + '"'): '')
+    + (connection.multiplicity_right.value !== '' ? ('"' + (connection.multiplicity_right.value) + '"'): '')
     + getConnection(connection.connector,connection.destinationElement, connection.sourceElement)
-    + (connection.multiplicity_right.value !== '' ? ( '"' + connection.multiplicity_right.value + '"') : '') 
+    + (connection.multiplicity_left.value !== '' ? ( '"' + connection.multiplicity_left.value + '"') : '') 
     + ' ' + connection.sourceElement
     + (connection.stereoType !== '' ? (' : "' + connection.stereoType + '"') :  '');
     result += '\n';
@@ -346,7 +346,7 @@ function getConnection(connector,destination,sourceElement){
         default:
             break;
     }
-    result += connector.lineStyle === 0 ? ('-' + getLayoutInfo(destinationClass,sourceClass) + '-') : ('.' + getLayoutInfo(destinationClass,sourceClass) + '.');
+    result += connector.lineStyle === 0 ? ('-' + getLayoutInfo(connector) + '-') : ('.' + getLayoutInfo(connector) + '.');
     switch(connector.startArrowSymbol){
         case 0: 
             result += '>';
@@ -369,23 +369,21 @@ function getConnection(connector,destination,sourceElement){
     return result;
 }
 
-function getLayoutInfo(destinationClass,sourceClass){
-    result = '';
-    delta = 100;
-    if(destinationClass){
-        if(parseInt(sourceClass.x) - (destinationClass.x) >= 0){
-            result = ''; //l
-        }
-        else{
-            result = ''; //r
-        }
+function getLayoutInfo(connector){
+    //console.log(connector);
     
-        if( Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) >= 0) {
-            result = ''; //up
-        }
-        else if(Math.abs(parseInt(sourceClass.y) - parseInt(destinationClass.y)) >= delta && parseInt(sourceClass.y) - parseInt(destinationClass.y) < 0){
-            result = ''; //down
-        }
+    let result = ''
+    if(connector.layoutProperty === 0){
+        result = 'up'; //l
+    }
+    else if(connector.layoutProperty === 1){
+        result = 'down'; //r
+    }
+    else if(connector.layoutProperty === 2){
+        result = 'left'; //r
+    }
+    else if(connector.layoutProperty === 3){
+        result = 'right'; //r
     }
 
     return result;

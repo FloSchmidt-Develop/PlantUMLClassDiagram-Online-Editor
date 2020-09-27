@@ -66,7 +66,9 @@ export default class Package extends ID implements Clonable, Typed{
         if(this.classReferences.find(e => e.id === classToAdd.id) != null){
             return;
         }
-        classToAdd.package = this.name;
+        classToAdd.package = this.name;     
+        console.log(classToAdd);
+           
         this.classReferences.push(classToAdd);
     }
 

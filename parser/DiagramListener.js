@@ -20,7 +20,7 @@ DiagramListener.prototype.constructor = DiagramListener;
 
 // Enter a parse tree produced by PlantUMLParser#diagram.
 PlantUMLListener.prototype.enterClass_diagram = function(ctx) {
-    console.log(ctx.getText());
+
     
     this.Res.diagram = {};
     this.Res.diagram.class_declaration = new Array();
@@ -35,15 +35,12 @@ PlantUMLListener.prototype.enterComment_section = function(ctx) {
     actual_note = {};
     actual_note.content = '';
     if(ctx.direction != null){
-        console.log('direction: ' + ctx.direction.getText()); 
         actual_note.direction = ctx.direction.getText();
     }
     if(ctx.relatedTo != null){
-        console.log('relatedTo: ' + ctx.relatedTo.getText()); 
         actual_note.relatedTo = ctx.relatedTo.getText();
     }
     if(ctx.name != null){
-        console.log('name: ' + ctx.name.getText()); 
         actual_note.name = ctx.name.getText();
     }
 
@@ -84,8 +81,7 @@ PlantUMLListener.prototype.exitComment_section = function(ctx) {
     if(actual_package != null){
         actual_note.package = actual_package.name;
     }
-    console.log(actual_note);
-    
+
     let clone = JSON.parse(JSON.stringify(actual_note));
     this.Res.diagram.note_declarations.push(clone);
     actual_note = null;
@@ -229,11 +225,7 @@ PlantUMLListener.prototype.enterVariable_name = function(ctx) {
 };
 
 PlantUMLListener.prototype.enterNested_argument_type = function(ctx) {
-    console.log('=======nested Type=======');
-    console.log(ctx.getText());
-    console.log('actual Attribute');
-    console.log(actual_functionAttribute);
-    console.log('===========================');
+
     
     
     
@@ -241,11 +233,7 @@ PlantUMLListener.prototype.enterNested_argument_type = function(ctx) {
 };
 
 PlantUMLListener.prototype.enterFunction_argument_attribute_type = function(ctx) {
-    console.log('=======not nested Type========');
-    console.log(ctx.getText());
-    console.log('actual Attribute');
-    console.log(actual_functionAttribute);
-    console.log('===========================');
+
     
 
     actual_functionAttribute.dataType = ctx.getText();

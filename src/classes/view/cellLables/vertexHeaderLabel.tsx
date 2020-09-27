@@ -38,7 +38,7 @@ export default class VertexHeaderLabel{
           dummy_div.style.marginRight = '20px';
           dummy_div.style.marginLeft = '20px';
   
-          header_text.innerText = actualClass.getName() + (actualClass.type === 'object' ? (':' + (actualClass as MyObject).dataType) : '');
+          header_text.innerText = actualClass.getName() + (actualClass.type === 'object' ? ((actualClass as MyObject).dataType !== '' ? (':' + (actualClass as MyObject).dataType) : '') : '');
           header_text.style.marginTop = '13px';
           header_text.style.fontSize = '14px';
           header_text.style.marginBottom = '13px';

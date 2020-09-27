@@ -59,7 +59,7 @@ export default class Class extends ObserverSubject<string> implements INamed  {
         let max = this.width; // min width
 
         //charakters in name + (image_width + margin) * 2
-        let lengthName = (((this.name.length + this.dataType.length) * 14) + 120) * 0.7;
+        let lengthName = (((this.name?.length + this.dataType?.length) * 14) + 120) * 0.7;
         if(lengthName > max){   
             max = lengthName;
         }

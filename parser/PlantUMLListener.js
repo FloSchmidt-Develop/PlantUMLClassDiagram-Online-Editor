@@ -542,5 +542,14 @@ PlantUMLListener.prototype.exitEnum_declaration = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#any_except_newline.
+PlantUMLListener.prototype.enterAny_except_newline = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#any_except_newline.
+PlantUMLListener.prototype.exitAny_except_newline = function(ctx) {
+};
+
+
 
 exports.PlantUMLListener = PlantUMLListener;

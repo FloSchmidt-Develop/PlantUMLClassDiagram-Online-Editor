@@ -2,7 +2,7 @@ grammar PlantUML;
 
 diagram:
     '@startuml'
-    (NEWLINE | class_diagram )
+    (NEWLINE | class_diagram  )
     '@enduml'
     ;
 
@@ -14,7 +14,7 @@ class_diagram
 comment_section:
     (NOTE WHITESPACE? direction=comment_direction WHITESPACE? 'of' WHITESPACE? relatedTo=comment_relatedTo WHITESPACE? ':' WHITESPACE? comment_content) 
     | (NOTE WHITESPACE? comment_content WHITESPACE? 'as' name=comment_name)
-    | (NOTE WHITESPACE? 'as' name=comment_name NEWLINE multiLine_content NEWLINE 'end note');
+    | (NOTE WHITESPACE? 'as' name=comment_name NEWLINE? multiLine_content NEWLINE? 'end note');
 
 comment_content:
     ('"'? (comment_element (WHITESPACE comment_element)* )+ '"'?)
@@ -26,6 +26,7 @@ comment_element:
     | ('</' WORD '>') 
     | (WORD ('?' | ',' | '!' | ':' | '.' ))
     | NOTE
+    | any_except_newline
     )
     ;
 
@@ -104,8 +105,7 @@ styling_value:
 	(FLOAT | INTEGER);
 
 attribute:
-    visibility?
-    modifiers?
+    ( visibility | modifiers )*
     attribute_name
     ':'
     WHITESPACE?
@@ -128,8 +128,7 @@ function_argument_attribute_type:
 
 
 method:
-    visibility?
-    modifiers?
+    ( visibility | modifiers )*
     mathode_name
     '(' function_argument_list? ')'
     (':' WHITESPACE? methode_data_type)?
@@ -141,13 +140,12 @@ method:
     ;
 
 declaration:
-    visibility?
-    modifiers?
+    ( visibility | modifiers )*
     declaration_name
 	WHITESPACE?
     '='
 	WHITESPACE?
-    declaration_argument
+     '"'? declaration_argument '"'?
     NEWLINE?
     ;
 
@@ -158,13 +156,13 @@ declaration_name:
 
 declaration_argument:
     WORD* 
-	| INTEGER+
-	| ('[' WORD (',' WORD)* ']')
-	| ('[' INTEGER+ (',' INTEGER)* ']')
+	| INTEGER+ | FLOAT+
+	| ('[' '"'? (INTEGER | FLOAT | WORD) '"'? (',' '"'? (INTEGER | FLOAT | WORD) '"'?)* ']')
     | (WORD (INTEGER+ WORD?))
+    | '[]'
     ;
 
-multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"' INTEGER '"' );
+multiplicity: ('"*"' | '"0..1"' | '"0..*"' | '"1..*"' | '"0..n"' | '"1..n"' | '"' INTEGER '"' );
 
 connection_left:
     instance=connection_name WHITESPACE? (mult=multiplicity)?
@@ -232,7 +230,7 @@ template_argument_list:
     ;
 
 ident:
-    '"'? WORD+ '"'? ('as' attribute_type)?
+    '"'? any_except_newline+ '"'? ('as' attribute_type)?
     ;
 
 methode_data_type:
@@ -260,16 +258,21 @@ connection_name:
 modifiers:
     static_mod='{static}'
     | abstract_mod='{abstract}'
+    | '{field}'
+    | '{classifier}'
+    | '{method}'
     ;
 
 stereotype:
-    QUOTATION ( ident ('(' args+=ident? ')')? '/'? )*  (DOTDOT stereotype_value)? QUOTATION
+    QUOTATION? ( ident ('(' args+=ident? ')')? '/'? )*  (DOTDOT stereotype_value)? QUOTATION?
     ;
 
 stereotype_value:
     WORD
     | WORD '.' 
     | (WORD ('.' WORD)+) 
+    | (WORD ('/' WORD)+)
+    | WORD '/'
     ;
 
 type_declaration:
@@ -286,6 +289,23 @@ enum_declaration:
     'enum' ident ('{' NEWLINE
     item_list?
     '}' )?
+    ;
+
+any_except_newline: 
+    DIRECTION
+    | NOTE
+    | CLASS
+    | INTERFACE
+    | ABSTRACT
+    | OBJECT
+    | PACKAGE
+    | AS
+    | ARRAY
+    | INTEGER
+    | FLOAT
+    | ANYARRAY
+    | WORD
+    | ANY
     ;
 
 CONNECTOR:
@@ -358,6 +378,7 @@ ABSTRACT: 'abstract';
 OBJECT: 'object';
 PACKAGE: 'package';
 AS : 'as';
+ 
 
 
 NEWPAGE : 'newpage' -> channel(HIDDEN)
@@ -381,8 +402,10 @@ WHITESPACE  : (' ' | '\t' | '\r' | '\n')+ -> skip ;
 QUOTATION : '"';
 
 COMMENT :
-    ('/' '/' .*? '\n' | '/*' .*? '*/') -> channel(HIDDEN)
+    ('/' '/' .*? '\n' | '/*' .*? '*/' | '\'\'\'' .*? '\'\'\'' ) -> channel(HIDDEN)
     ;
+
+ANYCHAR : .;
 
 
 //=========================================================

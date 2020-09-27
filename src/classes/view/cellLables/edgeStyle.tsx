@@ -7,7 +7,7 @@ export default class EdgeStyleCreator{
         return this.getLineStyle(connector) +
         this.getStartArrowStyle(connector) +
         this.getEndArrowStyle(connector) + 
-        "sourcePerimeterSpacing=0;shape=link;fontSize=18;fontColor=#000000;fillColor=#ffffff;strokeOpacity=100;strokeWidth=2;strokeColor=#000000;"
+        "sourcePerimeterSpacing=0;shape=link;"
     }
 
     private static getLineStyle(connector: Connector): string {

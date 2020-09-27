@@ -11,6 +11,7 @@ import {
 import EdgeStyleCreator from "../view/cellLables/edgeStyle";
 import Note from "../model/note";
 import Package from "../model/package";
+import DiagramCreator from "../../helper/diagramCreator";
 
 
 
@@ -139,10 +140,64 @@ export default class MxGraphCreator {
 
       //Source and Destination are no Connection
       else{
-        let source = this.diagram.class_declarations.find(e => e.getName() === connection.sourceElement) as Class;
+        let source: Class | Note;
+        console.log(connection);
+        
+        source = this.diagram.class_declarations.find(e => e.alias === connection.sourceElement) as Class;
+        console.log(source);
+        console.log(DiagramCreator.diagram);
+        
+        
+        if(source == null){
+          source = this.diagram.note_declarations.find(e => e.getName()  === connection.sourceElement) as Note;
+        }
+        if(source == null){
+          let newCls = new Class(connection.sourceElement,'class');
+          DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
+
+          newCls.x = this.x;
+          newCls.y = this.y;
+          addedVertexes[newCls.alias] = this.graph.insertVertex(
+            this.parentContainer,
+            newCls.id,
+            newCls,
+            newCls.x,
+            newCls.y,
+            newCls.getWidth(),
+            newCls.getHeight(),
+          )
+          this.index++;
+          this.x = this.x + 400;
+          newCls.registerObserver(connection as Connection);
+        }
         source?.registerObserver(connection as Connection);
 
-        let target = this.diagram.class_declarations.find(e => e.getName() === connection.destinationElement) as Class;
+        let target: Class | Note;
+        target = this.diagram.class_declarations.find(e => e.alias === connection.destinationElement) as Class;
+        console.log(target);
+
+        if(target == null){
+          target = this.diagram.note_declarations.find(e => e.getName() === connection.destinationElement) as Note;
+        }
+        if(target == null){
+          let newCls = new Class(connection.destinationElement,'class');
+          DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(newCls);
+
+          newCls.x = this.x;
+          newCls.y = this.y;
+          addedVertexes[newCls.alias] = this.graph.insertVertex(
+            this.parentContainer,
+            newCls.id,
+            newCls,
+            newCls.x,
+            newCls.y,
+            newCls.getWidth(),
+            newCls.getHeight(),
+          )
+          this.index++;
+          this.x = this.x + 400;
+          newCls.registerObserver(connection as Connection);
+        }
         target?.registerObserver(connection as Connection);
 
         addedEdges['(' + connection.destinationElement + ',' + connection.sourceElement + ')'] = this.graph.insertEdge(

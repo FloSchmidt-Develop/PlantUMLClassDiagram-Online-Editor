@@ -28,8 +28,6 @@ export default class ClassChangeController{
           let pakg = change.parent.value as Package;
           //#1: 3
           if(change.previous === null){
-
-            
             DiagramCreator.diagram[DiagramCreator.activeIndex].addClass(classToChange);
             pakg.AddClassReference(classToChange);
           }
@@ -38,10 +36,12 @@ export default class ClassChangeController{
             pakg.AddClassReference(classToChange);
           }
           else if(change.previous.value instanceof Package){
-
             let prev = change.previous.value as Package;
             prev.RemoveClassReference(classToChange);
-            pakg.AddClassReference(classToChange)
+            console.log(classToChange);
+            pakg.AddClassReference(classToChange);
+            console.log(pakg);
+            
           }
         }
     }

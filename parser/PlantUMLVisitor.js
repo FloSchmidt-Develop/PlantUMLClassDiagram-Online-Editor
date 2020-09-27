@@ -366,5 +366,11 @@ PlantUMLVisitor.prototype.visitEnum_declaration = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#any_except_newline.
+PlantUMLVisitor.prototype.visitAny_except_newline = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 
 exports.PlantUMLVisitor = PlantUMLVisitor;

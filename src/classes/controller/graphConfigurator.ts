@@ -8,10 +8,10 @@ import {
     mxRubberband,
     mxUndoManager,
     mxConstants,
-    mxEdgeStyle,
+    mxRectangle,
     mxGraphHandler,
     mxEdgeHandler,
-    mxConnectionHandler
+    mxPoint
   } from "mxgraph-js";
 
 import DiagramCreator from "../../helper/diagramCreator";
@@ -39,6 +39,9 @@ export default class GraphConfiguration{
         style[mxConstants.STYLE_ROUNDED] = true;
         style[mxConstants.STYLE_EDGE] = 'orthogonalEdgeStyle';
         graph.alternateEdgeStyle = 'elbow=vertical';
+
+
+
         
         mxGraphHandler.prototype.guidesEnabled = true;
         mxEdgeHandler.prototype.snapToTerminals = true;
@@ -138,6 +141,8 @@ export default class GraphConfiguration{
           {
             graph.removeCells();
           });
+
+          new mxRubberband(graph);
   
   
     }

@@ -88,8 +88,8 @@ export default class DiagramCreator{
             if(!jsonConnection.connector.includes('hidden')){
                 
                 let con = new Connection(jsonConnection.connector,
-                    jsonConnection.multiplicity_left.replace(/"/g,''),
                     jsonConnection.multiplicity_right.replace(/"/g,''),
+                    jsonConnection.multiplicity_left.replace(/"/g,''),
                     jsonConnection.left, jsonConnection.right, 
                     jsonConnection.stereotype);
 
@@ -156,8 +156,12 @@ export default class DiagramCreator{
             else{
                 cls = new MyObject(jsonClass.name, jsonClass.type);
             }
-            cls.alias = jsonClass.alias ? jsonClass.alias : jsonClass.name;
+
+            cls.alias = jsonClass.alias != null ? jsonClass.alias : jsonClass.name;
             cls.package = jsonClass.package ? jsonClass.package : '';
+
+
+            
 
             if(jsonClass.hight != null)
                 cls.hight = parseInt(jsonClass.hight);
