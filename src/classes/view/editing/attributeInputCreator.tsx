@@ -194,6 +194,23 @@ export default class AttributeInputCreator {
       };
 
       row_div.appendChild(input_type);
+      row_div.appendChild(document.createElement('br'));
+
+      //Datatype
+      let default_p = document.createElement("p");
+      default_p.style.display = "inline";
+      default_p.innerText = " Default: ";
+      row_div.appendChild(default_p);
+
+      let input_default = document.createElement("input");
+      input_default.type = "text";
+      input_default.value = attribute.defaultValue;
+
+      input_default.onchange = () => {
+        this.controller.updateDefaultValue(index,input_default.value);
+      };
+
+      row_div.appendChild(input_default);
 
       let moveDownAttributeButton = document.createElement('button');
       moveDownAttributeButton.innerText = '\\/';

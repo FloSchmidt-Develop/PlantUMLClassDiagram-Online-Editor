@@ -107,10 +107,8 @@ styling_value:
 attribute:
     ( visibility | modifiers )*
     attribute_name
-    ':'
-    WHITESPACE?
-    attribute_type
-    NEWLINE?
+    (':' WHITESPACE? attribute_type)
+    ('=' WHITESPACE? attribute_default)? NEWLINE?
     ;
 
 attribute_name:
@@ -120,6 +118,14 @@ attribute_name:
 
 attribute_type:
     attribute_data_type | ARRAY | ANY | ANYARRAY | nested_argument_type
+    ;
+
+attribute_default:
+      '"'? WORD* '"'? 
+	| INTEGER+ | FLOAT+
+	| ('[' '"'? (INTEGER | FLOAT | WORD) '"'? (',' '"'? (INTEGER | FLOAT | WORD) '"'?)* ']')
+    | '"'? (WORD (INTEGER+ WORD?)) '"'?
+    | '[]'
     ;
 
 function_argument_attribute_type:
@@ -151,7 +157,6 @@ declaration:
 
 declaration_name:
     WORD+
-    | ARRAY
     ;
 
 declaration_argument:

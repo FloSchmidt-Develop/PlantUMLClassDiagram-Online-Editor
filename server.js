@@ -394,8 +394,14 @@ function getAttributesOfClass(cls){
     var attrs = cls.attributes;
     for (let index = 0; index < attrs.length; index++) {
         const attr = attrs[index];
+
         result += '\t';
-        result += getVisibility(attr.visibility) + getModifier(attr.modifiers) + attr.name + ': ' + attr.dataType + '\n';
+        result += getVisibility(attr.visibility) 
+        + getModifier(attr.modifiers) 
+        + attr.name 
+        + (attr.dataType === '' ? '' : (':' + attr.dataType ))
+        + (attr.defaultValue === '' ? '' : (' = ' + attr.defaultValue))
+        + '\n';
     }
     return result;
 }

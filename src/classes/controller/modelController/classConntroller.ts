@@ -49,6 +49,12 @@ export default class ClassController{
         this.updateGraphElement(newElement);
     }
 
+    public updateDefaultValue(indexOfAttribute: number, value: string){
+        let newElement = this.cloneModel(this.classToChange);
+        newElement.attributes[indexOfAttribute].defaultValue = value;
+        this.updateGraphElement(newElement);
+    }
+
     public ChangeAttributePosition(attribute: Attribute, up: boolean){
         let newElement = this.cloneModel(this.classToChange);
         let attributeToChangePosition = newElement.attributes.find(e => e.id === attribute.id);

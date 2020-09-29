@@ -205,10 +205,18 @@ export default class DiagramCreator{
     private addAttributes(jsonAttributes: any, tempClass : Class): void{
         for (let index = 0; index < jsonAttributes.length; index++) {
             let jsonAttribute = jsonAttributes[index];
+            console.log(jsonAttribute);
+            console.log(jsonAttribute.dataType);
+            console.log(jsonAttribute.defaultValue);
+            
+            
+            
             let visibility = this.getVisibilityFromSymbol(jsonAttribute.visibility);
-            let modifiers = this.getModifiersFromString(jsonAttribute.modifiers)
+            let modifiers = this.getModifiersFromString(jsonAttribute.modifiers);
+            let dataType = jsonAttribute.dataType == null ? '' : jsonAttribute.dataType;
 
-            let attr = new Attribute(jsonAttribute.name, jsonAttribute.dataType, visibility, modifiers);
+            let attr = new Attribute(jsonAttribute.name, dataType, visibility, modifiers);
+            attr.defaultValue = jsonAttribute.defaultValue != null ? jsonAttribute.defaultValue : '';
             tempClass.attributes.push(attr);
             
         }

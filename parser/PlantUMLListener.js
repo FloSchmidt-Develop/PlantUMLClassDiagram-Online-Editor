@@ -236,6 +236,15 @@ PlantUMLListener.prototype.exitAttribute_type = function(ctx) {
 };
 
 
+// Enter a parse tree produced by PlantUMLParser#attribute_default.
+PlantUMLListener.prototype.enterAttribute_default = function(ctx) {
+};
+
+// Exit a parse tree produced by PlantUMLParser#attribute_default.
+PlantUMLListener.prototype.exitAttribute_default = function(ctx) {
+};
+
+
 // Enter a parse tree produced by PlantUMLParser#function_argument_attribute_type.
 PlantUMLListener.prototype.enterFunction_argument_attribute_type = function(ctx) {
 };

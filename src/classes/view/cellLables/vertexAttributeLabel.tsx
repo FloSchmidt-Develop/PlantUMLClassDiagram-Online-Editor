@@ -41,14 +41,17 @@ export default class VertexAttributeLabel{
 
         let name = document.createElement("div");
         let dataType = document.createElement("div");
+        let defaultValue = document.createElement('div');
 
 
         //attribute_div.appendChild(icon);
-        name.innerText = attribute.getName() + ": ";
-        dataType.innerText = attribute.dataType;
+        name.innerText = attribute.getName();
+        dataType.innerText = attribute.dataType === '' ? '' : (':' + attribute.dataType);
+        defaultValue.innerText = attribute.defaultValue === '' ? '' : (' = ' + attribute.defaultValue);
         attribute_div.appendChild(visibility_icon);
         attribute_div.appendChild(name);
         attribute_div.appendChild(dataType);
+        attribute_div.appendChild(defaultValue);
 
         attribute_div.style.textDecoration = attribute.modifiers === Modifiers.static ? 'underline' : 'none';
         attribute_div.style.fontStyle = attribute.modifiers === Modifiers.abstract ? 'italic' : 'none';

@@ -3,7 +3,11 @@ import DiagramCreator from "../../../../helper/diagramCreator";
 
 export default class PackageChangeController {
   public static ChangePackage(change: any, packageThatChange: Package) {
-
+    console.log('Child Change in Package =========');  
+    console.log(change);
+    console.log('=================================');
+    
+    
     if (change.parent === null) {
       DiagramCreator.diagram[DiagramCreator.activeIndex].removePackage(
         packageThatChange,

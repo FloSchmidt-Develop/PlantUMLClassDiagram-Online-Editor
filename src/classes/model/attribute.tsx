@@ -8,6 +8,7 @@ export default class Attribute extends ID implements IName {
     public dataType: string;
     public visibility: Visibility;
     public modifiers: Modifiers;
+    public defaultValue: string;
 
     constructor(name: string, dataType: string, visibility: Visibility, modifiers: Modifiers){
         super();
@@ -15,6 +16,7 @@ export default class Attribute extends ID implements IName {
         this.dataType = dataType;        
         this.visibility = visibility
         this.modifiers = modifiers;
+        this.defaultValue = '';
     }
 
     public setName(newName : string){
@@ -43,6 +45,7 @@ export default class Attribute extends ID implements IName {
 
     public cloneModel(): Attribute{
         let newAttribute = new Attribute(this.name,this.dataType,this.visibility,this.modifiers);
+        newAttribute.defaultValue = this.defaultValue;
         newAttribute.id = this.id;
         return newAttribute;
     }

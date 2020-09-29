@@ -63,16 +63,16 @@ export default class Package extends ID implements Clonable, Typed{
     }
 
     public AddClassReference(classToAdd : Class){
-        if(this.classReferences.find(e => e.id === classToAdd.id) != null){
-            return;
+
+        
+        if(this.classReferences.find(e => e.id === classToAdd.id) == null){
+            this.classReferences.push(classToAdd);
         }
         classToAdd.package = this.name;     
-        console.log(classToAdd);
-           
-        this.classReferences.push(classToAdd);
     }
 
     public RemoveClassReference(classToRemove: Class, keepName: boolean = false){
+        console.log('Remove Klass: ' + classToRemove.getName());
         this.classReferences = this.classReferences.filter(e => e.id !== classToRemove.id);
         if(keepName == null || keepName === false){
             classToRemove.package = '';
@@ -81,11 +81,11 @@ export default class Package extends ID implements Clonable, Typed{
     }
 
     public AddNoteReference(noteToAdd : Note){
-        if(this.noteReferences.find(e => e.id === noteToAdd.id) != null){
-            return;
+        if(this.noteReferences.find(e => e.id === noteToAdd.id) == null){
+            this.noteReferences.push(noteToAdd);
         }
         noteToAdd.package = this.name;
-        this.noteReferences.push(noteToAdd);
+        
     }
 
     public RemoveNoteReferences(noteToRemove: Note, keepName: boolean = false){

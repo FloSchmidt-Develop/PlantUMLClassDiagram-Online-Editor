@@ -162,6 +162,12 @@ PlantUMLVisitor.prototype.visitAttribute_type = function(ctx) {
 };
 
 
+// Visit a parse tree produced by PlantUMLParser#attribute_default.
+PlantUMLVisitor.prototype.visitAttribute_default = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by PlantUMLParser#function_argument_attribute_type.
 PlantUMLVisitor.prototype.visitFunction_argument_attribute_type = function(ctx) {
   return this.visitChildren(ctx);

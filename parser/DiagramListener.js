@@ -148,6 +148,8 @@ PlantUMLListener.prototype.enterStyling_expression = function(ctx){
 
 // Enter a parse tree produced by PlantUMLParser#declaration.
 PlantUMLListener.prototype.enterDeclaration = function(ctx) {
+    console.log(ctx.getText());
+    
     actual_declaration = {};
 };
 
@@ -165,6 +167,10 @@ PlantUMLListener.prototype.enterDeclaration_name = function(ctx) {
 
 // Enter a parse tree produced by PlantUMLParser#declaration_argument.
 PlantUMLListener.prototype.enterDeclaration_argument = function(ctx) {
+    console.log('declaration:');
+    console.log(actual_declaration);
+    console.log(ctx.getText());
+    console.log('====');
     actual_declaration.attribute = ctx.getText();
 };
 
@@ -184,6 +190,12 @@ PlantUMLListener.prototype.enterAttribute_name = function(ctx) {
 
 PlantUMLListener.prototype.enterAttribute_type = function(ctx) {
     actual_attribute.dataType = ctx.getText();
+};
+
+PlantUMLListener.prototype.enterAttribute_default = function(ctx) {
+    console.log(ctx.getText());
+    
+    actual_attribute.defaultValue = ctx.getText();
 };
 
 PlantUMLListener.prototype.enterVisibility = function(ctx) {
