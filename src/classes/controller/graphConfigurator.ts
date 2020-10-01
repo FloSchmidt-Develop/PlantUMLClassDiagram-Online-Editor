@@ -136,11 +136,7 @@ export default class GraphConfiguration{
             }
           }
 
-          var keyHandler = new mxKeyHandler(graph);
-          keyHandler.bindKey(46, function(evt)
-          {
-            graph.removeCells();
-          });
+
 
           new mxRubberband(graph);
   

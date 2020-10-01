@@ -38,20 +38,12 @@ import {
   mxConnectionHandler
 } from "mxgraph-js";
 
-import Class from "./classes/model/class";
-import Connection from "./classes/model/connection";
-import Package from "./classes/model/package";
+
 import { Typography } from "@material-ui/core";
-import Multiplicity from "./classes/model/multiplicity";
 import EditingView from "./classes/view/editing/editingView";
-import UserCreatedNewEdge from "./classes/controller/userCreatedNewEdge";
-import CellLabel from "./classes/view/cellLables/cellLabel";
-import MxClipboardHelper from "./helper/mxClipboardHelper";
 import SaveAs from "./components/saveAs";
 import DiagramPreview from "./components/diagramPreview";
 import PumlPreview from "./components/pumlPreview";
-import Note from "./classes/model/note";
-import ChangeInteraction from "./classes/controller/mxGraphInteraction";
 import GraphConfiguration from "./classes/controller/graphConfigurator";
 
 
@@ -196,6 +188,48 @@ const Editor = (props) => {
       if(rubberBand == null)
         rubberBand = new mxRubberband(graph);
 
+      keyHandler.getFunction = function(evt)
+      {
+        if (evt != null)
+        {
+          return (mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey)) ? this.controlKeys[evt.keyCode] : this.normalKeys[evt.keyCode];
+        }
+        
+          return null;
+      };
+
+      keyHandler.bindKey(46, function(evt)
+        {
+          graph.removeCells();
+        });
+
+        keyHandler.bindKey(67, function(evt)
+        {
+          console.log(evt);
+          if(evt.ctrlKey){
+            console.log('control Down');
+            
+          }
+        });
+
+        document.body.onkeydown = function(ev){
+          // do some stuff
+          ev.preventDefault()
+          if(ev.key === 'c' && ev.ctrlKey)
+            mxClipboard.copy(graph);
+          else if(ev.key === 'v' && ev.ctrlKey)
+            mxClipboard.paste(graph);
+          else if(ev.key === 'z' && ev.ctrlKey)
+            undoManager.undo();
+          else if(ev.key === 'y' && ev.ctrlKey)
+            undoManager.redo();
+
+          return false; // cancels this function as well as default actions
+      }
+
+
+
+        
 
   
         //======Undo=======

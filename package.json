@@ -20,13 +20,11 @@
     "express-fileupload": "^1.1.7-alpha.3",
     "file-saver": "^2.0.2",
     "mxgraph-js": "^1.0.1",
-    "node-plantuml": "^0.9.0",
     "plantuml-encoder": "^1.4.0",
     "react": "^16.13.1",
     "react-alert": "^7.0.1",
     "react-alert-template-basic": "^1.0.0",
     "react-dom": "^16.13.1",
-    "react-grid-layout": "^1.0.0",
     "react-scripts": "3.4.1",
     "react-zoom-pan-pinch": "^1.6.1",
     "typescript": "^3.7.5"

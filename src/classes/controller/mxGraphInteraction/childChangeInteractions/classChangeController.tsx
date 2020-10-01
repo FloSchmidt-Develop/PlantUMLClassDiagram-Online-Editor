@@ -4,15 +4,7 @@ import Class from "../../../model/class";
 
 export default class ClassChangeController{
 
-    public static ClassChange(change: any, classToChange: Class){
-
-
-        console.log('Change in Class====================');
-        console.log(change);
-        console.log('====================================');
-        
-        
-        
+    public static ClassChange(change: any, classToChange: Class){        
 
         if(change.parent === null ){
 
