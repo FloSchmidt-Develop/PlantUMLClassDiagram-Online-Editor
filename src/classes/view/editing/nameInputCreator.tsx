@@ -25,8 +25,12 @@ export default class NameInputCreator {
     let input2 = document.createElement("input");
     input2.type = "text";
     input2.value = selectedElement.getName();
+    console.log('name input');
+    
 
     input2.onchange = () => {
+      console.log('name Change');
+      
       this.controller.updateName(input2.value);
     };
 

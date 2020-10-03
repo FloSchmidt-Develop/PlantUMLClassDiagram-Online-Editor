@@ -214,7 +214,7 @@ const Editor = (props) => {
 
         document.body.onkeydown = function(ev){
           // do some stuff
-          ev.preventDefault()
+          //ev.preventDefault()
           if(ev.key === 'c' && ev.ctrlKey)
             mxClipboard.copy(graph);
           else if(ev.key === 'v' && ev.ctrlKey)
@@ -224,7 +224,7 @@ const Editor = (props) => {
           else if(ev.key === 'y' && ev.ctrlKey)
             undoManager.redo();
 
-          return false; // cancels this function as well as default actions
+          return true; // cancels this function as well as default actions
       }
 
 
