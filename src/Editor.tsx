@@ -14,6 +14,7 @@ import ZoomInSharpIcon from '@material-ui/icons/ZoomInSharp';
 import ZoomOutSharpIcon from '@material-ui/icons/ZoomOutSharp';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import Switch from '@material-ui/core/Switch';
 
 import "./App.css";
 import axios from "axios";
@@ -60,6 +61,10 @@ const styles = theme => ({
   filename: {
     margin: '0px 20px',
     paddingTop: '5px',
+  },
+  export_label: {
+    margin: '0px 5px',
+    paddingTop: '5px',
   }
 });
 
@@ -77,6 +82,17 @@ const Editor = (props) => {
   const [undoManager, setUndoManager] = React.useState(new mxUndoManager());
   var keyHandler;
   var rubberBand;
+
+  const [state, setState] = React.useState({
+    export_checked: true,
+  });
+
+  const handleChange = (event) => {
+    console.log(event.target.checked);
+    
+    DiagramCreator.diagram[DiagramCreator.activeIndex].export_with_styling = event.target.checked
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
   
 
   const diagramCreator = new DiagramCreator();
@@ -95,6 +111,7 @@ const Editor = (props) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("with-style", DiagramCreator.diagram[DiagramCreator.activeIndex].export_with_styling ? 'true' : 'false' );
 
 
       axios.post("/upload", formData, {
@@ -203,14 +220,6 @@ const Editor = (props) => {
           graph.removeCells();
         });
 
-        keyHandler.bindKey(67, function(evt)
-        {
-          console.log(evt);
-          if(evt.ctrlKey){
-            console.log('control Down');
-            
-          }
-        });
 
         document.body.onkeydown = function(ev){
           // do some stuff
@@ -275,6 +284,18 @@ const Editor = (props) => {
           color="primary" startIcon={<CloudUploadIcon/>} 
           className="my-button-style" type="submit">Upload</Button>
           <ExportPreviewDialog />
+          <Switch
+            id="switch-for-export-Styling"
+            checked={state.export_checked}
+            onChange={handleChange}
+            color="primary"
+            name="export_checked"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+          <Typography className={classes.export_label}> 
+              Export Layout
+          </Typography> 
+
         </div>
       </form>
       <Grid container className={classes.grid} spacing={2}>

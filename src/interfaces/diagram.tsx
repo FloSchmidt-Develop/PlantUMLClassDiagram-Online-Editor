@@ -8,6 +8,7 @@ import Package from '../classes/model/package';
 
 export default interface Diagram extends ID {
     scale: number;
+    export_with_styling: boolean;
     name: string;
     class_declarations: Class[];
     connection_declarations: Connection[];

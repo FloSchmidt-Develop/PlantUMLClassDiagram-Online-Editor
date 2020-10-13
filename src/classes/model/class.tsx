@@ -120,9 +120,7 @@ export default class Class extends ObserverSubject<string> implements INamed  {
         }
         newClass.observers = this.observers;
         newClass.dataType = this.dataType; 
-        console.log(this);
-        
-
+    
         return newClass;
     }
 

@@ -12,6 +12,7 @@ export default class Diagram extends ID implements IDiagram{
     public connection_declarations : Connection[] = [];
     public package_declarations : Package [] = [];
     public note_declarations: Note [] = [];
+    public export_with_styling: boolean = true;
 
     constructor(name: string) {
         super();

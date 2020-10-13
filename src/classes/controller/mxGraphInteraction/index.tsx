@@ -53,6 +53,6 @@ export default class ChangeInteraction{
 
 function replacer(key,value)
 {
-    if (key=="vertex") return undefined;
+    if (key=="vertex" || key === 'observers') return undefined;
     else return value;
 }

@@ -12,6 +12,8 @@ var requestBody = {};
 var addedClasses;
 var addedConnections;
 var addedNotes;
+var addedPackages;
+var export_with_stling = null;
 //const bodyParser = require('body-parser');
 
 const app = express();
@@ -184,10 +186,14 @@ function createJSONFile(requestObject){
 }
 
 function createPUMLFile(requestData ){
+    //console.log(requestData);
+    
     response = requestData;
     addedClasses = [];
     addedConnections = [];
     addedNotes = [];
+    addedPackages = [];
+    export_with_stling = response.export_with_styling;
     
     var result = '';
     result += '@startuml';
@@ -211,8 +217,28 @@ function addPackages(packages, connections){
     var result = '';
     for (let index = 0; index < packages.length; index++) {
         const pack = packages[index];
+        addedPackages.push(pack);
         result += 'package "' + pack.name + '" {\n'
         result += getStylingOfClass(pack) + '\n';
+        //console.log(pack);
+        
+        if(pack.package !== ''){
+            //console.log(addedPackages);
+            
+            let parentPackage = addedPackages.find(e => e.name === pack.package);
+            console.log('=========');
+            
+            console.log(parentPackage);
+
+            console.log('====================');
+            if(parentPackage != null){
+                pack.x = parentPackage.x + pack.x;
+                pack.y = parentPackage.y + pack.y;
+            }
+            
+            
+        }
+
         let classes = pack.classReferences;
         result += createClasses(classes, connections);
         let notes = pack.noteReferences;
@@ -259,11 +285,12 @@ function createNotes(notes, connections){
         result += note.content;
         result += '\n';
         result += 'end note \n\n';
-        addedClasses.push(note.name);
+        addedClasses.push(note.name);   
+        
+        let connectionsOfNote = connections.filter(e => e.sourceElement === note.name || e.destinationElement === note.name);
 
         
-        let connectionsOfClass = connections.filter(e => e.sourceElement === note.name || e.destinationElement === note.name);
-        connectionsOfClass.forEach(connection => {
+        connectionsOfNote.forEach(connection => {
 
             
             if(addedClasses.find(srcCls => srcCls === connection.sourceElement) && addedClasses.find(dstCls => dstCls === connection.destinationElement)){
@@ -320,13 +347,18 @@ function getConnectionPoints(points){
 
 function getConnection(connector,destination,sourceElement){
     result = '';
-    let destinationClass = requestBody.class_declarations.find(e => e.name === destination);
-    let sourceClass = requestBody.class_declarations.find(e => e.name === sourceElement);
+    var destinationClass = requestBody.class_declarations.find(e => e.alias === destination);
+    var sourceClass = requestBody.class_declarations.find(e => e.alias === sourceElement);
     if(destinationClass == null)
         destinationClass = requestBody.note_declarations.find(e => e.name === destination);
     if(sourceClass == null)
         sourceClass = requestBody.note_declarations.find(e => e.name === sourceElement);
 
+
+    
+    
+    
+    
     switch(connector.endArrowSymbol){
         case 0: 
             result += '<';
@@ -346,7 +378,7 @@ function getConnection(connector,destination,sourceElement){
         default:
             break;
     }
-    result += connector.lineStyle === 0 ? ('-' + getLayoutInfo(connector) + '-') : ('.' + getLayoutInfo(connector) + '.');
+    result += connector.lineStyle === 0 ? ('-' + getLayoutInfo(connector, destination, sourceElement) + '-') : ('.' + getLayoutInfo(connector, destination, sourceElement) + '.');
     switch(connector.startArrowSymbol){
         case 0: 
             result += '>';
@@ -369,22 +401,88 @@ function getConnection(connector,destination,sourceElement){
     return result;
 }
 
-function getLayoutInfo(connector){
-    //console.log(connector);
+function getLayoutInfo(connector, destinationElement, sourceElement){
+    let destination = Object.assign({},requestBody.class_declarations.find(e => e.alias === destinationElement));
+    let source = Object.assign({},requestBody.class_declarations.find(e => e.alias === sourceElement));
+    if(destination == null || destination.name == null) 
+        destination = Object.assign({},requestBody.note_declarations.find(e => e.name === destinationElement));
+    if(source == null || source.name == null)
+        source = Object.assign({},requestBody.note_declarations.find(e => e.name === sourceElement));
     
+
     let result = ''
-    if(connector.layoutProperty === 0){
-        result = 'up'; //l
+    let offset = 100;
+
+    if((source == null || destination == null) || (source.name == null || destination.name == null)){
+        return result;
     }
-    else if(connector.layoutProperty === 1){
-        result = 'down'; //r
+
+
+    if(source.package !== ''){
+        let found_package = requestBody.package_declarations.find(e => e.name === source.package );
+        if(found_package != null){
+            source.x = source.x + found_package.x;
+            source.y = source.y + found_package.y;
+        }
     }
-    else if(connector.layoutProperty === 2){
-        result = 'left'; //r
+
+    if(destination.package !== ''){
+        let found_package = requestBody.package_declarations.find(e => e.name === destination.package );
+        if(found_package != null){
+            destination.x = destination.x + found_package.x;
+            destination.y = destination.y + found_package.y;
+        }
     }
-    else if(connector.layoutProperty === 3){
-        result = 'right'; //r
+
+    
+    if(export_with_stling){
+        let sameHight = Math.abs(source.y - destination.y) < offset;
+        if(sameHight){
+            if(source.x < destination.x){
+                if(connector.endArrowSymbol === 0)
+                    result = 'r';
+                else{
+                    result = 'l';
+                }
+            }
+            else{
+                if(connector.endArrowSymbol === 0)
+                    result = 'l';
+                else
+                    result = 'r';
+            }   
+        }
+        else{
+            if(source.y < destination.y){
+                if(connector.endArrowSymbol === 0)
+                    result = 'd';
+                else
+                    result = 'u';
+            }
+            else{
+                if(connector.endArrowSymbol === 0)
+                    result = 'u';
+                else    
+                    result = 'down';
+            }
+        }
     }
+    
+    if(!export_with_stling){
+        if(connector.layoutProperty === 0){
+            result = 'up'; //l
+        }
+        else if(connector.layoutProperty === 1){
+            result = 'down'; //r
+        }
+        else if(connector.layoutProperty === 2){
+            result = 'left'; //r
+        }
+        else if(connector.layoutProperty === 3){
+            result = 'right'; //r
+        }
+    }
+
 
     return result;
 }

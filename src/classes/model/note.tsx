@@ -59,6 +59,7 @@ export default class Note extends ObserverSubject<string>{
         newNote.x = this.x;
         newNote.y = this.y;
         newNote.observers = this.observers;
+        newNote.package = this.package;
         if(this.package !== ''){
             let parentPackage = DiagramCreator.diagram[DiagramCreator.activeIndex].package_declarations.find(e => e.getName() === this.package);
             parentPackage?.RemoveNoteReferences(this,true);

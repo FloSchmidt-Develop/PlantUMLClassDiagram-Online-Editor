@@ -68,6 +68,7 @@ export default function ExportPreviewDialog() {
   function replacer(key,value)
   {
       if (key=="vertex") return undefined;
+      else if(key=="observers") return undefined;
       else return value;
   }
 
