@@ -440,14 +440,14 @@ function getLayoutInfo(connector, destinationElement, sourceElement){
         if(sameHight){
             if(source.x < destination.x){
                 if(connector.endArrowSymbol === 0)
-                    result = 'r';
+                    result = 'l';
                 else{
                     result = 'l';
                 }
             }
             else{
                 if(connector.endArrowSymbol === 0)
-                    result = 'l';
+                    result = 'r';
                 else
                     result = 'r';
             }   
@@ -455,15 +455,15 @@ function getLayoutInfo(connector, destinationElement, sourceElement){
         else{
             if(source.y < destination.y){
                 if(connector.endArrowSymbol === 0)
-                    result = 'd';
+                    result = 'u';
                 else
                     result = 'u';
             }
             else{
                 if(connector.endArrowSymbol === 0)
-                    result = 'u';
+                    result = 'd';
                 else    
-                    result = 'down';
+                    result = 'd';
             }
         }
     }
