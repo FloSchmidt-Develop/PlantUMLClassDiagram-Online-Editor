@@ -13,7 +13,16 @@ export default abstract class ObserverSubject<T> extends ID{
 
 
     public registerObserver(observer: Observer<T>): void{
-        this.observers.push(observer);
+        if(!this.observers.find(e => e === observer))
+            this.observers.push(observer);
+
+        console.log('Observer from');
+        
+        console.log(this);  
+        console.log(this.observers);
+        console.log('---------------------');
+        
+        
     }
 
     public removeObserver(observer: Observer<T>): void{

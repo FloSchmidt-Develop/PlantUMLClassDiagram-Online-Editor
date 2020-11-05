@@ -42,7 +42,6 @@ import {
 
 import { Typography } from "@material-ui/core";
 import EditingView from "./classes/view/editing/editingView";
-import SaveAs from "./components/saveAs";
 import DiagramPreview from "./components/diagramPreview";
 import PumlPreview from "./components/pumlPreview";
 import GraphConfiguration from "./classes/controller/graphConfigurator";
@@ -254,7 +253,9 @@ const Editor = (props) => {
         //is called when selection in mxGraph Change
         graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
         {        
-          EditingView.CreateEditingView(sender,graph,editPanel);       
+          EditingView.CreateEditingView(sender,graph,editPanel);    
+          console.log(DiagramCreator.diagram[DiagramCreator.activeIndex]);
+             
         });
 
       let toolbar = new Toolbar();
@@ -266,7 +267,7 @@ const Editor = (props) => {
       <form onSubmit={onSubmit}>
         <div className="upload-section">
           <input 
-            accept=".puml,.json" 
+            accept=".puml" 
             className={classes.input} 
             id="raised-button-file"  
             type="file" 
@@ -333,7 +334,6 @@ const Editor = (props) => {
         <Button variant="contained" color="primary" startIcon={<FileCopyIcon/>} onClick={copy} >copy</Button>
         <Button variant="contained" color="primary" startIcon={<FileCopyIcon/>}  onClick={paste} >paste</Button>
         <Button variant="contained" color="secondary" startIcon={<DeleteForeverSharpIcon/>} onClick={remove} >Delete</Button>
-        <SaveAs/>
         <Button color="primary" variant="contained" onClick={toggleView} >{isVisible ? 'Hide Preview' : 'show Preview'}</Button>
 
         

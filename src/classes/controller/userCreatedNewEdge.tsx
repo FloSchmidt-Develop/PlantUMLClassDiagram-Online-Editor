@@ -73,7 +73,7 @@ export default class UserCreatedNewEdge{
         graph.getModel().beginUpdate();
         console.log('edge added');
         
-        cell.setStyle(EdgeStyleCreator.getStyle(connection.connector));
+        graph.getModel().setStyle(cell,EdgeStyleCreator.getStyle(connection.connector));
         graph.getModel().setValue(cell, connection);
         connection.points = cell.geometry.points?.reduce((acc,curr) => acc.push(new Point(curr.x,curr.y)),[]);
         

@@ -37,7 +37,7 @@ export default class NoteEditingView{
 
         let input2 = document.createElement("textarea");
         input2.rows = 4;
-        input2.cols = 40;
+        input2.cols = 30;
         input2.value = selectedNote.content;
 
         input2.onchange = () => {
