@@ -1,7 +1,7 @@
 # What yo see is what you get - UML-Klassendiagramm Editor
 
 Dieses Projekt beinhaltet eine Webapplikation mit welcher Klassendiagramme erstellt werden können. <br>
-Es können verhandene Klassendiagramme im puml-Foramt eingelesen werden. 
+Es können verhandene Klassendiagramme im puml-Format eingelesen werden. 
 Exportiert werden können die Diagrtamme ebenfalls wieder in das puml-Format.
 
 Das Projekt wurde mit [Create React App](https://github.com/facebook/create-react-app) gebootstrapt.
