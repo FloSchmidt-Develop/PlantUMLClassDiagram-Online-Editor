@@ -6,7 +6,7 @@ Exportiert werden können die Diagrtamme ebenfalls wieder in das puml-Format.
 
 Das Projekt wurde mit [Create React App](https://github.com/facebook/create-react-app) gebootstrapt.
 
-Das Projket wurde mit Folgenden Versionen getestet:
+Das Projekt wurde mit Folgenden Versionen getestet:
 - npm Version: 6.9.0
 - Nodejs Version: 10.16.0
 - PlantUML Version: V1.2020.19  (Achtung hier gab es Änderugen bzg. des Layouts. Der Branch oldPlantUML-Layout unterstützt den Export von älteren Versionen, Vorschaufunktion funktioniert hier jedoch nicht!!!! )
