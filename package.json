@@ -1,7 +1,8 @@
 {
-  "name": "mx-client",
+  "name": "mxclient",
   "version": "0.1.0",
   "private": true,
+  "main": "Main.js",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -33,6 +34,7 @@
   "scripts": {
     "dev:server": "node server.js",
     "dev:client": "react-scripts start",
+    "dev:electron": "electron .",
     "build:client": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -55,6 +57,7 @@
   },
   "devDependencies": {
     "@types/react-native": "^0.63.8",
+    "electron": "^11.2.1",
     "mxgraph-type-definitions": "^1.0.3"
   }
 }
