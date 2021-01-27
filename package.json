@@ -17,6 +17,7 @@
     "antlr4": "^4.8.0",
     "axios": "^0.19.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "file-saver": "^2.0.2",
@@ -33,11 +34,12 @@
   },
   "scripts": {
     "dev:server": "node server.js",
-    "dev:client": "react-scripts start",
+    "dev:client": "cross-env BROWSER=none react-scripts start",
     "dev:electron": "electron .",
     "build:client": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "concurrently --kill-others \"npm run dev:server\" \"npm run dev:client\" \"npm run dev:electron\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -57,6 +59,7 @@
   },
   "devDependencies": {
     "@types/react-native": "^0.63.8",
+    "concurrently": "^5.3.0",
     "electron": "^11.2.1",
     "mxgraph-type-definitions": "^1.0.3"
   }
